@@ -12,6 +12,10 @@
   &_full {
     flex-direction: row;
     background-color: transparent;
+
+    .card__title {
+      flex-grow: 0;
+    }
   }
 
   &_compact {
@@ -45,6 +49,7 @@
     font-size: $titleFontSize;
     font-weight: 500;
     margin: 0;
+    flex-grow: 1;
   }
   &__text {
     text-align: left;

@@ -4,10 +4,12 @@
 .basket {
   @include mixins.flex(column);
   gap: 2rem;
+  height: 100%;
 
   &__list {
     padding: 0;
     margin: 0;
+    flex-grow: 1;
   }
 
   &__item {

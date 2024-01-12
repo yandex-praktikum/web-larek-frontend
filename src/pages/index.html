@@ -12,93 +12,32 @@
 	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000">
 	<meta name="msapplication-TileColor" content="#000000">
 
-	<title>Film!</title>
+	<title>WebLarek</title>
 	<meta name="description" content="">
 </head>
 <body class="page">
 	<div class="page__wrapper">
-	<header class="header">
-		<div class="header__container">
-			<a class="header__logo" href="/">
-				<img class="header__logo-image" src="<%=require('../images/logo.svg')%>" alt="Film! logo" />
-			</a>
-			<button class="header__basket">
-				<span class="header__basket-counter">0</span>
-			</button>
+		<header class="header">
+			<div class="header__container">
+				<a class="header__logo" href="/">
+					<img class="header__logo-image" src="<%=require('../images/logo.svg')%>" alt="Film! logo" />
+				</a>
+				<button class="header__basket">
+					<span class="header__basket-counter">0</span>
+				</button>
+			</div>
+		</header>
+
+		<main class="gallery"></main>
+	</div>
+
+	<div class="modal" id="modal-container">
+		<div class="modal__container">
+			<button class="modal__close" aria-label="закрыть"></button>
+			<div class="modal__content">
+
+			</div>
 		</div>
-	</header>
-
-	<main class="gallery">
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_soft">софт-скил</span>
-			<h2 class="card__title">+1 час в сутках</h2>
-			<img class="card__image" src="<%=require('../images/5_Dots.svg')%>" alt="" />
-			<span class="card__price">750 синапсов</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_other">другое</span>
-			<h2 class="card__title">HEX-леденец</h2>
-			<img class="card__image" src="<%=require('../images/Shell.svg')%>" alt="" />
-			<span class="card__price">1450 синапсов</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_soft">софт-скил</span>
-			<h2 class="card__title">Мамка-таймер</h2>
-			<img class="card__image" src="<%=require('../images/Asterisk_2.svg')%>" alt="" />
-			<span class="card__price">Бесценно</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_additional">дополнительное</span>
-			<h2 class="card__title">Фреймворк куки судьбы</h2>
-			<img class="card__image" src="<%=require('../images/Soft_Flower.svg')%>" alt="" />
-			<span class="card__price">2500 синапсов</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_button">кнопка</span>
-			<h2 class="card__title">Кнопка «Замьютить кота»</h2>
-			<img class="card__image" src="<%=require('../images/mute-cat.svg')%>" alt="" />
-			<span class="card__price">2000 синапсов</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_other">другое</span>
-			<h2 class="card__title">БЭМ-пилюлька</h2>
-			<img class="card__image" src="<%=require('../images/Pill.svg')%>" alt="" />
-			<span class="card__price">1500 синапсов</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_other">другое</span>
-			<h2 class="card__title">Портативный телепорт</h2>
-			<img class="card__image" src="<%=require('../images/Polygon.svg')%>" alt="" />
-			<span class="card__price">100 000 синапсов</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_other">другое</span>
-			<h2 class="card__title">Микровселенная в кармане</h2>
-			<img class="card__image" src="<%=require('../images/5_Dots.svg')%>" alt="" />
-			<span class="card__price">750 синапсов</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_hard">хард-скил</span>
-			<h2 class="card__title">UI/UX-карандаш</h2>
-			<img class="card__image" src="<%=require('../images/Leaf.svg')%>" alt="" />
-			<span class="card__price">10 000 синапсов</span>
-		</button>
-
-		<button class="gallery__item gallery__item_active card">
-			<span class="card__category card__category_other">другое</span>
-			<h2 class="card__title">Бэкенд-антистресс</h2>
-			<img class="card__image" src="<%=require('../images/Mithosis.svg')%>" alt="" />
-			<span class="card__price">1000 синапсов</span>
-		</button>
-	</main>
 	</div>
 
 	<div class="modal">
@@ -106,7 +45,7 @@
 			<button class="modal__close" aria-label="закрыть"></button>
 			<div class="modal__content">
 				<div class="card card_full">
-					<img class="card__image" src="<%=require('../images/Mithosis.svg')%>" alt="" />
+					<img class="card__image" src="<%=require('../images/Subtract.svg')%>" alt="" />
 					<div class="card__column">
 						<span class="card__category card__category_other">другое</span>
 						<h2 class="card__title">Бэкенд-антистресс</h2>
@@ -175,7 +114,7 @@
 						</label>
 					</div>
 					<div class="modal__actions">
-						<button disabled class="button">Оформить</button>
+						<button disabled class="button">Далее</button>
 					</div>
 				</form>
 			</div>
@@ -217,5 +156,98 @@
 			</div>
 		</div>
 	</div>
+
+	<template id="success">
+		<div class="order-success">
+			<h2 class="order-success__title">Заказ оформлен</h2>
+			<p class="order-success__description">Списано 0 синапсов</p>
+			<button class="button order-success__close">За новыми покупками!</button>
+		</div>
+	</template>
+
+	<template id="card-catalog">
+		<button class="gallery__item card">
+			<span class="card__category card__category_soft">софт-скил</span>
+			<h2 class="card__title">+1 час в сутках</h2>
+			<img class="card__image" src="<%=require('../images/Subtract.svg')%>" alt="" />
+			<span class="card__price">750 синапсов</span>
+		</button>
+	</template>
+
+	<template id="card-preview">
+		<div class="card card_full">
+			<img class="card__image" src="<%=require('../images/Subtract.svg')%>" alt="" />
+			<div class="card__column">
+				<span class="card__category card__category_other">другое</span>
+				<h2 class="card__title">Бэкенд-антистресс</h2>
+				<p class="card__text">Если планируете решать задачи в тренажёре, берите два.</p>
+				<div class="card__row">
+					<button class="button card__button">В корзину</button>
+					<span class="card__price">1000 синапсов</span>
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<template id="card-basket">
+		<li class="basket__item card card_compact">
+			<span class="basket__item-index">1</span>
+			<span class="card__title">Фреймворк куки судьбы</span>
+			<span class="card__price">2500 синапсов</span>
+			<button class="basket__item-delete card__button" aria-label="удалить"></button>
+		</li>
+	</template>
+
+	<template id="basket">
+		<div class="basket">
+			<h2 class="modal__title">Корзина</h2>
+			<ul class="basket__list"></ul>
+			<div class="modal__actions">
+				<button class="button basket__button">Оформить</button>
+				<span class="basket__price">0 синапсов</span>
+			</div>
+		</div>
+	</template>
+
+	<template id="order">
+		<form class="form" name="order">
+			<div class="order">
+				<div class="order__field">
+					<h2 class="modal__title">Способ оплаты</h2>
+					<div class="order__buttons">
+						<button name="card" type="button" class="button button_alt">Онлайн</button>
+						<button name="cash" type="button" class="button button_alt">При получении</button>
+					</div>
+				</div>
+				<label class="order__field">
+					<span class="form__label modal__title">Адрес доставки</span>
+					<input name="address" class="form__input" type="text" placeholder="Введите адрес" />
+				</label>
+			</div>
+			<div class="modal__actions">
+				<button type="submit" disabled class="button order__button">Далее</button>
+				<span class="form__errors"></span>
+			</div>
+		</form>
+	</template>
+
+	<template id="contacts">
+		<form class="form" name="contacts">
+			<div class="order">
+				<label class="order__field">
+					<span class="form__label modal__title">Email</span>
+					<input name="email" class="form__input" type="text" placeholder="Введите Email" />
+				</label>
+				<label class="order__field">
+					<span class="form__label modal__title">Телефон</span>
+					<input name="phone" class="form__input" type="text" placeholder="+7 (" />
+				</label>
+			</div>
+			<div class="modal__actions">
+				<button type="submit" disabled class="button">Оплатить</button>
+				<span class="form__errors"></span>
+			</div>
+		</form>
+	</template>
 </body>
 </html>
