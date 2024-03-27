@@ -1,7 +1,7 @@
-import { IProductService } from '../application/ports';
+import { IProductService } from '../service.ports';
 import { Product } from '../types';
 import { CDN_URL, API_URL } from '../utils/constants';
-import { WebLarekApi } from './webLarekApi';
+import { WebLarekApi } from './webLarekApi.service';
 
 export class ProductService implements IProductService {
 	private _api: WebLarekApi;

@@ -1,46 +1,62 @@
 import { Product } from '../types';
+import { IHome } from '../ui.ports';
 import { cloneTemplate, ensureElement } from '../utils/utils';
+import { AppComponent } from './AppComponent';
 
-type HomeModel = {
-	products: Product[];
-};
+interface IHomeModel {
+	counter: number;
+	gallery: Product[];
+	locked: boolean;
+}
 
-type HomeEvents = {
+interface IHomeEvents {
 	onProductCardClick: (id: Product['id']) => void;
-};
+}
 
-type ConstructorParams = {
-	cardCatalog: HTMLTemplateElement;
-};
+export class Home extends AppComponent<IHomeModel> implements IHome {
+	protected _counter: HTMLElement;
+	protected _gallery: HTMLElement;
+	protected _wrapper: HTMLElement;
+	protected _basket: HTMLElement;
 
-export class Home {
-	private _container: HTMLElement;
-	private _gallery: HTMLElement;
-	private _card: HTMLTemplateElement;
-	private _onProductCardClick: HomeEvents['onProductCardClick'];
+	constructor(private events: IHomeEvents) {
+		super();
 
-	constructor(
-		container: HTMLElement,
-		events: HomeEvents,
-		params: ConstructorParams
-	) {
-		this._container = container;
+		// this._counter = ensureElement<HTMLElement>('.header__basket-counter');
+		// this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
+		// this._basket = ensureElement<HTMLElement>('.header__basket');
+
 		this._gallery = ensureElement<HTMLElement>('.gallery');
-		this._card = params.cardCatalog;
-		this._onProductCardClick = events.onProductCardClick;
 	}
-	render(model: HomeModel) {
-		const productCards = model.products.map((product) => {
-			const card = cloneTemplate(this._card);
-			card.addEventListener('click', () =>
-				this._onProductCardClick(product.id)
+
+	set counter(value: number) {
+		this.setText(this._counter, String(value));
+	}
+
+	set gallery(items: Product[]) {
+		const cards = items.map((product) => {
+			const cardElement = cloneTemplate(this._cardTemplate);
+			cardElement.addEventListener('click', () =>
+				this.events.onProductCardClick(product.id)
 			);
-			card.querySelector('.card__category').textContent = product.category;
-			card.querySelector('.card__title').textContent = product.title;
-			card.querySelector('.card__image').setAttribute('src', product.image);
-			return card;
+			ensureElement('.card__category', cardElement).textContent =
+				product.category;
+			ensureElement('.card__title', cardElement).textContent = product.title;
+			ensureElement('.card__image', cardElement).setAttribute(
+				'src',
+				product.image
+			);
+
+			return cardElement;
 		});
-		this._gallery.replaceChildren(...productCards);
-		return this._container;
+		this._gallery.replaceChildren(...cards);
+	}
+
+	set locked(value: boolean) {
+		if (value) {
+			this._wrapper.classList.add('page__wrapper_locked');
+		} else {
+			this._wrapper.classList.remove('page__wrapper_locked');
+		}
 	}
 }

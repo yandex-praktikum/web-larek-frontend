@@ -1,4 +1,4 @@
-import { Order, Product } from '../types';
+import { Order, Product } from './types';
 
 export interface IProductService {
 	getProducts: () => Promise<Product[]>;
@@ -13,4 +13,10 @@ export interface IBasketService {
 
 export interface IOrderService {
 	sendOrder: (order: Order) => Promise<void>;
+}
+
+export interface IWebLarekApi {
+	getProducts: () => Promise<Product[]>;
+	getProduct: (id: Product['id']) => Promise<Product>;
+	postOrder: (order: Order) => Promise<void>;
 }

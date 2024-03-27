@@ -1,7 +1,8 @@
+import { Api, ApiListResponse } from '../adapters/api.adapter';
+import { IWebLarekApi } from '../service.ports';
 import { Order, Product } from '../types';
-import { Api, ApiListResponse } from './base/api';
 
-export class WebLarekApi extends Api {
+export class WebLarekApi extends Api implements IWebLarekApi {
 	readonly cdn: string;
 
 	constructor(cdn: string, baseUrl: string, options?: RequestInit) {
