@@ -1,7 +1,6 @@
 import { Product } from '../types';
-import { IHome } from '../ui.ports';
 import { cloneTemplate, ensureElement } from '../utils/utils';
-import { AppComponent } from './AppComponent';
+import { Page } from './Page';
 
 interface IHomeModel {
 	counter: number;
@@ -13,7 +12,7 @@ interface IHomeEvents {
 	onProductCardClick: (id: Product['id']) => void;
 }
 
-export class Home extends AppComponent<IHomeModel> implements IHome {
+export class Home extends Page<IHomeModel> {
 	protected _counter: HTMLElement;
 	protected _gallery: HTMLElement;
 	protected _wrapper: HTMLElement;
@@ -21,10 +20,6 @@ export class Home extends AppComponent<IHomeModel> implements IHome {
 
 	constructor(private events: IHomeEvents) {
 		super();
-
-		// this._counter = ensureElement<HTMLElement>('.header__basket-counter');
-		// this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
-		// this._basket = ensureElement<HTMLElement>('.header__basket');
 
 		this._gallery = ensureElement<HTMLElement>('.gallery');
 	}

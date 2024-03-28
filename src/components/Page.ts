@@ -1,7 +1,8 @@
+import { Component } from '../ui/Component';
 import { ensureElement } from '../utils/utils';
-import { Component } from './Component';
 
-export abstract class AppComponent<T> extends Component<T> {
+export abstract class Page<T> extends Component<T> {
+	// получить шаблоны и модальные формы
 	protected _cardTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 
 	constructor() {
