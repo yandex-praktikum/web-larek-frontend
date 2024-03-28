@@ -1,24 +1,24 @@
 import { Product } from '../types';
 import { cloneTemplate, ensureElement } from '../utils/utils';
-import { Page } from './Page';
+import { PageView } from './PageView';
 
-interface IHomeModel {
+interface IHomeViewModel {
 	counter: number;
 	gallery: Product[];
 	locked: boolean;
 }
 
-interface IHomeEvents {
+interface IHomeViewEvents {
 	onProductCardClick: (id: Product['id']) => void;
 }
 
-export class Home extends Page<IHomeModel> {
+export class Home extends PageView<IHomeViewModel> {
 	protected _counter: HTMLElement;
 	protected _gallery: HTMLElement;
 	protected _wrapper: HTMLElement;
 	protected _basket: HTMLElement;
 
-	constructor(private events: IHomeEvents) {
+	constructor(private events: IHomeViewEvents) {
 		super();
 
 		this._gallery = ensureElement<HTMLElement>('.gallery');
@@ -30,7 +30,7 @@ export class Home extends Page<IHomeModel> {
 
 	set gallery(items: Product[]) {
 		const cards = items.map((product) => {
-			const cardElement = cloneTemplate(this._cardTemplate);
+			const cardElement = cloneTemplate(this.cardTemplate);
 			cardElement.addEventListener('click', () =>
 				this.events.onProductCardClick(product.id)
 			);

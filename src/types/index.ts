@@ -22,3 +22,34 @@ export type Order = {
 	total: number;
 	items: ProductId[];
 };
+
+// ~~~~~~~~~ Интерфейсы сервисов ~~~~~~~~~ //
+
+export interface IProductService {
+	getProducts: () => Promise<Product[]>;
+	getProduct: (id: Product['id']) => Promise<Product>;
+}
+
+export interface IBasketService {
+	addItem: (item: Product) => void;
+	removeItem: (index: number) => void;
+	clear: () => void;
+}
+
+export interface IOrderService {
+	sendOrder: (order: Order) => Promise<void>;
+}
+
+export interface IWebLarekApi {
+	getProducts: () => Promise<Product[]>;
+	getProduct: (id: Product['id']) => Promise<Product>;
+	postOrder: (order: Order) => Promise<void>;
+}
+
+// ~~~~~~~~~~~~ Интерфейсы UI ~~~~~~~~~~~~ //
+
+export interface IHome {
+	set counter(value: number);
+	set gallery(items: Product[]);
+	set locked(value: boolean);
+}

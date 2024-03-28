@@ -1,6 +1,5 @@
 import { Api, ApiListResponse } from '../adapters/api.adapter';
-import { IWebLarekApi } from '../service.ports';
-import { Order, Product } from '../types';
+import { IWebLarekApi, Order, Product } from '../types';
 
 export class WebLarekApi implements IWebLarekApi {
 	private api: Api;

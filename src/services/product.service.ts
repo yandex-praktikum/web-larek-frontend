@@ -1,6 +1,5 @@
-import { IProductService } from '../service.ports';
-import { Product } from '../types';
-import { CDN_URL, API_URL } from '../utils/constants';
+import { IProductService, Product } from '../types';
+import { API_URL, CDN_URL } from '../utils/constants';
 import { WebLarekApi } from './webLarekApi.service';
 
 export class ProductService implements IProductService {

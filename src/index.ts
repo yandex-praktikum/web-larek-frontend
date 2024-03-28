@@ -2,10 +2,12 @@
 
 import './scss/styles.scss';
 
-import { Home } from './components/Home';
+import { Home } from './components/HomeView';
 import { EventEmitter } from './events';
 import { ProductService } from './services/product.service';
 import { Product } from './types';
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 const events = new EventEmitter();
 
@@ -16,11 +18,21 @@ events.onAll(({ eventName, data }) => {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
+const productService = new ProductService();
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
 const homePage = new Home({
 	onProductCardClick: (id) => events.emit('card:select', { id }),
 });
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+events.on('start', () => {
+	productService.getProducts().then((products) => {
+		homePage.gallery = products;
+	});
+});
 
 events.on<Pick<Product, 'id'>>('card:select', ({ id }) => {
 	productService.getProduct(id).then((product) => {
@@ -30,12 +42,4 @@ events.on<Pick<Product, 'id'>>('card:select', ({ id }) => {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-const productService = new ProductService();
-
-export function main() {
-	productService.getProducts().then((products) => {
-		homePage.gallery = products;
-	});
-}
-
-main();
+events.emit('start');
