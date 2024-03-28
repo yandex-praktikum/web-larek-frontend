@@ -21,7 +21,7 @@ const config = {
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
-    open: true,
+    open: false,
     host: "localhost",
     watchFiles: ["src/pages/*.html"],
     hot: true
