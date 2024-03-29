@@ -7,7 +7,7 @@ import { EventEmitter } from './events';
 import { ProductService } from './services/product.service';
 import { Product } from './types';
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~ event emitter ~~~~~~~~~~~~ //
 
 const events = new EventEmitter();
 
@@ -16,17 +16,17 @@ events.onAll(({ eventName, data }) => {
 	console.log(eventName, data);
 });
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~~~~ сервисы ~~~~~~~~~~~~~~~ //
 
 const productService = new ProductService();
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
 const homePage = new Home({
 	onProductCardClick: (id) => events.emit('card:select', { id }),
 });
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
 events.on('start', () => {
 	productService.getProducts().then((products) => {
@@ -36,10 +36,10 @@ events.on('start', () => {
 
 events.on<{ id: Product['id'] }>('card:select', ({ id }) => {
 	productService.getProduct(id).then((product) => {
-		console.log(product);
+		console.log('Товар, полученный с сервера:', product);
 	});
 });
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
 
 events.emit('start');
