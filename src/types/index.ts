@@ -45,11 +45,3 @@ export interface IWebLarekApi {
 	getProduct: (id: Product['id']) => Promise<Product>;
 	postOrder: (order: Order) => Promise<void>;
 }
-
-// ~~~~~~~~~~~~ Интерфейсы UI ~~~~~~~~~~~~ //
-
-export interface IHome {
-	set counter(value: number);
-	set gallery(items: Product[]);
-	set locked(value: boolean);
-}
