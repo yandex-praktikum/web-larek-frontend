@@ -30,7 +30,7 @@ export class Home extends PageView<IHomeViewModel> {
 
 	set gallery(items: Product[]) {
 		const cards = items.map((product) => {
-			const cardElement = cloneTemplate(this.cardTemplate);
+			const cardElement = cloneTemplate(this.templates.cardCatalogTemplate);
 			cardElement.addEventListener('click', () =>
 				this.events.onProductCardClick(product.id)
 			);

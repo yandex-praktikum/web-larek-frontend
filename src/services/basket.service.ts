@@ -1,6 +1,5 @@
 import { emptyBasket } from '../models/basket';
-import { IBasketService } from '../service.interfaces';
-import { Basket, Product } from '../types';
+import { Basket, IBasketService, Product } from '../types';
 
 export class BasketService implements IBasketService {
 	constructor() {

@@ -1,14 +1,12 @@
 import { Component } from '../ui/Component';
+import { uiTemplates } from '../ui/ui';
 import { ensureElement } from '../utils/utils';
 
 export abstract class PageView<T> extends Component<T> {
-	// получить шаблоны и модальные формы
-	protected cardTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
-
-	protected cardFullElement = ensureElement<HTMLElement>('.modal .card_full');
+	protected templates: typeof uiTemplates;
 
 	constructor() {
-		const container = ensureElement(document.body);
-		super(container);
+		super(ensureElement(document.body));
+		this.templates = uiTemplates;
 	}
 }

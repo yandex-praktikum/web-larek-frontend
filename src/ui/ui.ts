@@ -1,6 +1,6 @@
 import { ensureElement } from '../utils/utils';
 
-export const uiElements = {
+export const uiTemplates = {
 	successTemplate: ensureElement<HTMLTemplateElement>('#success'),
 	cardCatalogTemplate: ensureElement<HTMLTemplateElement>('#card-catalog'),
 	cardPreviewTemplate: ensureElement<HTMLTemplateElement>('#card-preview'),
@@ -9,3 +9,5 @@ export const uiElements = {
 	orderTemplate: ensureElement<HTMLTemplateElement>('#order'),
 	contactsTemplate: ensureElement<HTMLTemplateElement>('#contacts'),
 };
+
+export type UITemplates = typeof uiTemplates;

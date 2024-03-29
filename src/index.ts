@@ -34,9 +34,9 @@ events.on('start', () => {
 	});
 });
 
-events.on<Pick<Product, 'id'>>('card:select', ({ id }) => {
+events.on<{ id: Product['id'] }>('card:select', ({ id }) => {
 	productService.getProduct(id).then((product) => {
-		return;
+		console.log(product);
 	});
 });
 
