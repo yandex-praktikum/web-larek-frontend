@@ -42,7 +42,7 @@ export interface IBasketService {
 }
 
 export interface IOrderService {
-	sendOrder: (order: Order) => Promise<void>;
+	sendOrder: (order: Order) => Promise<SentOrder>;
 }
 
 export interface IWebLarekApi {
