@@ -1,5 +1,5 @@
 import { Api } from '../adapters/api.adapter';
-import { IWebLarekApi, Order, Product } from '../types';
+import { IWebLarekApi, Order, Product, SentOrder } from '../types';
 
 type ApiListResponse<Type> = {
 	total: number;
@@ -31,7 +31,12 @@ export class WebLarekApi implements IWebLarekApi {
 		}));
 	}
 
-	async postOrder(order: Order): Promise<void> {
-		this.api.post('/order', order);
+	async postOrder(order: Order): Promise<SentOrder> {
+		return this.api
+			.post('/order', order)
+			.then((res: Pick<SentOrder, 'id' | 'total'>) => {
+				return { ...order, ...res };
+			});
+			// ошибка обрабатывается в классе Api
 	}
 }

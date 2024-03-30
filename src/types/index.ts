@@ -23,6 +23,11 @@ export type Order = {
 	items: ProductId[];
 };
 
+type OrderId = string;
+type OrderTotal = number;
+
+export type SentOrder = { id: OrderId; total: OrderTotal } & Order;
+
 // ~~~~~~~~~ Интерфейсы сервисов ~~~~~~~~~ //
 
 export interface IProductService {
@@ -43,5 +48,5 @@ export interface IOrderService {
 export interface IWebLarekApi {
 	getProducts: () => Promise<Product[]>;
 	getProduct: (id: Product['id']) => Promise<Product>;
-	postOrder: (order: Order) => Promise<void>;
+	postOrder: (order: Order) => Promise<SentOrder>;
 }
