@@ -105,7 +105,7 @@ yarn build
 ### Product
 Товар
 ```typescript
-export type Product = {
+type Product = {
 	id: ProductId;
 	description: string;
 	image: string;
@@ -118,7 +118,7 @@ export type Product = {
 ### Basket
 Корзина
 ```typescript
-export type Basket = {
+type Basket = {
 	items: Product[];
 };
 ```
@@ -126,7 +126,7 @@ export type Basket = {
 ### Order
 Заказ
 ```typescript
-export type Order = {
+type Order = {
 	payment: PaymentType;
 	email: string;
 	phone: string;
@@ -139,7 +139,7 @@ export type Order = {
 ### ProductService
 Получает список всех товаров или товар по идентификатору с сервера. 
 ```typescript
-export interface IProductService {
+interface IProductService {
 	getProducts: () => Promise<Product[]>;
 	getProduct: (id: Product['id']) => Promise<Product>;
 }
@@ -148,7 +148,7 @@ export interface IProductService {
 ### BasketService
 Работа с корзиной
 ```typescript
-export interface IBasketService {
+interface IBasketService {
 	addItem: (item: Product) => void;
 	removeItem: (index: number) => void;
 	clear: () => void;
@@ -158,7 +158,7 @@ export interface IBasketService {
 ### OrderService
 Отправляет заказ на сервер
 ```typescript
-export interface IOrderService {
+interface IOrderService {
 	sendOrder: (order: Order) => Promise<void>;
 }
 ```
@@ -166,7 +166,7 @@ export interface IOrderService {
 ### WebLarekApi
 Взаимодействие с сервером "larek-api"
 ```typescript
-export interface IWebLarekApi {
+interface IWebLarekApi {
 	getProducts: () => Promise<Product[]>;
 	getProduct: (id: Product['id']) => Promise<Product>;
 	postOrder: (order: Order) => Promise<void>;
@@ -176,7 +176,7 @@ export interface IWebLarekApi {
 ### Component
 Базовый компонент UI
 ```typescript
-export abstract class Component<T> {
+abstract class Component<T> {
 	protected constructor(protected readonly container: HTMLElement) {...}
 
 	// Инструментарий для работы с DOM в дочерних компонентах
@@ -207,7 +207,7 @@ export abstract class Component<T> {
 ### PageView
 Компонент, в котором находятся все нужные для работы HTML-элементы и шаблоны. Нужен для того, чтобы повторно их не искать в DOM
 ```typescript
-export abstract class PageView<T> extends Component<T> {
+abstract class PageView<T> extends Component<T> {
 	// здесь должны быть все элементы, которые есть в HTML-странице
 	protected ui: Record<string, HTMLElement | HTMLTemplateElement>; 
 
@@ -218,7 +218,7 @@ export abstract class PageView<T> extends Component<T> {
 ### HomeView
 Компонент главной страницы. Содержит галерею товаров
 ```typescript
-export class Home extends PageView<IHomeModel> {
+class Home extends PageView<IHomeModel> {
 	private _gallery: HTMLElement;
 	
 	constructor(private events: IHomeEvents) {...}
