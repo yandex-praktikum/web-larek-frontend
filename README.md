@@ -270,4 +270,4 @@ class Home extends PageView<IHomeModel> {
 
 ### Диаграмма
 
-![Диаграмма зависимостей](./docs/web-larek-frontend-dependency-diagram.png)
+![Диаграмма зависимостей](./doc/web-larek-frontend-dependency-diagram.png)
