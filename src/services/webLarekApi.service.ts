@@ -1,12 +1,17 @@
-import { Api, ApiListResponse } from '../adapters/api.adapter';
+import { Api } from '../adapters/api.adapter';
 import { IWebLarekApi, Order, Product } from '../types';
+
+type ApiListResponse<Type> = {
+	total: number;
+	items: Type[];
+};
 
 export class WebLarekApi implements IWebLarekApi {
 	private api: Api;
 	readonly cdn: string;
 
 	constructor(cdn: string, baseUrl: string, options?: RequestInit) {
-		this.api = new Api(baseUrl, options)
+		this.api = new Api(baseUrl, options);
 		this.cdn = cdn;
 	}
 
