@@ -7,7 +7,7 @@ export type Product = {
 	image: string;
 	title: string;
 	category: string;
-	price: number;
+	price: number | null;
 };
 
 export type Basket = {
@@ -23,6 +23,11 @@ export type Order = {
 	items: ProductId[];
 };
 
+type OrderId = string;
+type OrderTotal = number;
+
+export type SentOrder = { id: OrderId; total: OrderTotal } & Order;
+
 // ~~~~~~~~~ Интерфейсы сервисов ~~~~~~~~~ //
 
 export interface IProductService {
@@ -37,11 +42,11 @@ export interface IBasketService {
 }
 
 export interface IOrderService {
-	sendOrder: (order: Order) => Promise<void>;
+	sendOrder: (order: Order) => Promise<SentOrder>;
 }
 
 export interface IWebLarekApi {
 	getProducts: () => Promise<Product[]>;
 	getProduct: (id: Product['id']) => Promise<Product>;
-	postOrder: (order: Order) => Promise<void>;
+	postOrder: (order: Order) => Promise<SentOrder>;
 }
