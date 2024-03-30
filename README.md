@@ -3,6 +3,7 @@
 Стек: HTML, SCSS, TypeScript, Webpack
 
 Структура проекта:
+
 - src/ — исходные файлы проекта, модули слоя приложения
 - src/adapters/ - модули слоя адаптеров - адаптеры API браузера
 - src/common.blocks/ - файлы стилей для блоков
@@ -19,6 +20,7 @@
 - src/vendor/ - сторонние пакеты
 
 Важные файлы:
+
 - src/pages/index.html — HTML-файл главной страницы
 - src/styles/styles.scss — корневой файл стилей
 - src/index.ts — точка входа приложения
@@ -27,6 +29,7 @@
 - src/utils/utils.ts — файл с утилитами
 
 ## Установка и запуск
+
 Для установки и запуска проекта необходимо выполнить команды
 
 ```
@@ -42,6 +45,7 @@ yarn start
 ```
 
 ## Окружение
+
 Для правильной сборки проекта необходимо задать переменную окружения `API_ORIGIN`
 
 ## Сборка
@@ -59,51 +63,55 @@ yarn build
 ## Архитектура
 
 - ### Слой моделей
-	- Элементы не зависят ни от чего, кроме элементов этого слоя
-	- описывает модели данных и их преобразования
-	- `types/index.ts`
-		- `type Product` - товар
-		- `type Basket` - корзина
-		- `type Order` - заказ
+  - Элементы не зависят ни от чего, кроме элементов этого слоя
+  - описывает модели данных и их преобразования
+  - `types/index.ts`
+    - `type Product` - товар
+    - `type Basket` - корзина
+    - `type Order` - заказ
 - ### Прикладной слой
-	- Модули и классы прикладного слоя могут использовать слой моделей и сервисный слой (сервисы и gui-компоненты приложения)
-	- Здесь происходит инициализация брокера событий, создание сервисов и gui-компонентов, начальная инициализация приложения; описываются требуемые для приложения интерфейсы взаимодействия с внешним миром
-	- `class EventEmitter`
-		- Класс `EventEmitter` обеспечивает работу событий. Его функции: возможность установить и снять слушателей событий, вызвать слушателей при возникновении события
-	- `index.ts`
-		- точка входа в приложение
-		- создание сервисов и gui-компонентов приложения
-		- добавление событий  в `EventEmitter` и подключение их обработчиков
-		- запуск получения товаров с сервера и заполнение начальной страницы `Home`
-	- интерфейсы взаимодействия с внешним миром
-		- `IProductService`
-		- `IBasketService`
-		- `IOrderService`
-		- `IWebLarekApi`
+
+  - Модули и классы прикладного слоя могут использовать слой моделей и сервисный слой (сервисы и gui-компоненты приложения)
+  - Здесь происходит инициализация брокера событий, создание сервисов и gui-компонентов, начальная инициализация приложения; описываются требуемые для приложения интерфейсы взаимодействия с внешним миром
+  - `class EventEmitter`
+    - Класс `EventEmitter` обеспечивает работу событий. Его функции: возможность установить и снять слушателей событий, вызвать слушателей при возникновении события
+  - `index.ts`
+    - точка входа в приложение
+    - создание сервисов и gui-компонентов приложения
+    - добавление событий в `EventEmitter` и подключение их обработчиков
+    - запуск получения товаров с сервера и заполнение начальной страницы `Home`
+  - интерфейсы взаимодействия с внешним миром
+    - `IProductService`
+    - `IBasketService`
+    - `IOrderService`
+    - `IWebLarekApi`
 
 - ### Слой сервисов
-	- Модули и классы сервисного слоя могут использовать модели и интерфейсы прикладного слоя, а так же иметь внутренние зависимости
-	- В этом слое реализуются интерфейсы прикладного слоя
-	- Сервисы, реализующие соответствующие интерфейсы:
-		- `class ProductService`
-		- `class BasketService`
-		- `class OrderService`
-		- `class WebLarekAPI`
-	- UI-компоненты приложения, для сокращения времени разработки могут использовать WEB-api браузера
-		- `class HomeView extends PageView`
-			- главная страница
-		- Другие компоненты отображения объектов приложения
+  - Модули и классы сервисного слоя могут использовать модели и интерфейсы прикладного слоя, а так же иметь внутренние зависимости
+  - В этом слое реализуются интерфейсы прикладного слоя
+  - Сервисы, реализующие соответствующие интерфейсы:
+    - `class ProductService`
+    - `class BasketService`
+    - `class OrderService`
+    - `class WebLarekAPI`
+  - UI-компоненты приложения, для сокращения времени разработки могут использовать WEB-api браузера
+    - `class HomeView extends PageView`
+      - главная страница
+    - Другие компоненты отображения объектов приложения
 - ### Слой адаптеров
-	- Только UI-компоненты и элементы слоя адаптеров могут использовать API браузера
-	- Этот слой взаимодействует непосредственно с браузером
-	- Адаптеры браузерного API
-		- `class Api`
-	- общие компоненты UI
-		- `class Component`
+  - Только UI-компоненты и элементы слоя адаптеров могут использовать API браузера
+  - Этот слой взаимодействует непосредственно с браузером
+  - Адаптеры браузерного API
+    - `class Api`
+  - общие компоненты UI
+    - `class Component`
+
 ## Типы и классы
 
 ### Product
+
 Товар
+
 ```typescript
 type Product = {
 	id: ProductId;
@@ -116,7 +124,9 @@ type Product = {
 ```
 
 ### Basket
+
 Корзина
+
 ```typescript
 type Basket = {
 	items: Product[];
@@ -124,7 +134,9 @@ type Basket = {
 ```
 
 ### Order
+
 Заказ
+
 ```typescript
 type Order = {
 	payment: PaymentType;
@@ -136,8 +148,21 @@ type Order = {
 };
 ```
 
+### SentOrder
+
+Отправленный заказ
+
+```typescript
+type OrderId = string;
+type OrderTotal = number;
+
+type SentOrder = { id: OrderId; total: OrderTotal } & Order;
+```
+
 ### ProductService
-Получает список всех товаров или товар по идентификатору с сервера. 
+
+Получает список всех товаров или товар по идентификатору с сервера.
+
 ```typescript
 interface IProductService {
 	getProducts: () => Promise<Product[]>;
@@ -146,7 +171,9 @@ interface IProductService {
 ```
 
 ### BasketService
+
 Работа с корзиной
+
 ```typescript
 interface IBasketService {
 	addItem: (item: Product) => void;
@@ -156,25 +183,31 @@ interface IBasketService {
 ```
 
 ### OrderService
+
 Отправляет заказ на сервер
+
 ```typescript
 interface IOrderService {
-	sendOrder: (order: Order) => Promise<void>;
+	sendOrder: (order: Order) => Promise<SentOrder>;
 }
 ```
 
 ### WebLarekApi
+
 Взаимодействие с сервером "larek-api"
+
 ```typescript
 interface IWebLarekApi {
 	getProducts: () => Promise<Product[]>;
 	getProduct: (id: Product['id']) => Promise<Product>;
-	postOrder: (order: Order) => Promise<void>;
+	postOrder: (order: Order) => Promise<SentOrder>;
 }
 ```
 
 ### Component
+
 Базовый компонент UI
+
 ```typescript
 abstract class Component<T> {
 	protected constructor(protected readonly container: HTMLElement) {...}
@@ -205,22 +238,26 @@ abstract class Component<T> {
 ```
 
 ### PageView
+
 Компонент, в котором находятся все нужные для работы HTML-элементы и шаблоны. Нужен для того, чтобы повторно их не искать в DOM
+
 ```typescript
 abstract class PageView<T> extends Component<T> {
 	// здесь должны быть все элементы, которые есть в HTML-странице
-	protected ui: Record<string, HTMLElement | HTMLTemplateElement>; 
+	protected ui: Record<string, HTMLElement | HTMLTemplateElement>;
 
 	constructor() {...}
 }
 ```
 
 ### HomeView
+
 Компонент главной страницы. Содержит галерею товаров
+
 ```typescript
 class Home extends PageView<IHomeModel> {
 	private _gallery: HTMLElement;
-	
+
 	constructor(private events: IHomeEvents) {...}
 
 	set gallery(items: Product[]) {...}
@@ -228,6 +265,7 @@ class Home extends PageView<IHomeModel> {
 ```
 
 ### ...View
+
 Остальные компоненты наследуются от PageView
 
 ### Диаграмма
