@@ -167,7 +167,7 @@ type SentOrder = { id: OrderId; total: OrderTotal } & Order;
 ```typescript
 interface IProductService {
 	getProducts: () => Promise<Product[]>;
-	getProduct: (id: Product['id']) => Promise<Product>;
+	getProduct: (id: ProductId) => Promise<Product>;
 }
 ```
 
@@ -200,7 +200,7 @@ interface IOrderService {
 ```typescript
 interface IWebLarekApi {
 	getProducts: () => Promise<Product[]>;
-	getProduct: (id: Product['id']) => Promise<Product>;
+	getProduct: (id: ProductId) => Promise<Product>;
 	postOrder: (order: Order) => Promise<SentOrder>;
 }
 ```

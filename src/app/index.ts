@@ -4,7 +4,7 @@ import { HomeView } from '../components/HomeView';
 import { ModalView } from '../components/ModalView';
 import { ProductView } from '../components/ProductView';
 import { ProductService } from '../services/product.service';
-import { Product } from '../types';
+import { ProductId } from '../types';
 import { EventEmitter } from './events';
 import { UiConfig } from './uiConfig';
 
@@ -40,7 +40,7 @@ events.on('start', () => {
 	});
 });
 
-events.on<{ id: Product['id'] }>('card:select', ({ id }) => {
+events.on<{ id: ProductId }>('card:select', ({ id }) => {
 	productService.getProduct(id).then((product) => {
 		const productView = new ProductView(
 			UiConfig.templates.cardPreviewTemplate,

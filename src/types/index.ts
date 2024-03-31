@@ -32,7 +32,7 @@ export type SentOrder = { id: OrderId; total: OrderTotal } & Order;
 
 export interface IProductService {
 	getProducts: () => Promise<Product[]>;
-	getProduct: (id: Product['id']) => Promise<Product>;
+	getProduct: (id: ProductId) => Promise<Product>;
 }
 
 export interface IBasketService {
@@ -47,6 +47,6 @@ export interface IOrderService {
 
 export interface IWebLarekApi {
 	getProducts: () => Promise<Product[]>;
-	getProduct: (id: Product['id']) => Promise<Product>;
+	getProduct: (id: ProductId) => Promise<Product>;
 	postOrder: (order: Order) => Promise<SentOrder>;
 }

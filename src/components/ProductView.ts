@@ -1,4 +1,4 @@
-import { Product } from '../types';
+import { Product, ProductId } from '../types';
 import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement, isEmpty } from '../utils/utils';
 
@@ -13,8 +13,8 @@ interface IProductViewModel {
 }
 
 interface IProductViewEvents {
-	toggleBasket?: (id: Product['id']) => void;
-	onProductCardClick?: (id: Product['id']) => void;
+	toggleBasket?: (id: ProductId) => void;
+	onProductCardClick?: (id: ProductId) => void;
 }
 
 export class ProductView extends Component<IProductViewModel> {

@@ -1,5 +1,5 @@
 import { Api } from '../adapters/api.adapter';
-import { IWebLarekApi, Order, Product, SentOrder } from '../types';
+import { IWebLarekApi, Order, Product, ProductId, SentOrder } from '../types';
 
 type ApiListResponse<Type> = {
 	total: number;
@@ -24,7 +24,7 @@ export class WebLarekApi implements IWebLarekApi {
 		);
 	}
 
-	async getProduct(id: Product['id']): Promise<Product> {
+	async getProduct(id: ProductId): Promise<Product> {
 		return this.api.get(`/product/${id}`).then((item: Product) => ({
 			...item,
 			image: this.cdn + item.image,
@@ -37,6 +37,6 @@ export class WebLarekApi implements IWebLarekApi {
 			.then((res: Pick<SentOrder, 'id' | 'total'>) => {
 				return { ...order, ...res };
 			});
-			// ошибка обрабатывается в классе Api
+		// ошибка обрабатывается в классе Api
 	}
 }

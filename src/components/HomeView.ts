@@ -1,7 +1,7 @@
 import { UiConfig } from '../app/uiConfig';
-import { Product } from '../types';
+import { Product, ProductId } from '../types';
 import { Component } from '../ui/Component';
-import { cloneTemplate, ensureElement } from '../utils/utils';
+import { ensureElement } from '../utils/utils';
 import { ProductView } from './ProductView';
 
 interface IHomeViewModel {
@@ -11,7 +11,7 @@ interface IHomeViewModel {
 }
 
 interface IHomeViewEvents {
-	onProductCardClick: (id: Product['id']) => void;
+	onProductCardClick: (id: ProductId) => void;
 }
 
 export class HomeView extends Component<IHomeViewModel> {
