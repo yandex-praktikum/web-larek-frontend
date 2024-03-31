@@ -1,6 +1,8 @@
+import { UiConfig } from '../app/uiConfig';
 import { Product } from '../types';
+import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement } from '../utils/utils';
-import { PageView } from './PageView';
+import { ProductView } from './ProductView';
 
 interface IHomeViewModel {
 	counter: number;
@@ -12,14 +14,14 @@ interface IHomeViewEvents {
 	onProductCardClick: (id: Product['id']) => void;
 }
 
-export class Home extends PageView<IHomeViewModel> {
+export class HomeView extends Component<IHomeViewModel> {
 	protected _counter: HTMLElement;
 	protected _gallery: HTMLElement;
 	protected _wrapper: HTMLElement;
 	protected _basket: HTMLElement;
 
 	constructor(private events: IHomeViewEvents) {
-		super();
+		super(document.body);
 
 		this._gallery = ensureElement<HTMLElement>('.gallery');
 	}
@@ -28,21 +30,16 @@ export class Home extends PageView<IHomeViewModel> {
 		this.setText(this._counter, String(value));
 	}
 
-	set gallery(items: Product[]) {
-		const cards = items.map((product) => {
-			const cardElement = cloneTemplate(this.templates.cardCatalogTemplate);
-			cardElement.addEventListener('click', () =>
-				this.events.onProductCardClick(product.id)
+	set products(products: Product[]) {
+		const cards = products.map((product) => {
+			const productView = new ProductView(
+				UiConfig.templates.cardCatalogTemplate,
+				{
+					onProductCardClick: () => this.events.onProductCardClick(product.id),
+				},
+				'catalog'
 			);
-			ensureElement('.card__category', cardElement).textContent =
-				product.category;
-			ensureElement('.card__title', cardElement).textContent = product.title;
-			ensureElement('.card__image', cardElement).setAttribute(
-				'src',
-				product.image
-			);
-
-			return cardElement;
+			return productView.render(product);
 		});
 		this._gallery.replaceChildren(...cards);
 	}

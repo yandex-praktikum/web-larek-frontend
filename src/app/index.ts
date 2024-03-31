@@ -1,9 +1,12 @@
 // Application layer
 
-import { Home } from '../components/HomeView';
+import { HomeView } from '../components/HomeView';
+import { ModalView } from '../components/ModalView';
+import { ProductView } from '../components/ProductView';
 import { ProductService } from '../services/product.service';
 import { Product } from '../types';
 import { EventEmitter } from './events';
+import { UiConfig } from './uiConfig';
 
 // ~~~~~~~~~~~~ event emitter ~~~~~~~~~~~~ //
 
@@ -20,21 +23,35 @@ const productService = new ProductService();
 
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
-const homePage = new Home({
+const homeView = new HomeView({
 	onProductCardClick: (id) => events.emit('card:select', { id }),
+});
+
+const modalView = new ModalView(UiConfig.predefinedElements.modalContainer, {
+	onOpen: () => {},
+	onClose: () => {},
 });
 
 // ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
 events.on('start', () => {
 	productService.getProducts().then((products) => {
-		homePage.gallery = products;
+		homeView.products = products;
 	});
 });
 
 events.on<{ id: Product['id'] }>('card:select', ({ id }) => {
 	productService.getProduct(id).then((product) => {
-		console.log('Товар, полученный с сервера:', product);
+		const productView = new ProductView(
+			UiConfig.templates.cardPreviewTemplate,
+			{
+				toggleBasket: () => {},
+			},
+			'full'
+		);
+		const content = productView.render(product);
+		modalView.content = content;
+		modalView.open();
 	});
 });
 
