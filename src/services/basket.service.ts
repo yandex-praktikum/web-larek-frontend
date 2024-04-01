@@ -9,10 +9,10 @@ export class BasketService implements IBasketService {
 	private _basket: Basket;
 
 	findItem(product: Product): number | undefined {
-		return (
-			this._basket.items.findIndex((value) => value.id === product.id) ||
-			undefined
+		const res = this._basket.items.findIndex(
+			(value) => value.id === product.id
 		);
+		return res === -1 ? undefined : res;
 	}
 
 	addItem(item: Product) {
