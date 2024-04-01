@@ -13,7 +13,7 @@ interface IProductViewModel {
 }
 
 interface IProductViewEvents {
-	toggleBasket?: (id: ProductId) => void;
+	toggleBasket?: () => void;
 	onProductCardClick?: (id: ProductId) => void;
 }
 
@@ -26,6 +26,7 @@ export class ProductView extends Component<IProductViewModel> {
 	private _title: HTMLElement;
 	private _category: HTMLElement;
 	private _price: HTMLElement;
+	private _toBasketButton: HTMLButtonElement;
 
 	private ensureCategory() {
 		this._category = ensureElement('.card__category', this.container);
@@ -61,6 +62,13 @@ export class ProductView extends Component<IProductViewModel> {
 				this.ensureCategory();
 				this.ensureImage();
 				this._description = ensureElement('.card__text', this.container);
+				this._toBasketButton = ensureElement<HTMLButtonElement>(
+					'.button',
+					this.container
+				);
+				this._toBasketButton.addEventListener('click', () =>
+					this._events.toggleBasket()
+				);
 				break;
 			case 'basket':
 			// TODO: set index

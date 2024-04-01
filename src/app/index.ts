@@ -3,8 +3,9 @@
 import { HomeView } from '../components/HomeView';
 import { ModalView } from '../components/ModalView';
 import { ProductView } from '../components/ProductView';
+import { BasketService } from '../services/basket.service';
 import { ProductService } from '../services/product.service';
-import { ProductId } from '../types';
+import { Product, ProductId } from '../types';
 import { EventEmitter } from './events';
 import { UiConfig } from './uiConfig';
 
@@ -20,6 +21,7 @@ events.onAll(({ eventName, data }) => {
 // ~~~~~~~~~~~~~~~ сервисы ~~~~~~~~~~~~~~~ //
 
 const productService = new ProductService();
+const basketService = new BasketService();
 
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
@@ -27,10 +29,7 @@ const homeView = new HomeView({
 	onProductCardClick: (id) => events.emit('card:select', { id }),
 });
 
-const modalView = new ModalView(UiConfig.predefinedElements.modalContainer, {
-	onOpen: () => {},
-	onClose: () => {},
-});
+const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
 
 // ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
@@ -45,7 +44,10 @@ events.on<{ id: ProductId }>('card:select', ({ id }) => {
 		const productView = new ProductView(
 			UiConfig.templates.cardPreviewTemplate,
 			{
-				toggleBasket: () => {},
+				toggleBasket: () => {
+					events.emit('card:toggleBasket', { product });
+					modalView.close();
+				},
 			},
 			'full'
 		);
@@ -53,6 +55,11 @@ events.on<{ id: ProductId }>('card:select', ({ id }) => {
 		modalView.content = content;
 		modalView.open();
 	});
+});
+
+events.on<{ product: Product }>('card:toggleBasket', ({ product }) => {
+	basketService.addItem(product);
+	console.log(basketService);
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
