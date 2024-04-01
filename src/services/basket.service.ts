@@ -3,20 +3,27 @@ import { Basket, IBasketService, Product } from '../types';
 
 export class BasketService implements IBasketService {
 	constructor() {
-		this.basket = emptyBasket();
+		this._basket = emptyBasket();
 	}
 
-	private basket: Basket;
+	private _basket: Basket;
+
+	findItem(product: Product): number | undefined {
+		return (
+			this._basket.items.findIndex((value) => value.id === product.id) ||
+			undefined
+		);
+	}
 
 	addItem(item: Product) {
-		this.basket.items.push(item);
+		this._basket.items.push(item);
 	}
 
-	removeItem(index: number) {
-		this.basket.items = this.basket.items.filter((_, i) => i === index);
+	removeItem(item: Product) {
+		this._basket.items = this._basket.items.filter((x) => x.id !== item.id);
 	}
 
 	clear() {
-		this.basket.items = [];
+		this._basket.items = [];
 	}
 }

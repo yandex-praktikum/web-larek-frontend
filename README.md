@@ -177,8 +177,9 @@ interface IProductService {
 
 ```typescript
 interface IBasketService {
+	findItem: (product: Product) => number | undefined;
 	addItem: (item: Product) => void;
-	removeItem: (index: number) => void;
+	removeItem: (item: Product) => void;
 	clear: () => void;
 }
 ```
