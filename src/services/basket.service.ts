@@ -26,4 +26,8 @@ export class BasketService implements IBasketService {
 	clear() {
 		this._basket.items = [];
 	}
+
+	count(): number {
+		return this._basket.items.length;
+	}
 }
