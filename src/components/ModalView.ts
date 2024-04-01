@@ -6,15 +6,15 @@ interface IModalData {
 }
 
 interface IModalEvents {
-	onOpen: () => void;
-	onClose: () => void;
+	onOpen?: () => void;
+	onClose?: () => void;
 }
 
 export class ModalView extends Component<IModalData> {
 	protected _closeButton: HTMLButtonElement;
 	protected _content: HTMLElement;
 
-	constructor(container: HTMLElement, protected events: IModalEvents) {
+	constructor(container: HTMLElement, protected events?: IModalEvents) {
 		super(container);
 
 		this._closeButton = ensureElement<HTMLButtonElement>(
@@ -34,13 +34,13 @@ export class ModalView extends Component<IModalData> {
 
 	open() {
 		this.container.classList.add('modal_active');
-		this.events.onOpen();
+		this.events?.onOpen && this.events.onOpen();
 	}
 
 	close() {
 		this.container.classList.remove('modal_active');
 		this.content = null;
-		this.events.onClose();
+		this.events?.onClose && this.events.onClose();
 	}
 
 	render(data: IModalData): HTMLElement {
