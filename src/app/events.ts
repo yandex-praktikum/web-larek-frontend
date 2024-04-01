@@ -56,6 +56,12 @@ export class EventEmitter implements IEvents {
 	 */
 	emit<T extends object>(eventName: string, data?: T) {
 		this._events.forEach((subscribers, name) => {
+			// чтобы вернуть начальный вариант, нужно удалить блок
+			// со сравнением с '*'
+			if (name === '*') {
+				subscribers.forEach((callback) => callback({ eventName, data }));
+				return;
+			}
 			if (
 				(name instanceof RegExp && name.test(eventName)) ||
 				name === eventName
