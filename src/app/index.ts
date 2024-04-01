@@ -51,15 +51,23 @@ events.on<{ id: ProductId }>('card:select', ({ id }) => {
 			},
 			'full'
 		);
-		const content = productView.render(product);
+		const content = productView.render({
+			...product,
+			isInBasket: basketService.findItem(product) !== undefined,
+		});
 		modalView.content = content;
 		modalView.open();
 	});
 });
 
 events.on<{ product: Product }>('card:toggleBasket', ({ product }) => {
-	basketService.addItem(product);
-	console.log(basketService);
+	const itemIndex = basketService.findItem(product);
+	if (itemIndex === undefined) {
+		basketService.addItem(product);
+	} else {
+		basketService.removeItem(product);
+	}
+	homeView.counter = basketService.count();
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //

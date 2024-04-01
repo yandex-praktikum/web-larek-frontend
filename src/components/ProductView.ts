@@ -1,15 +1,17 @@
-import { Product, ProductId } from '../types';
+import { ProductId } from '../types';
 import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement, isEmpty } from '../utils/utils';
 
 type ProductViewMode = 'catalog' | 'full' | 'basket';
 
 interface IProductViewModel {
+	id: ProductId;
 	description: string;
 	image: string;
 	title: string;
 	category: string;
 	price: number | null;
+	isInBasket?: boolean;
 }
 
 interface IProductViewEvents {
@@ -75,11 +77,11 @@ export class ProductView extends Component<IProductViewModel> {
 		}
 	}
 
-	render(product: Product) {
-		const res = super.render(product);
+	render(model: IProductViewModel) {
+		const res = super.render(model);
 		this._events.onProductCardClick &&
 			this.container.addEventListener('click', () =>
-				this._events.onProductCardClick(product.id)
+				this._events.onProductCardClick(model.id)
 			);
 		return res;
 	}
@@ -102,5 +104,13 @@ export class ProductView extends Component<IProductViewModel> {
 
 	set price(value: number | null) {
 		this._price.textContent = isEmpty(value) ? '' : String(value);
+	}
+
+	set isInBasket(inBasket: boolean) {
+		this._toBasketButton &&
+			this.setText(
+				this._toBasketButton,
+				inBasket ? 'Удалить из корзины' : 'В корзину'
+			);
 	}
 }

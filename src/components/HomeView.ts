@@ -24,6 +24,7 @@ export class HomeView extends Component<IHomeViewModel> {
 		super(document.body);
 
 		this._gallery = ensureElement<HTMLElement>('.gallery');
+		this._counter = ensureElement<HTMLElement>('.header__basket-counter');
 	}
 
 	set counter(value: number) {
