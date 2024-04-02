@@ -36,7 +36,9 @@ export class HomeView extends Component<IHomeViewModel> {
 			const productView = new ProductView(
 				UiConfig.templates.cardCatalogTemplate,
 				{
-					onProductCardClick: () => this.events.onProductCardClick(product.id),
+					onProductCardClick: () => {
+						this.events.onProductCardClick(product.id);
+					},
 				},
 				'catalog'
 			);

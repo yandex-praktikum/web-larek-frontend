@@ -1,11 +1,9 @@
-import { ProductId } from '../types';
 import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement, isEmpty } from '../utils/utils';
 
 type ProductViewMode = 'catalog' | 'full' | 'basket';
 
 interface IProductViewModel {
-	id: ProductId;
 	description: string;
 	image: string;
 	title: string;
@@ -16,7 +14,7 @@ interface IProductViewModel {
 
 interface IProductViewEvents {
 	toggleBasket?: () => void;
-	onProductCardClick?: (id: ProductId) => void;
+	onProductCardClick?: () => void;
 }
 
 export class ProductView extends Component<IProductViewModel> {
@@ -59,6 +57,11 @@ export class ProductView extends Component<IProductViewModel> {
 				this.ensureCategory();
 				this.ensureImage();
 
+				this._events.onProductCardClick &&
+					this.container.addEventListener('click', () =>
+						this._events.onProductCardClick()
+					);
+
 				break;
 			case 'full':
 				this.ensureCategory();
@@ -78,12 +81,7 @@ export class ProductView extends Component<IProductViewModel> {
 	}
 
 	render(model: IProductViewModel) {
-		const res = super.render(model);
-		this._events.onProductCardClick &&
-			this.container.addEventListener('click', () =>
-				this._events.onProductCardClick(model.id)
-			);
-		return res;
+		return super.render(model);
 	}
 
 	set description(value: string) {
