@@ -30,6 +30,7 @@ export class ProductView extends Component<IProductViewModel> {
 	private _price: HTMLElement;
 	private _toBasketButton: HTMLButtonElement;
 	private _itemIndex: HTMLElement;
+	private _deleteFromBasketButton: HTMLElement;
 
 	private ensureCategory() {
 		this._category = ensureElement('.card__category', this.container);
@@ -79,7 +80,17 @@ export class ProductView extends Component<IProductViewModel> {
 				);
 				break;
 			case 'basket':
-				this._itemIndex = ensureElement<HTMLElement>('.basket__item-index');
+				this._itemIndex = ensureElement<HTMLElement>(
+					'.basket__item-index',
+					container
+				);
+				this._deleteFromBasketButton = ensureElement<HTMLElement>(
+					'.basket__item-delete',
+					container
+				);
+				this._deleteFromBasketButton.addEventListener('click', () => {
+					this._events.onDeleteClick();
+				});
 		}
 	}
 

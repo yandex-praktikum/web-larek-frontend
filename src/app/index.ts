@@ -66,7 +66,7 @@ events.on<{ id: ProductId }>(Events.CARD_SELECT, ({ id }) => {
 events.on(Events.BASKET_OPEN, () => {
 	const basketView = new BasketView(UiConfig.templates.basketTemplate, {
 		deleteItem: (product) => {
-			events.emit(Events.BASKET_DELETE_ITEM, { product });
+			events.emit(Events.BASKET_DELETE_ITEM, { product, basketView });
 		},
 		submit: () => {
 			events.emit(Events.BASKET_SUBMIT);
@@ -89,6 +89,18 @@ events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
 	}
 	homeView.counter = basketService.count();
 });
+
+events.on<{ product: Product; basketView: BasketView }>(
+	Events.BASKET_DELETE_ITEM,
+	({ product, basketView }) => {
+		basketService.removeItem(product);
+		modalView.content = basketView.render({
+			items: basketService.items,
+			total: basketService.total,
+		});
+		homeView.counter = basketService.count()
+	}
+);
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
 
