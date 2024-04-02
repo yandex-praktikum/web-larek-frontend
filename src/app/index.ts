@@ -24,7 +24,6 @@ events.onAll(({ eventName, data }) => {
 
 const productService = new ProductService();
 const basketService = new BasketService();
-
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
 const homeView = new HomeView({
@@ -69,7 +68,9 @@ events.on(Events.BASKET_OPEN, () => {
 			events.emit(Events.BASKET_DELETE_ITEM, { product, basketView });
 		},
 		submit: () => {
-			events.emit(Events.BASKET_SUBMIT);
+			events.emit<{ items: Product[] }>(Events.BASKET_SUBMIT, {
+				items: basketService.items,
+			});
 		},
 	});
 	const content = basketView.render({
@@ -101,6 +102,10 @@ events.on<{ product: Product; basketView: BasketView }>(
 		homeView.counter = basketService.count()
 	}
 );
+
+events.on<{ items: Product[] }>(Events.BASKET_SUBMIT, ({ items }) => {
+	modalView.close();
+});
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
 
