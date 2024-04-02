@@ -17,6 +17,7 @@ interface IBasketViewEvents {
 export class BasketView extends Component<IBasketViewModel> {
 	private _items: HTMLElement;
 	private _total: HTMLElement;
+	private _submitButton: HTMLButtonElement;
 
 	constructor(
 		template: HTMLTemplateElement,
@@ -27,6 +28,10 @@ export class BasketView extends Component<IBasketViewModel> {
 
 		this._items = ensureElement<HTMLElement>('.basket__list', container);
 		this._total = ensureElement<HTMLElement>('.basket__price', container);
+		this._submitButton = ensureElement<HTMLButtonElement>(
+			'.basket__button',
+			container
+		);
 
 		container.addEventListener('submit', () => {
 			events.submit();
@@ -48,6 +53,7 @@ export class BasketView extends Component<IBasketViewModel> {
 			return productView.render(product);
 		});
 		this._items.replaceChildren(...cards);
+		this.setDisabled(this._submitButton, cards.length === 0);
 	}
 
 	set total(value: number) {
