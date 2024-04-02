@@ -7,6 +7,7 @@ import { BasketService } from '../services/basket.service';
 import { ProductService } from '../services/product.service';
 import { Product, ProductId } from '../types';
 import { EventEmitter } from './events';
+import { Events } from './events.const';
 import { UiConfig } from './uiConfig';
 
 // ~~~~~~~~~~~~ event emitter ~~~~~~~~~~~~ //
@@ -26,26 +27,26 @@ const basketService = new BasketService();
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
 const homeView = new HomeView({
-	onProductCardClick: (id) => events.emit('card:select', { id }),
+	onProductCardClick: (id) => events.emit(Events.CARD_SELECT, { id }),
 });
 
 const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
 
 // ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
-events.on('start', () => {
+events.on(Events.START, () => {
 	productService.getProducts().then((products) => {
 		homeView.products = products;
 	});
 });
 
-events.on<{ id: ProductId }>('card:select', ({ id }) => {
+events.on<{ id: ProductId }>(Events.CARD_SELECT, ({ id }) => {
 	productService.getProduct(id).then((product) => {
 		const productView = new ProductView(
 			UiConfig.templates.cardPreviewTemplate,
 			{
 				toggleBasket: () => {
-					events.emit('card:toggleBasket', { product });
+					events.emit(Events.CARD_TOGGLE_BASKET, { product });
 					modalView.close();
 				},
 			},
@@ -60,7 +61,7 @@ events.on<{ id: ProductId }>('card:select', ({ id }) => {
 	});
 });
 
-events.on<{ product: Product }>('card:toggleBasket', ({ product }) => {
+events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
 	const itemIndex = basketService.findItem(product);
 	if (itemIndex === undefined) {
 		basketService.addItem(product);
@@ -72,4 +73,4 @@ events.on<{ product: Product }>('card:toggleBasket', ({ product }) => {
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
 
-events.emit('start');
+events.emit(Events.START);
