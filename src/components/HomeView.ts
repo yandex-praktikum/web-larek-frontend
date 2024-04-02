@@ -12,23 +12,29 @@ interface IHomeViewModel {
 
 interface IHomeViewEvents {
 	onProductCardClick: (id: ProductId) => void;
+	onBasketOpenClick: () => void;
 }
 
 export class HomeView extends Component<IHomeViewModel> {
-	protected _counter: HTMLElement;
+	protected _headerCounter: HTMLElement;
 	protected _gallery: HTMLElement;
+	protected _headerBasket: HTMLElement;
 	protected _wrapper: HTMLElement;
-	protected _basket: HTMLElement;
 
 	constructor(private events: IHomeViewEvents) {
 		super(document.body);
 
+		this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
 		this._gallery = ensureElement<HTMLElement>('.gallery');
-		this._counter = ensureElement<HTMLElement>('.header__basket-counter');
+		this._headerBasket = ensureElement<HTMLElement>('.header__basket');
+		this._headerCounter = ensureElement<HTMLElement>('.header__basket-counter');
+		this._headerBasket.addEventListener('click', () =>
+			this.events.onBasketOpenClick()
+		);
 	}
 
 	set counter(value: number) {
-		this.setText(this._counter, String(value));
+		this.setText(this._headerCounter, String(value));
 	}
 
 	set products(products: Product[]) {

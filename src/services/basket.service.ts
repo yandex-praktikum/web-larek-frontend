@@ -30,4 +30,8 @@ export class BasketService implements IBasketService {
 	count(): number {
 		return this._basket.items.length;
 	}
+
+	get items(): Product[] {
+		return this._basket.items;
+	}
 }

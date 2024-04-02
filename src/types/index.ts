@@ -41,6 +41,7 @@ export interface IBasketService {
 	removeItem: (item: Product) => void;
 	clear: () => void;
 	count: () => number;
+	get items(): Product[];
 }
 
 export interface IOrderService {

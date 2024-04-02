@@ -28,6 +28,7 @@ const basketService = new BasketService();
 
 const homeView = new HomeView({
 	onProductCardClick: (id) => events.emit(Events.CARD_SELECT, { id }),
+	onBasketOpenClick: () => events.emit(Events.BASKET_OPEN),
 });
 
 const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
@@ -69,6 +70,10 @@ events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
 		basketService.removeItem(product);
 	}
 	homeView.counter = basketService.count();
+});
+
+events.on(Events.BASKET_OPEN, () => {
+	console.log('opening basket...', basketService.items);
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
