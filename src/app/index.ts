@@ -1,5 +1,6 @@
 // Application layer
 
+import { BasketView } from '../components/BasketView';
 import { HomeView } from '../components/HomeView';
 import { ModalView } from '../components/ModalView';
 import { ProductView } from '../components/ProductView';
@@ -62,6 +63,23 @@ events.on<{ id: ProductId }>(Events.CARD_SELECT, ({ id }) => {
 	});
 });
 
+events.on(Events.BASKET_OPEN, () => {
+	const basketView = new BasketView(UiConfig.templates.basketTemplate, {
+		deleteItem: (product) => {
+			events.emit(Events.BASKET_DELETE_ITEM, { product });
+		},
+		submit: () => {
+			events.emit(Events.BASKET_SUBMIT);
+		},
+	});
+	const content = basketView.render({
+		items: basketService.items,
+		total: basketService.total,
+	});
+	modalView.content = content;
+	modalView.open();
+});
+
 events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
 	const itemIndex = basketService.findItem(product);
 	if (itemIndex === undefined) {
@@ -70,10 +88,6 @@ events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
 		basketService.removeItem(product);
 	}
 	homeView.counter = basketService.count();
-});
-
-events.on(Events.BASKET_OPEN, () => {
-	console.log('opening basket...', basketService.items);
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //

@@ -10,11 +10,13 @@ interface IProductViewModel {
 	category: string;
 	price: number | null;
 	isInBasket?: boolean;
+	itemIndex?: number;
 }
 
 interface IProductViewEvents {
 	toggleBasket?: () => void;
 	onProductCardClick?: () => void;
+	onDeleteClick?: () => void;
 }
 
 export class ProductView extends Component<IProductViewModel> {
@@ -27,6 +29,7 @@ export class ProductView extends Component<IProductViewModel> {
 	private _category: HTMLElement;
 	private _price: HTMLElement;
 	private _toBasketButton: HTMLButtonElement;
+	private _itemIndex: HTMLElement;
 
 	private ensureCategory() {
 		this._category = ensureElement('.card__category', this.container);
@@ -76,7 +79,7 @@ export class ProductView extends Component<IProductViewModel> {
 				);
 				break;
 			case 'basket':
-			// TODO: set index
+				this._itemIndex = ensureElement<HTMLElement>('.basket__item-index');
 		}
 	}
 
@@ -110,5 +113,9 @@ export class ProductView extends Component<IProductViewModel> {
 				this._toBasketButton,
 				inBasket ? 'Удалить из корзины' : 'В корзину'
 			);
+	}
+
+	set itemIndex(value: number) {
+		this._itemIndex && this.setText(this._itemIndex, value);
 	}
 }

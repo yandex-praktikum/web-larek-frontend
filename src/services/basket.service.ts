@@ -34,4 +34,10 @@ export class BasketService implements IBasketService {
 	get items(): Product[] {
 		return this._basket.items;
 	}
+
+	get total(): number {
+		return this._basket.items.reduce((acc, x) => {
+			return acc + (x.price || 0);
+		}, 0);
+	}
 }

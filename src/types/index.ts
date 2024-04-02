@@ -42,6 +42,7 @@ export interface IBasketService {
 	clear: () => void;
 	count: () => number;
 	get items(): Product[];
+	get total(): number;
 }
 
 export interface IOrderService {
