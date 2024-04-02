@@ -33,7 +33,7 @@ export class BasketView extends Component<IBasketViewModel> {
 			container
 		);
 
-		container.addEventListener('submit', () => {
+		this._submitButton.addEventListener('click', () => {
 			events.submit();
 		});
 	}
