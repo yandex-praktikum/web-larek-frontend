@@ -99,7 +99,7 @@ events.on<{ product: Product; basketView: BasketView }>(
 			items: basketService.items,
 			total: basketService.total,
 		});
-		homeView.counter = basketService.count()
+		homeView.counter = basketService.count();
 	}
 );
 
