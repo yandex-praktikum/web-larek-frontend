@@ -122,7 +122,7 @@ export class ProductView extends Component<IProductViewModel> {
 		this._toBasketButton &&
 			this.setText(
 				this._toBasketButton,
-				inBasket ? 'Удалить из корзины' : 'В корзину'
+				inBasket ? 'Убрать' : 'В корзину'
 			);
 	}
 
