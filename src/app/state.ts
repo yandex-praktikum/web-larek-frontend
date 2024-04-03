@@ -9,9 +9,7 @@ export class BasketState {
 	private _value: Basket;
 
 	findItem(product: Product): number | undefined {
-		const res = this._value.items.findIndex(
-			(value) => value.id === product.id
-		);
+		const res = this._value.items.findIndex((value) => value.id === product.id);
 		return res === -1 ? undefined : res;
 	}
 
@@ -59,5 +57,13 @@ export class OrderState {
 
 	set value(value: Order) {
 		this._value = value;
+	}
+
+	get payment(): Order['payment'] {
+		return this._value.payment;
+	}
+
+	set payment(value: Order['payment']) {
+		this._value.payment = value;
 	}
 }

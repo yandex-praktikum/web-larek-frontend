@@ -164,10 +164,7 @@ events.on<{ items: Product[] }>(Events.BASKET_START_ORDER, ({ items }) => {
 });
 
 events.on(Events.ORDER_TOGGLE_PAYMENT_TYPE, () => {
-	orderState.value = {
-		...orderState.value,
-		payment: togglePaymentType(orderState.value.payment),
-	};
+	orderState.payment = togglePaymentType(orderState.value.payment);
 	orderPaymentStepView.render({ payment: orderState.value.payment });
 });
 
