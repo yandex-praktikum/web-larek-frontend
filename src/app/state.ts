@@ -3,61 +3,61 @@ import { Basket, Product } from '../types';
 
 export class BasketState {
 	constructor() {
-		this._basket = emptyBasket();
+		this._value = emptyBasket();
 	}
 
-	private _basket: Basket;
+	private _value: Basket;
 
 	findItem(product: Product): number | undefined {
-		const res = this._basket.items.findIndex(
+		const res = this._value.items.findIndex(
 			(value) => value.id === product.id
 		);
 		return res === -1 ? undefined : res;
 	}
 
 	addItem(item: Product) {
-		this._basket.items.push(item);
+		this._value.items.push(item);
 	}
 
 	removeItem(item: Product) {
-		this._basket.items = this._basket.items.filter((x) => x.id !== item.id);
+		this._value.items = this._value.items.filter((x) => x.id !== item.id);
 	}
 
 	clear() {
-		this._basket.items = [];
+		this._value.items = [];
 	}
 
 	count(): number {
-		return this._basket.items.length;
+		return this._value.items.length;
 	}
 
 	get items(): Product[] {
-		return this._basket.items;
+		return this._value.items;
 	}
 
 	get total(): number {
-		return this._basket.items.reduce((acc, x) => {
+		return this._value.items.reduce((acc, x) => {
 			return acc + (x.price || 0);
 		}, 0);
 	}
 
 	get isValidated(): boolean {
-		return this._basket.items.length > 0;
+		return this._value.items.length > 0;
 	}
 }
 
 export class OrderState {
-	private _order: Order;
+	private _value: Order;
 
 	constructor() {
-		this._order = emptyOrder();
+		this._value = emptyOrder();
 	}
 
-	get order(): Order {
-		return this._order;
+	get value(): Order {
+		return this._value;
 	}
 
-	set order(value: Order) {
-		this._order = value;
+	set value(value: Order) {
+		this._value = value;
 	}
 }

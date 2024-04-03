@@ -9,7 +9,7 @@ import {
 	CatalogProductView,
 	FullProductView,
 } from '../components/ProductView';
-import { BasketState } from './state';
+import { BasketState, OrderState } from './state';
 import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
 import { Product, ProductId, togglePaymentType } from '../types';
@@ -59,11 +59,11 @@ function createProductPreview(product: Product) {
 	);
 	return productView.render({
 		...product,
-		isInBasket: basketService.findItem(product) !== undefined,
+		isInBasket: basketState.findItem(product) !== undefined,
 	});
 }
 
-// ~~~~~~~~~~~~ event emitter ~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~~~ приложение ~~~~~~~~~~~~~ //
 
 const events = new EventEmitter();
 
@@ -72,10 +72,12 @@ events.onAll(({ eventName, data }) => {
 	console.log(eventName, data);
 });
 
+const basketState = new BasketState();
+const orderState = new OrderState();
+
 // ~~~~~~~~~~~~~~~ сервисы ~~~~~~~~~~~~~~~ //
 
 const productService = new ProductService();
-const basketService = new BasketState();
 const orderService = new OrderService();
 
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
@@ -89,7 +91,7 @@ const homeView = new HomeView({
 const basketView = new BasketView(UiConfig.templates.basketTemplate, {
 	startOrder: () => {
 		events.emit<{ items: Product[] }>(Events.BASKET_START_ORDER, {
-			items: basketService.items,
+			items: basketState.items,
 		});
 	},
 });
@@ -122,32 +124,32 @@ events.on<{ id: ProductId }>(Events.CARD_SELECT, ({ id }) => {
 
 events.on(Events.BASKET_OPEN, () => {
 	const content = basketView.render({
-		items: basketService.items.map(createBasketItem(basketView)),
-		total: basketService.total,
-		isValidated: basketService.isValidated
+		items: basketState.items.map(createBasketItem(basketView)),
+		total: basketState.total,
+		isValidated: basketState.isValidated,
 	});
 	modalView.render({ content });
 });
 
 events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
-	const itemIndex = basketService.findItem(product);
+	const itemIndex = basketState.findItem(product);
 	if (itemIndex === undefined) {
-		basketService.addItem(product);
+		basketState.addItem(product);
 	} else {
-		basketService.removeItem(product);
+		basketState.removeItem(product);
 	}
-	homeView.render({ counter: basketService.count() });
+	homeView.render({ counter: basketState.count() });
 });
 
 events.on<{ product: Product; basketView: BasketView }>(
 	Events.BASKET_DELETE_ITEM,
 	({ product, basketView }) => {
-		basketService.removeItem(product);
-		homeView.render({ counter: basketService.count() });
+		basketState.removeItem(product);
+		homeView.render({ counter: basketState.count() });
 		modalView.render({
 			content: basketView.render({
-				items: basketService.items.map(createBasketItem(basketView)),
-				total: basketService.total,
+				items: basketState.items.map(createBasketItem(basketView)),
+				total: basketState.total,
 			}),
 		});
 	}
@@ -156,17 +158,17 @@ events.on<{ product: Product; basketView: BasketView }>(
 events.on<{ items: Product[] }>(Events.BASKET_START_ORDER, ({ items }) => {
 	modalView.render({
 		content: orderPaymentStepView.render({
-			payment: orderService.order.payment,
+			payment: orderState.value.payment,
 		}),
 	});
 });
 
 events.on(Events.ORDER_TOGGLE_PAYMENT_TYPE, () => {
-	orderService.order = {
-		...orderService.order,
-		payment: togglePaymentType(orderService.order.payment),
+	orderState.value = {
+		...orderState.value,
+		payment: togglePaymentType(orderState.value.payment),
 	};
-	orderPaymentStepView.render({ payment: orderService.order.payment });
+	orderPaymentStepView.render({ payment: orderState.value.payment });
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
