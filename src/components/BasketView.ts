@@ -1,16 +1,12 @@
-import { UiConfig } from '../app/uiConfig';
-import { Product } from '../types';
 import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement } from '../utils/utils';
-import { ProductView } from './ProductView';
 
 interface IBasketViewModel {
-	items: Product[];
+	items: HTMLElement[];
 	total: number;
 }
 
 interface IBasketViewEvents {
-	deleteItem: (item: Product) => void;
 	submit: () => void;
 }
 
@@ -38,22 +34,9 @@ export class BasketView extends Component<IBasketViewModel> {
 		});
 	}
 
-	set items(value: Product[]) {
-		const cards = value.map((product) => {
-			const productView = new ProductView(
-				UiConfig.templates.cardBasketTemplate,
-				{
-					onDeleteClick: () => {
-						this.events.deleteItem(product);
-					},
-				},
-				'basket'
-			);
-			console.log(productView, product);
-			return productView.render(product);
-		});
-		this._items.replaceChildren(...cards);
-		this.setDisabled(this._submitButton, cards.length === 0);
+	set items(items: HTMLElement[]) {
+		this._items.replaceChildren(...items);
+		this.setDisabled(this._submitButton, items.length === 0);
 	}
 
 	set total(value: number) {

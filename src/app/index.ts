@@ -11,6 +11,26 @@ import { EventEmitter } from './events';
 import { Events } from './events.const';
 import { UiConfig } from './uiConfig';
 
+// ~~~~~~~ вспомогательные функции ~~~~~~~ //
+
+function createBasketItems(
+	basketService: BasketService,
+	basketView: BasketView
+) {
+	return basketService.items.map((product) => {
+		const productView = new ProductView(
+			UiConfig.templates.cardBasketTemplate,
+			{
+				onDeleteClick: () => {
+					events.emit(Events.BASKET_DELETE_ITEM, { product, basketView });
+				},
+			},
+			'basket'
+		);
+		return productView.render(product);
+	});
+}
+
 // ~~~~~~~~~~~~ event emitter ~~~~~~~~~~~~ //
 
 const events = new EventEmitter();
@@ -24,10 +44,10 @@ events.onAll(({ eventName, data }) => {
 
 const productService = new ProductService();
 const basketService = new BasketService();
+
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
 const homeView = new HomeView({
-	onProductCardClick: (id) => events.emit(Events.CARD_SELECT, { id }),
 	onBasketOpenClick: () => events.emit(Events.BASKET_OPEN),
 });
 
@@ -37,7 +57,19 @@ const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
 
 events.on(Events.START, () => {
 	productService.getProducts().then((products) => {
-		homeView.products = products;
+		const cards = products.map((product) => {
+			const productView = new ProductView(
+				UiConfig.templates.cardCatalogTemplate,
+				{
+					onProductCardClick: () => {
+						events.emit(Events.CARD_SELECT, { id: product.id });
+					},
+				},
+				'catalog'
+			);
+			return productView.render(product);
+		});
+		homeView.gallery = cards;
 	});
 });
 
@@ -64,9 +96,6 @@ events.on<{ id: ProductId }>(Events.CARD_SELECT, ({ id }) => {
 
 events.on(Events.BASKET_OPEN, () => {
 	const basketView = new BasketView(UiConfig.templates.basketTemplate, {
-		deleteItem: (product) => {
-			events.emit(Events.BASKET_DELETE_ITEM, { product, basketView });
-		},
 		submit: () => {
 			events.emit<{ items: Product[] }>(Events.BASKET_SUBMIT, {
 				items: basketService.items,
@@ -74,7 +103,7 @@ events.on(Events.BASKET_OPEN, () => {
 		},
 	});
 	const content = basketView.render({
-		items: basketService.items,
+		items: createBasketItems(basketService, basketView),
 		total: basketService.total,
 	});
 	modalView.content = content;
@@ -96,7 +125,7 @@ events.on<{ product: Product; basketView: BasketView }>(
 	({ product, basketView }) => {
 		basketService.removeItem(product);
 		modalView.content = basketView.render({
-			items: basketService.items,
+			items: createBasketItems(basketService, basketView),
 			total: basketService.total,
 		});
 		homeView.counter = basketService.count();
