@@ -1,4 +1,4 @@
-import { Product, ProductId, Order, SentOrder } from '../models';
+import { Product, ProductId, Order, SentOrder, PaymentType } from '../models';
 
 export * from '../models';
 
@@ -14,12 +14,13 @@ export interface IBasketService {
 	addItem: (item: Product) => void;
 	removeItem: (item: Product) => void;
 	clear: () => void;
-	count: () => number;
+	count(): number;
 	get items(): Product[];
 	get total(): number;
 }
 
 export interface IOrderService {
+	set order(value: Order);
 	sendOrder: (order: Order) => Promise<SentOrder>;
 }
 

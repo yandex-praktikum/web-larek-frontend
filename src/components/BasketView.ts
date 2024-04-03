@@ -15,10 +15,7 @@ export class BasketView extends Component<IBasketViewModel> {
 	private _total: HTMLElement;
 	private _submitButton: HTMLButtonElement;
 
-	constructor(
-		template: HTMLTemplateElement,
-		events: IBasketViewEvents
-	) {
+	constructor(template: HTMLTemplateElement, events: IBasketViewEvents) {
 		const container = cloneTemplate(template);
 		super(container);
 
@@ -41,9 +38,5 @@ export class BasketView extends Component<IBasketViewModel> {
 
 	set total(value: number) {
 		this.setText(this._total, value);
-	}
-
-	render(value: IBasketViewModel) {
-		return super.render(value);
 	}
 }

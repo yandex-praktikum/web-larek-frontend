@@ -1,16 +1,17 @@
 import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement } from '../utils/utils';
 
-type Step = 'payment' | 'phone' | 'done';
-
 interface IOrderViewModel {
-	paymentType: 'online' | 'onReceipt';
+	payment: 'card' | 'cash';
 	address: string;
 	email: string;
 	phoneNumber: string;
 }
 
-// interface IOrderViewEvents {}
+interface IOrderViewEvents {
+	buttonOnlineClick: () => void;
+	buttonOnReceiptClick: () => void;
+}
 
 abstract class OrderView extends Component<IOrderViewModel> {
 	constructor(template: HTMLTemplateElement) {
@@ -23,16 +24,37 @@ export class OrderPaymentStepView extends OrderView {
 	private _buttonOnline: HTMLButtonElement;
 	private _buttonOnReceipt: HTMLButtonElement;
 
-	constructor(template: HTMLTemplateElement) {
+	constructor(template: HTMLTemplateElement, events: IOrderViewEvents) {
 		super(template);
 
 		this._buttonOnline = ensureElement<HTMLButtonElement>(
-			'.button:first-child',
+			'.button[name="card"]',
 			this.container
 		);
 		this._buttonOnReceipt = ensureElement<HTMLButtonElement>(
-			'.button:nth-child(2)',
+			'.button[name="cash"]',
 			this.container
 		);
+
+		this._buttonOnline.addEventListener('click', () => {
+			events.buttonOnlineClick();
+		});
+
+		this._buttonOnReceipt.addEventListener('click', () => {
+			events.buttonOnReceiptClick();
+		});
+	}
+
+	set payment(value: IOrderViewModel['payment']) {
+		switch (value) {
+			case 'card':
+				this._buttonOnline.classList.add('button_alt-active');
+				this._buttonOnReceipt.classList.remove('button_alt-active');
+				break;
+			case 'cash':
+				this._buttonOnline.classList.remove('button_alt-active');
+				this._buttonOnReceipt.classList.add('button_alt-active');
+				break;
+		}
 	}
 }

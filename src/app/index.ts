@@ -10,8 +10,9 @@ import {
 	FullProductView,
 } from '../components/ProductView';
 import { BasketService } from '../services/basket.service';
+import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
-import { Product, ProductId, emtpyOrder } from '../types';
+import { Product, ProductId, togglePaymentType } from '../types';
 import { EventEmitter } from './events';
 import { Events } from './events.const';
 import { UiConfig } from './uiConfig';
@@ -75,14 +76,15 @@ events.onAll(({ eventName, data }) => {
 
 const productService = new ProductService();
 const basketService = new BasketService();
+const orderService = new OrderService();
 
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
+
+const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
 
 const homeView = new HomeView({
 	onBasketOpenClick: () => events.emit(Events.BASKET_OPEN),
 });
-
-const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
 
 const basketView = new BasketView(UiConfig.templates.basketTemplate, {
 	submit: () => {
@@ -91,6 +93,18 @@ const basketView = new BasketView(UiConfig.templates.basketTemplate, {
 		});
 	},
 });
+
+const orderPaymentStepView = new OrderPaymentStepView(
+	UiConfig.templates.orderTemplate,
+	{
+		buttonOnlineClick: () => {
+			events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
+		},
+		buttonOnReceiptClick: () => {
+			events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
+		},
+	}
+);
 
 // ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
@@ -139,12 +153,17 @@ events.on<{ product: Product; basketView: BasketView }>(
 );
 
 events.on<{ items: Product[] }>(Events.BASKET_SUBMIT, ({ items }) => {
-	modalView.close();
-	const orderPaymentStepView = new OrderPaymentStepView(
-		UiConfig.templates.orderTemplate
-	);
-	modalView.content = orderPaymentStepView.render(emtpyOrder());
-	modalView.open();
+	modalView.render({
+		content: orderPaymentStepView.render({
+			payment: orderService.order.payment,
+		}),
+	});
+});
+
+events.on(Events.ORDER_TOGGLE_PAYMENT_TYPE, () => {
+	const order = orderService.order;
+	orderService.order = { ...order, payment: togglePaymentType(order.payment) };
+	orderPaymentStepView.render({ payment: orderService.order.payment });
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
