@@ -40,4 +40,8 @@ export class BasketService implements IBasketService {
 			return acc + (x.price || 0);
 		}, 0);
 	}
+
+	get isValidated(): boolean {
+		return this._basket.items.length > 0;
+	}
 }

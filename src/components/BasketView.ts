@@ -4,6 +4,7 @@ import { cloneTemplate, ensureElement } from '../utils/utils';
 interface IBasketViewModel {
 	items: HTMLElement[];
 	total: number;
+	isValidated: boolean;
 }
 
 interface IBasketViewEvents {
@@ -33,10 +34,13 @@ export class BasketView extends Component<IBasketViewModel> {
 
 	set items(items: HTMLElement[]) {
 		this._items.replaceChildren(...items);
-		this.setDisabled(this._submitButton, items.length === 0);
 	}
 
 	set total(value: number) {
 		this.setText(this._total, value);
+	}
+
+	set isValidated(value: boolean) {
+		this.setDisabled(this._submitButton, !value);
 	}
 }

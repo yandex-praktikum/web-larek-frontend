@@ -17,6 +17,7 @@ export interface IBasketService {
 	count(): number;
 	get items(): Product[];
 	get total(): number;
+	get isValidated(): boolean;
 }
 
 export interface IOrderService {

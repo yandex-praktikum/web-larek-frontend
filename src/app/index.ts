@@ -124,6 +124,7 @@ events.on(Events.BASKET_OPEN, () => {
 	const content = basketView.render({
 		items: basketService.items.map(createBasketItem(basketView)),
 		total: basketService.total,
+		isValidated: basketService.isValidated
 	});
 	modalView.render({ content });
 });
