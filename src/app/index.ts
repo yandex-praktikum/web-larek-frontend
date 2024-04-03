@@ -87,8 +87,8 @@ const homeView = new HomeView({
 });
 
 const basketView = new BasketView(UiConfig.templates.basketTemplate, {
-	submit: () => {
-		events.emit<{ items: Product[] }>(Events.BASKET_SUBMIT, {
+	startOrder: () => {
+		events.emit<{ items: Product[] }>(Events.BASKET_START_ORDER, {
 			items: basketService.items,
 		});
 	},
@@ -152,7 +152,7 @@ events.on<{ product: Product; basketView: BasketView }>(
 	}
 );
 
-events.on<{ items: Product[] }>(Events.BASKET_SUBMIT, ({ items }) => {
+events.on<{ items: Product[] }>(Events.BASKET_START_ORDER, ({ items }) => {
 	modalView.render({
 		content: orderPaymentStepView.render({
 			payment: orderService.order.payment,
@@ -161,8 +161,10 @@ events.on<{ items: Product[] }>(Events.BASKET_SUBMIT, ({ items }) => {
 });
 
 events.on(Events.ORDER_TOGGLE_PAYMENT_TYPE, () => {
-	const order = orderService.order;
-	orderService.order = { ...order, payment: togglePaymentType(order.payment) };
+	orderService.order = {
+		...orderService.order,
+		payment: togglePaymentType(orderService.order.payment),
+	};
 	orderPaymentStepView.render({ payment: orderService.order.payment });
 });
 

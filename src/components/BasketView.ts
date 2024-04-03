@@ -7,7 +7,7 @@ interface IBasketViewModel {
 }
 
 interface IBasketViewEvents {
-	submit: () => void;
+	startOrder: () => void;
 }
 
 export class BasketView extends Component<IBasketViewModel> {
@@ -27,7 +27,7 @@ export class BasketView extends Component<IBasketViewModel> {
 		);
 
 		this._submitButton.addEventListener('click', () => {
-			events.submit();
+			events.startOrder();
 		});
 	}
 
