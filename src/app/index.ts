@@ -9,7 +9,7 @@ import {
 	CatalogProductView,
 	FullProductView,
 } from '../components/ProductView';
-import { BasketService } from '../services/basket.service';
+import { BasketState } from './state';
 import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
 import { Product, ProductId, togglePaymentType } from '../types';
@@ -75,7 +75,7 @@ events.onAll(({ eventName, data }) => {
 // ~~~~~~~~~~~~~~~ сервисы ~~~~~~~~~~~~~~~ //
 
 const productService = new ProductService();
-const basketService = new BasketService();
+const basketService = new BasketState();
 const orderService = new OrderService();
 
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //

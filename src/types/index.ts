@@ -1,4 +1,4 @@
-import { Product, ProductId, Order, SentOrder, PaymentType } from '../models';
+import { Order, Product, ProductId, SentOrder } from '../models';
 
 export * from '../models';
 
@@ -9,18 +9,8 @@ export interface IProductService {
 	getProduct: (id: ProductId) => Promise<Product>;
 }
 
-export interface IBasketService {
-	findItem: (product: Product) => number | undefined;
-	addItem: (item: Product) => void;
-	removeItem: (item: Product) => void;
-	clear: () => void;
-	count(): number;
-	get items(): Product[];
-	get total(): number;
-	get isValidated(): boolean;
-}
-
 export interface IOrderService {
+	// todo: метод order() не взаимодействует с внешним миром
 	set order(value: Order);
 	sendOrder: (order: Order) => Promise<SentOrder>;
 }

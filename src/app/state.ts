@@ -1,7 +1,7 @@
 import { emptyBasket } from '../models';
-import { Basket, IBasketService, Product } from '../types';
+import { Basket, Product } from '../types';
 
-export class BasketService implements IBasketService {
+export class BasketState {
 	constructor() {
 		this._basket = emptyBasket();
 	}
