@@ -9,9 +9,9 @@ import {
 	CatalogProductView,
 	FullProductView,
 } from '../components/ProductView';
-import { Product, ProductId } from '../models/product';
 import { BasketService } from '../services/basket.service';
 import { ProductService } from '../services/product.service';
+import { Product, ProductId } from '../types';
 import { EventEmitter } from './events';
 import { Events } from './events.const';
 import { UiConfig } from './uiConfig';
@@ -142,7 +142,7 @@ events.on<{ items: Product[] }>(Events.BASKET_SUBMIT, ({ items }) => {
 	const orderPaymentStepView = new OrderPaymentStepView(
 		UiConfig.templates.orderTemplate
 	);
-	const content = orderPaymentStepView.render()
+	const content = orderPaymentStepView.render();
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //

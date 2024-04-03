@@ -1,24 +1,6 @@
-import { type Product, type ProductId } from '../models/product';
+import { Product, ProductId, Order, SentOrder } from '../models';
 
-export type PaymentType = 'online' | 'offline';
-
-export type Basket = {
-	items: Product[];
-};
-
-export type Order = {
-	payment: PaymentType;
-	email: string;
-	phone: string;
-	address: string;
-	total: number;
-	items: ProductId[];
-};
-
-type OrderId = string;
-type OrderTotal = number;
-
-export type SentOrder = { id: OrderId; total: OrderTotal } & Order;
+export * from '../models';
 
 // ~~~~~~~~~ Интерфейсы сервисов ~~~~~~~~~ //
 

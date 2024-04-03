@@ -1,4 +1,4 @@
-import { emptyBasket } from '../models/basket';
+import { emptyBasket } from '../models';
 import { Basket, IBasketService, Product } from '../types';
 
 export class BasketService implements IBasketService {
