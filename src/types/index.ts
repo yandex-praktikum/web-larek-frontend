@@ -1,14 +1,6 @@
-export type ProductId = string;
-export type PaymentType = 'online' | 'offline';
+import { type Product, type ProductId } from '../models/product';
 
-export type Product = {
-	id: ProductId;
-	description: string;
-	image: string;
-	title: string;
-	category: string;
-	price: number | null;
-};
+export type PaymentType = 'online' | 'offline';
 
 export type Basket = {
 	items: Product[];
