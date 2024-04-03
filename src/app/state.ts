@@ -59,6 +59,14 @@ export class OrderState {
 		this._value = value;
 	}
 
+	get isPaymentValidated(): boolean {
+		return this._value.address.length > 0;
+	}
+
+	get isContactsValidated(): boolean {
+		return this._value.email.length > 0 && this._value.phone.length > 0;
+	}
+
 	get payment(): Order['payment'] {
 		return this._value.payment;
 	}

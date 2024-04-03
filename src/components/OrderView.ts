@@ -6,6 +6,8 @@ interface IOrderViewModel {
 	address: string;
 	email: string;
 	phoneNumber: string;
+	isPaymentValidated: boolean;
+	isContantsValidated: boolean;
 }
 
 interface IOrderViewEvents {
@@ -14,9 +16,16 @@ interface IOrderViewEvents {
 }
 
 abstract class OrderView extends Component<IOrderViewModel> {
+	protected _submitButton: HTMLButtonElement;
+
 	constructor(template: HTMLTemplateElement) {
 		const container = cloneTemplate(template);
 		super(container);
+
+		this._submitButton = ensureElement<HTMLButtonElement>(
+			'.order__button',
+			this.container
+		);
 	}
 }
 
@@ -56,5 +65,9 @@ export class OrderPaymentStepView extends OrderView {
 				this._buttonOnReceipt.classList.add('button_alt-active');
 				break;
 		}
+	}
+
+	set isPaymentValidated(value: boolean) {
+		this.setDisabled(this._submitButton, !value);
 	}
 }

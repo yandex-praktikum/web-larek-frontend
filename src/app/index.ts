@@ -78,7 +78,6 @@ const orderState = new OrderState();
 // ~~~~~~~~~~~~~~~ сервисы ~~~~~~~~~~~~~~~ //
 
 const productService = new ProductService();
-const orderService = new OrderService();
 
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
