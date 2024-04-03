@@ -11,7 +11,7 @@ import {
 } from '../components/ProductView';
 import { BasketService } from '../services/basket.service';
 import { ProductService } from '../services/product.service';
-import { Product, ProductId } from '../types';
+import { Product, ProductId, emtpyOrder } from '../types';
 import { EventEmitter } from './events';
 import { Events } from './events.const';
 import { UiConfig } from './uiConfig';
@@ -84,35 +84,34 @@ const homeView = new HomeView({
 
 const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
 
+const basketView = new BasketView(UiConfig.templates.basketTemplate, {
+	submit: () => {
+		events.emit<{ items: Product[] }>(Events.BASKET_SUBMIT, {
+			items: basketService.items,
+		});
+	},
+});
+
 // ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
 events.on(Events.START, () => {
 	productService.getProducts().then((products): void => {
-		homeView.gallery = products.map(createCatalogItem);
+		homeView.render({ gallery: products.map(createCatalogItem) });
 	});
 });
 
 events.on<{ id: ProductId }>(Events.CARD_SELECT, ({ id }) => {
 	productService.getProduct(id).then((product) => {
-		modalView.content = createProductPreview(product);
-		modalView.open();
+		modalView.render({ content: createProductPreview(product) });
 	});
 });
 
 events.on(Events.BASKET_OPEN, () => {
-	const basketView = new BasketView(UiConfig.templates.basketTemplate, {
-		submit: () => {
-			events.emit<{ items: Product[] }>(Events.BASKET_SUBMIT, {
-				items: basketService.items,
-			});
-		},
-	});
 	const content = basketView.render({
 		items: basketService.items.map(createBasketItem(basketView)),
 		total: basketService.total,
 	});
-	modalView.content = content;
-	modalView.open();
+	modalView.render({ content });
 });
 
 events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
@@ -122,18 +121,20 @@ events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
 	} else {
 		basketService.removeItem(product);
 	}
-	homeView.counter = basketService.count();
+	homeView.render({ counter: basketService.count() });
 });
 
 events.on<{ product: Product; basketView: BasketView }>(
 	Events.BASKET_DELETE_ITEM,
 	({ product, basketView }) => {
 		basketService.removeItem(product);
-		modalView.content = basketView.render({
-			items: basketService.items.map(createBasketItem(basketView)),
-			total: basketService.total,
+		homeView.render({ counter: basketService.count() });
+		modalView.render({
+			content: basketView.render({
+				items: basketService.items.map(createBasketItem(basketView)),
+				total: basketService.total,
+			}),
 		});
-		homeView.counter = basketService.count();
 	}
 );
 
@@ -142,7 +143,8 @@ events.on<{ items: Product[] }>(Events.BASKET_SUBMIT, ({ items }) => {
 	const orderPaymentStepView = new OrderPaymentStepView(
 		UiConfig.templates.orderTemplate
 	);
-	const content = orderPaymentStepView.render();
+	modalView.content = orderPaymentStepView.render(emtpyOrder());
+	modalView.open();
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
