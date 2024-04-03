@@ -17,7 +17,7 @@ export class BasketView extends Component<IBasketViewModel> {
 
 	constructor(
 		template: HTMLTemplateElement,
-		private events: IBasketViewEvents
+		events: IBasketViewEvents
 	) {
 		const container = cloneTemplate(template);
 		super(container);
@@ -44,7 +44,6 @@ export class BasketView extends Component<IBasketViewModel> {
 	}
 
 	render(value: IBasketViewModel) {
-		console.log('rendering basket with', value);
 		return super.render(value);
 	}
 }
