@@ -1,8 +1,6 @@
 import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement, isEmpty } from '../utils/utils';
 
-type ProductViewMode = 'catalog' | 'full' | 'basket';
-
 interface IProductViewModel {
 	description: string;
 	image: string;
@@ -14,92 +12,38 @@ interface IProductViewModel {
 }
 
 interface IProductViewEvents {
-	toggleBasket?: () => void;
-	onProductCardClick?: () => void;
-	onDeleteClick?: () => void;
+	toggleBasket: () => void;
+	onProductCardClick: () => void;
+	onDeleteClick: () => void;
 }
 
-export class ProductView extends Component<IProductViewModel> {
-	private _mode: ProductViewMode;
-	private _events: IProductViewEvents;
+abstract class ProductView extends Component<IProductViewModel> {
+	protected _image: HTMLImageElement;
+	protected _title: HTMLElement;
+	protected _category: HTMLElement;
+	protected _price: HTMLElement;
 
-	private _description: HTMLElement;
-	private _image: HTMLImageElement;
-	private _title: HTMLElement;
-	private _category: HTMLElement;
-	private _price: HTMLElement;
-	private _toBasketButton: HTMLButtonElement;
-	private _itemIndex: HTMLElement;
-	private _deleteFromBasketButton: HTMLElement;
-
-	private ensureCategory() {
+	protected ensureCategory() {
 		this._category = ensureElement('.card__category', this.container);
 	}
 
-	private ensureImage() {
+	protected ensureImage() {
 		this._image = ensureElement<HTMLImageElement>(
 			'.card__image',
 			this.container
 		);
 	}
 
-	constructor(
-		template: HTMLTemplateElement,
-		events: IProductViewEvents,
-		mode: ProductViewMode
-	) {
+	constructor(template: HTMLTemplateElement) {
 		const container = cloneTemplate(template);
 		super(container);
 
-		this._events = events;
-		this._mode = mode;
-		this._title = ensureElement('.card__title', this.container);
-		this._price = ensureElement('.card__price', this.container);
-
-		switch (mode) {
-			case 'catalog':
-				this.ensureCategory();
-				this.ensureImage();
-
-				this._events.onProductCardClick &&
-					this.container.addEventListener('click', () =>
-						this._events.onProductCardClick()
-					);
-
-				break;
-			case 'full':
-				this.ensureCategory();
-				this.ensureImage();
-				this._description = ensureElement('.card__text', this.container);
-				this._toBasketButton = ensureElement<HTMLButtonElement>(
-					'.button',
-					this.container
-				);
-				this._toBasketButton.addEventListener('click', () =>
-					this._events.toggleBasket()
-				);
-				break;
-			case 'basket':
-				this._itemIndex = ensureElement<HTMLElement>(
-					'.basket__item-index',
-					container
-				);
-				this._deleteFromBasketButton = ensureElement<HTMLElement>(
-					'.basket__item-delete',
-					container
-				);
-				this._deleteFromBasketButton.addEventListener('click', () => {
-					this._events.onDeleteClick();
-				});
-		}
+		this._title = ensureElement<HTMLElement>('.card__title', container);
+		this._price = ensureElement<HTMLElement>('.card__price', container);
 	}
 
 	render(model: IProductViewModel) {
 		return super.render(model);
-	}
-
-	set description(value: string) {
-		this._mode === 'full' && (this._description.textContent = value);
 	}
 
 	set title(value: string) {
@@ -107,26 +51,90 @@ export class ProductView extends Component<IProductViewModel> {
 	}
 
 	set image(value: string) {
-		this._mode !== 'basket' && this.setImage(this._image, value);
+		this._image && this.setImage(this._image, value);
 	}
 
 	set category(value: string) {
-		this._mode !== 'basket' && (this._category.textContent = value);
+		this._category && this.setText(this._category, value);
 	}
 
 	set price(value: number | null) {
-		this._price.textContent = isEmpty(value) ? '' : String(value);
+		this._price &&
+			(this._price.textContent = isEmpty(value) ? '' : String(value));
+	}
+}
+
+export class CatalogProductView extends ProductView {
+	constructor(
+		template: HTMLTemplateElement,
+		events: Pick<IProductViewEvents, 'onProductCardClick'>
+	) {
+		super(template);
+
+		this.ensureCategory();
+		this.ensureImage();
+
+		this.container.addEventListener('click', () => events.onProductCardClick());
+	}
+}
+
+export class FullProductView extends ProductView {
+	private _description: HTMLElement;
+	private _toBasketButton: HTMLButtonElement;
+
+	constructor(
+		template: HTMLTemplateElement,
+		events: Pick<IProductViewEvents, 'toggleBasket'>
+	) {
+		super(template);
+
+		this.ensureCategory();
+		this.ensureImage();
+		this._description = ensureElement<HTMLElement>(
+			'.card__text',
+			this.container
+		);
+		this._toBasketButton = ensureElement<HTMLButtonElement>(
+			'.button',
+			this.container
+		);
+
+		this._toBasketButton.addEventListener('click', () => events.toggleBasket());
+	}
+
+	set description(value: string) {
+		this.setText(this._description, value);
 	}
 
 	set isInBasket(inBasket: boolean) {
-		this._toBasketButton &&
-			this.setText(
-				this._toBasketButton,
-				inBasket ? 'Убрать' : 'В корзину'
-			);
+		this.setText(this._toBasketButton, inBasket ? 'Убрать' : 'В корзину');
+	}
+}
+
+export class BasketProductView extends ProductView {
+	private _itemIndex: HTMLElement;
+	private _deleteFromBasketButton: HTMLElement;
+
+	constructor(
+		template: HTMLTemplateElement,
+		events: Pick<IProductViewEvents, 'onDeleteClick'>
+	) {
+		super(template);
+
+		this._itemIndex = ensureElement<HTMLElement>(
+			'.basket__item-index',
+			this.container
+		);
+		this._deleteFromBasketButton = ensureElement<HTMLElement>(
+			'.basket__item-delete',
+			this.container
+		);
+		this._deleteFromBasketButton.addEventListener('click', () => {
+			events.onDeleteClick();
+		});
 	}
 
 	set itemIndex(value: number) {
-		this._itemIndex && this.setText(this._itemIndex, value);
+		this.setText(this._itemIndex, value);
 	}
 }

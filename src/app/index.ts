@@ -3,7 +3,11 @@
 import { BasketView } from '../components/BasketView';
 import { HomeView } from '../components/HomeView';
 import { ModalView } from '../components/ModalView';
-import { ProductView } from '../components/ProductView';
+import {
+	BasketProductView,
+	CatalogProductView,
+	FullProductView,
+} from '../components/ProductView';
 import { BasketService } from '../services/basket.service';
 import { ProductService } from '../services/product.service';
 import { Product, ProductId } from '../types';
@@ -17,42 +21,39 @@ import { UiConfig } from './uiConfig';
 
 function createBasketItem(basketView: BasketView) {
 	return (product: Product) => {
-		const productView = new ProductView(
+		const productView = new BasketProductView(
 			UiConfig.templates.cardBasketTemplate,
 			{
 				onDeleteClick: () => {
 					events.emit(Events.BASKET_DELETE_ITEM, { product, basketView });
 				},
-			},
-			'basket'
+			}
 		);
 		return productView.render(product);
 	};
 }
 
 function createCatalogItem(product: Product) {
-	const productView = new ProductView(
+	const productView = new CatalogProductView(
 		UiConfig.templates.cardCatalogTemplate,
 		{
 			onProductCardClick: () => {
 				events.emit(Events.CARD_SELECT, { id: product.id });
 			},
-		},
-		'catalog'
+		}
 	);
 	return productView.render(product);
 }
 
 function createProductPreview(product: Product) {
-	const productView = new ProductView(
+	const productView = new FullProductView(
 		UiConfig.templates.cardPreviewTemplate,
 		{
 			toggleBasket: () => {
 				events.emit(Events.CARD_TOGGLE_BASKET, { product });
 				modalView.close();
 			},
-		},
-		'full'
+		}
 	);
 	return productView.render({
 		...product,
