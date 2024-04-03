@@ -1,4 +1,4 @@
-import { emptyBasket } from '../models';
+import { Order, emptyBasket, emptyOrder } from '../models';
 import { Basket, Product } from '../types';
 
 export class BasketState {
@@ -43,5 +43,21 @@ export class BasketState {
 
 	get isValidated(): boolean {
 		return this._basket.items.length > 0;
+	}
+}
+
+export class OrderState {
+	private _order: Order;
+
+	constructor() {
+		this._order = emptyOrder();
+	}
+
+	get order(): Order {
+		return this._order;
+	}
+
+	set order(value: Order) {
+		this._order = value;
 	}
 }

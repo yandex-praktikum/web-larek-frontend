@@ -10,8 +10,6 @@ export interface IProductService {
 }
 
 export interface IOrderService {
-	// todo: метод order() не взаимодействует с внешним миром
-	set order(value: Order);
 	sendOrder: (order: Order) => Promise<SentOrder>;
 }
 
