@@ -13,11 +13,8 @@ import { UiConfig } from './uiConfig';
 
 // ~~~~~~~ вспомогательные функции ~~~~~~~ //
 
-function createBasketItems(
-	basketService: BasketService,
-	basketView: BasketView
-) {
-	return basketService.items.map((product) => {
+function createBasketItem(basketView: BasketView) {
+	return (product: Product) => {
 		const productView = new ProductView(
 			UiConfig.templates.cardBasketTemplate,
 			{
@@ -28,6 +25,36 @@ function createBasketItems(
 			'basket'
 		);
 		return productView.render(product);
+	};
+}
+
+function createCatalogItem(product: Product) {
+	const productView = new ProductView(
+		UiConfig.templates.cardCatalogTemplate,
+		{
+			onProductCardClick: () => {
+				events.emit(Events.CARD_SELECT, { id: product.id });
+			},
+		},
+		'catalog'
+	);
+	return productView.render(product);
+}
+
+function createProductPreview(product: Product) {
+	const productView = new ProductView(
+		UiConfig.templates.cardPreviewTemplate,
+		{
+			toggleBasket: () => {
+				events.emit(Events.CARD_TOGGLE_BASKET, { product });
+				modalView.close();
+			},
+		},
+		'full'
+	);
+	return productView.render({
+		...product,
+		isInBasket: basketService.findItem(product) !== undefined,
 	});
 }
 
@@ -56,40 +83,14 @@ const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
 // ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
 events.on(Events.START, () => {
-	productService.getProducts().then((products) => {
-		const cards = products.map((product) => {
-			const productView = new ProductView(
-				UiConfig.templates.cardCatalogTemplate,
-				{
-					onProductCardClick: () => {
-						events.emit(Events.CARD_SELECT, { id: product.id });
-					},
-				},
-				'catalog'
-			);
-			return productView.render(product);
-		});
-		homeView.gallery = cards;
+	productService.getProducts().then((products): void => {
+		homeView.gallery = products.map(createCatalogItem);
 	});
 });
 
 events.on<{ id: ProductId }>(Events.CARD_SELECT, ({ id }) => {
 	productService.getProduct(id).then((product) => {
-		const productView = new ProductView(
-			UiConfig.templates.cardPreviewTemplate,
-			{
-				toggleBasket: () => {
-					events.emit(Events.CARD_TOGGLE_BASKET, { product });
-					modalView.close();
-				},
-			},
-			'full'
-		);
-		const content = productView.render({
-			...product,
-			isInBasket: basketService.findItem(product) !== undefined,
-		});
-		modalView.content = content;
+		modalView.content = createProductPreview(product);
 		modalView.open();
 	});
 });
@@ -103,7 +104,7 @@ events.on(Events.BASKET_OPEN, () => {
 		},
 	});
 	const content = basketView.render({
-		items: createBasketItems(basketService, basketView),
+		items: basketService.items.map(createBasketItem(basketView)),
 		total: basketService.total,
 	});
 	modalView.content = content;
@@ -125,7 +126,7 @@ events.on<{ product: Product; basketView: BasketView }>(
 	({ product, basketView }) => {
 		basketService.removeItem(product);
 		modalView.content = basketView.render({
-			items: createBasketItems(basketService, basketView),
+			items: basketService.items.map(createBasketItem(basketView)),
 			total: basketService.total,
 		});
 		homeView.counter = basketService.count();
