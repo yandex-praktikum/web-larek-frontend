@@ -3,7 +3,10 @@
 import { BasketView } from '../components/BasketView';
 import { HomeView } from '../components/HomeView';
 import { ModalView } from '../components/ModalView';
-import { OrderPaymentStepView } from '../components/OrderView';
+import {
+	OrderContactsStepView,
+	OrderPaymentStepView,
+} from '../components/OrderView';
 import {
 	BasketProductView,
 	CatalogProductView,
@@ -107,6 +110,24 @@ const orderPaymentStepView = new OrderPaymentStepView(
 		addressChange: (value) => {
 			events.emit(Events.ORDER_CHANGE_ADDRESS, { address: value });
 		},
+		submit: () => {
+			events.emit(Events.ORDER_PAYMENT_SUBMIT);
+		},
+	}
+);
+
+const orderContactsStepView = new OrderContactsStepView(
+	UiConfig.templates.contactsTemplate,
+	{
+		emailChange: (value) => {
+			events.emit(Events.ORDER_CHANGE_EMAIL, { email: value });
+		},
+		phoneNumberChange: (value) => {
+			events.emit(Events.ORDER_CHANGE_PHONE, { phone: value });
+		},
+		submit: () => {
+			events.emit(Events.ORDER_CONTACT_SUBMIT);
+		},
 	}
 );
 
@@ -158,6 +179,7 @@ events.on<{ product: Product; basketView: BasketView }>(
 );
 
 events.on<{ items: Product[] }>(Events.BASKET_START_ORDER, ({ items }) => {
+	orderState.items = items.map((item) => item.id);
 	modalView.render({
 		content: orderPaymentStepView.render({
 			payment: orderState.value.payment,
@@ -174,6 +196,26 @@ events.on<{ address: string }>(Events.ORDER_CHANGE_ADDRESS, ({ address }) => {
 	orderState.address = address;
 	orderPaymentStepView.render({
 		isPaymentValidated: orderState.isPaymentValidated,
+	});
+});
+
+events.on(Events.ORDER_PAYMENT_SUBMIT, () => {
+	modalView.render({
+		content: orderContactsStepView.render(),
+	});
+});
+
+events.on<{ email: string }>(Events.ORDER_CHANGE_EMAIL, ({ email }) => {
+	orderState.email = email;
+	orderContactsStepView.render({
+		isContactsValidated: orderState.isContactsValidated,
+	});
+});
+
+events.on<{ phone: string }>(Events.ORDER_CHANGE_PHONE, ({ phone }) => {
+	orderState.phone = phone;
+	orderContactsStepView.render({
+		isContactsValidated: orderState.isContactsValidated,
 	});
 });
 

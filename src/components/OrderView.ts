@@ -5,15 +5,22 @@ interface IOrderViewModel {
 	payment: 'card' | 'cash';
 	address: string;
 	email: string;
-	phoneNumber: string;
+	phone: string;
 	isPaymentValidated: boolean;
-	isContantsValidated: boolean;
+	isContactsValidated: boolean;
 }
 
 interface IOrderPaymentStepViewEvents {
 	buttonOnlineClick: () => void;
 	buttonOnReceiptClick: () => void;
 	addressChange: (value: string) => void;
+	submit: () => void;
+}
+
+interface IOrderContactsStepEvents {
+	emailChange: (value: string) => void;
+	phoneNumberChange: (value: string) => void;
+	submit: () => void;
 }
 
 abstract class OrderView extends Component<IOrderViewModel> {
@@ -24,7 +31,7 @@ abstract class OrderView extends Component<IOrderViewModel> {
 		super(container);
 
 		this._submitButton = ensureElement<HTMLButtonElement>(
-			'.order__button',
+			'button[type="submit"]',
 			this.container
 		);
 	}
@@ -42,11 +49,11 @@ export class OrderPaymentStepView extends OrderView {
 		super(template);
 
 		this._buttonOnline = ensureElement<HTMLButtonElement>(
-			'.button[name="card"]',
+			'button[name="card"]',
 			this.container
 		);
 		this._buttonOnReceipt = ensureElement<HTMLButtonElement>(
-			'.button[name="cash"]',
+			'button[name="cash"]',
 			this.container
 		);
 
@@ -66,7 +73,12 @@ export class OrderPaymentStepView extends OrderView {
 		this._addressInput.addEventListener('input', (ev: InputEvent) => {
 			return 'value' in ev.target
 				? events.addressChange(String(ev.target.value))
-				: '';
+				: undefined;
+		});
+
+		this.container.addEventListener('submit', (ev) => {
+			ev.preventDefault();
+			events.submit();
 		});
 	}
 
@@ -84,6 +96,43 @@ export class OrderPaymentStepView extends OrderView {
 	}
 
 	set isPaymentValidated(value: boolean) {
+		this.setDisabled(this._submitButton, !value);
+	}
+}
+
+export class OrderContactsStepView extends OrderView {
+	private _emailInput: HTMLInputElement;
+	private _phoneNumberInput: HTMLInputElement;
+
+	constructor(template: HTMLTemplateElement, events: IOrderContactsStepEvents) {
+		super(template);
+
+		this._emailInput = ensureElement<HTMLInputElement>(
+			'input[name="email"]',
+			this.container
+		);
+		this._phoneNumberInput = ensureElement<HTMLInputElement>(
+			'input[name="phone"]',
+			this.container
+		);
+
+		this._emailInput.addEventListener('input', (ev) => {
+			'value' in ev.target
+				? events.emailChange(String(ev.target.value))
+				: undefined;
+		});
+		this._phoneNumberInput.addEventListener('input', (ev) => {
+			'value' in ev.target
+				? events.phoneNumberChange(String(ev.target.value))
+				: undefined;
+		});
+		this.container.addEventListener('submit', (ev) => {
+			ev.preventDefault();
+			events.submit();
+		});
+	}
+
+	set isContactsValidated(value: boolean) {
 		this.setDisabled(this._submitButton, !value);
 	}
 }

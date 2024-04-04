@@ -82,4 +82,28 @@ export class OrderState {
 	set address(value: string) {
 		this._value.address = value;
 	}
+
+	get email(): Order['email'] {
+		return this._value.email;
+	}
+
+	set email(value: string) {
+		this._value.email = value;
+	}
+
+	get phone(): Order['phone'] {
+		return this._value.phone;
+	}
+
+	set phone(value: string) {
+		this._value.phone = value;
+	}
+
+	get items(): Order['items'] {
+		return this._value.items;
+	}
+
+	set items(value: Order['items']) {
+		this._value.items = value;
+	}
 }
