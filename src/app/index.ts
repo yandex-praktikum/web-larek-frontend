@@ -21,8 +21,6 @@ import { BasketState, OrderState } from './state';
 
 // ~~~~~~~ вспомогательные функции ~~~~~~~ //
 
-// TODO: общая функция создания компонента товара - createProductView
-
 function createBasketItem(basketView: BasketView) {
 	return (product: Product) => {
 		const productView = new BasketProductView({
