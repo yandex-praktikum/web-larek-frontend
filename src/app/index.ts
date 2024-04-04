@@ -138,7 +138,6 @@ events.on('BASKET_OPEN', () => {
 	const content = basketView.render({
 		items: basketState.items.map(createBasketItem(basketView)),
 		total: basketState.total,
-		isValidated: basketState.isValidated,
 	});
 	modalView.render({ content });
 });
@@ -168,10 +167,12 @@ events.on<{ product: Product; basketView: BasketView }>(
 );
 
 events.on<{ items: Product[] }>('BASKET_START_ORDER', ({ items }) => {
+	const validation = Object.values(orderState.validation).join('\n');
 	orderState.items = items;
 	modalView.render({
 		content: orderPaymentStepView.render({
 			payment: orderState.value.payment,
+			validation
 		}),
 	});
 });

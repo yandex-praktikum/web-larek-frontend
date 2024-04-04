@@ -4,7 +4,6 @@ import { AppComponent } from './AppComponent';
 interface IBasketViewModel {
 	items: HTMLElement[];
 	total: number;
-	isValidated: boolean;
 }
 
 interface IBasketViewEvents {
@@ -25,7 +24,6 @@ export class BasketView extends AppComponent<IBasketViewModel> {
 			'.basket__button',
 			this.container
 		);
-
 		this._submitButton.addEventListener('click', () => {
 			events.startOrder();
 		});
@@ -37,9 +35,5 @@ export class BasketView extends AppComponent<IBasketViewModel> {
 
 	set total(value: number) {
 		this.setText(this._total, value);
-	}
-
-	set isValidated(value: boolean) {
-		this.setDisabled(this._submitButton, !value);
 	}
 }

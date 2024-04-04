@@ -38,14 +38,11 @@ export class BasketState {
 			return acc + (x.price || 0);
 		}, 0);
 	}
-
-	get isValidated(): boolean {
-		return this._value.items.length > 0;
-	}
 }
 
 export class OrderState {
 	private _value: Order;
+	private _validation: { [key: string]: string } = {};
 
 	constructor() {
 		this._value = emptyOrder();
@@ -53,6 +50,15 @@ export class OrderState {
 
 	clear() {
 		this._value = emptyOrder();
+	}
+
+	get validation(): typeof this._validation | undefined {
+		if (this._value.items.length === 0) {
+			this._validation.address = 'Не заполнено значение';
+		} else {
+			this._validation = undefined;
+		}
+		return this._validation;
 	}
 
 	get value(): Order {

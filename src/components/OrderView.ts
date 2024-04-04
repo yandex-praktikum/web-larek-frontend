@@ -1,11 +1,11 @@
-import { Component } from '../ui/Component';
-import { cloneTemplate, ensureElement } from '../utils/utils';
+import { ensureElement } from '../utils/utils';
 import { AppComponent, AvailableContainer } from './AppComponent';
 
 interface IOrderViewModel {
 	payment: 'card' | 'cash';
 	isPaymentValidated: boolean;
 	isContactsValidated: boolean;
+	validation?: string;
 }
 
 interface IOrderPaymentStepViewEvents {
@@ -23,6 +23,7 @@ interface IOrderContactsStepEvents {
 
 abstract class OrderView extends AppComponent<IOrderViewModel> {
 	protected _submitButton: HTMLButtonElement;
+	protected _formErrors: HTMLElement;
 
 	constructor(element: AvailableContainer) {
 		super(element);
@@ -31,6 +32,21 @@ abstract class OrderView extends AppComponent<IOrderViewModel> {
 			'button[type="submit"]',
 			this.container
 		);
+
+		this._formErrors = ensureElement<HTMLElement>(
+			'.form__errors',
+			this.container
+		);
+	}
+
+	set validation(value: IOrderViewModel['validation']) {
+		this.setDisabled(this._submitButton, value !== undefined);
+
+		if (value === undefined) {
+			this.setText(this._formErrors, '');
+		} else {
+			this.setText(this._formErrors, value);
+		}
 	}
 }
 
