@@ -3,9 +3,8 @@ import { AppComponent, AvailableContainer } from './AppComponent';
 
 interface IOrderViewModel {
 	payment: 'card' | 'cash';
-	isPaymentValidated: boolean;
-	isContactsValidated: boolean;
-	validation?: string;
+	validation?: { key: string; value: string }[];
+	submitDisabled?: boolean;
 }
 
 interface IOrderPaymentStepViewEvents {
@@ -37,16 +36,24 @@ abstract class OrderView extends AppComponent<IOrderViewModel> {
 			'.form__errors',
 			this.container
 		);
+
+		this.container.addEventListener('submit', () => {
+			(this.container as HTMLFormElement).reset();
+		});
 	}
 
 	set validation(value: IOrderViewModel['validation']) {
-		this.setDisabled(this._submitButton, value !== undefined);
+		this.setDisabled(this._submitButton, value.length !== 0);
 
-		if (value === undefined) {
+		if (value.length === 0) {
 			this.setText(this._formErrors, '');
 		} else {
-			this.setText(this._formErrors, value);
+			this.setText(this._formErrors, value.map((x) => x.value).join('. '));
 		}
+	}
+
+	set submitDisabled(value: boolean) {
+		this.setDisabled(this._submitButton, value);
 	}
 }
 
@@ -104,10 +111,6 @@ export class OrderPaymentStepView extends OrderView {
 				break;
 		}
 	}
-
-	set isPaymentValidated(value: boolean) {
-		this.setDisabled(this._submitButton, !value);
-	}
 }
 
 export class OrderContactsStepView extends OrderView {
@@ -140,9 +143,5 @@ export class OrderContactsStepView extends OrderView {
 			ev.preventDefault();
 			events.submit();
 		});
-	}
-
-	set isContactsValidated(value: boolean) {
-		this.setDisabled(this._submitButton, !value);
 	}
 }

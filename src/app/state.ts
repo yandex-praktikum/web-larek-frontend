@@ -40,24 +40,45 @@ export class BasketState {
 	}
 }
 
-export class OrderState {
-	private _value: Order;
-	private _validation: { [key: string]: string } = {};
+type Validation = { key: string; value: string }[];
+type OrderValidationKeys = 'items' | 'address' | 'email' | 'phone';
 
-	constructor() {
-		this._value = emptyOrder();
-	}
+export class OrderState {
+	private _value: Order = emptyOrder();
+	private _validation: Validation = [];
 
 	clear() {
 		this._value = emptyOrder();
 	}
 
-	get validation(): typeof this._validation | undefined {
-		if (this._value.items.length === 0) {
-			this._validation.address = 'Не заполнено значение';
-		} else {
-			this._validation = undefined;
+	private pushValidation(key: string, value: string) {
+		if (!this._validation.find((x) => x.key === key)) {
+			this._validation.push({ key, value });
 		}
+	}
+
+	validation(keys: OrderValidationKeys[]): Validation {
+		this._validation = [];
+		keys.forEach((key) => {
+			switch (key) {
+				case 'items':
+					if (this._value.items.length === 0)
+						this.pushValidation(key, 'Нет товаров');
+					break;
+				case 'address':
+					if (this._value.address.trim() === '')
+						this.pushValidation(key, 'Не заполнен адрес');
+					break;
+				case 'email':
+					if (this._value.email.trim() === '')
+						this.pushValidation(key, 'Не заполнен email');
+					break;
+				case 'phone':
+					if (this._value.phone.trim() === '')
+						this.pushValidation(key, 'Не заполнен номер телефона');
+					break;
+			}
+		});
 		return this._validation;
 	}
 

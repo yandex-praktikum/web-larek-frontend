@@ -19,41 +19,6 @@ import { AppEvents, Product, ProductId, togglePaymentType } from '../types';
 import { EventEmitter } from './events';
 import { BasketState, OrderState } from './state';
 
-// ~~~~~~~ вспомогательные функции ~~~~~~~ //
-
-function createBasketItem(basketView: BasketView) {
-	return (product: Product) => {
-		const productView = new BasketProductView({
-			onDeleteClick: () => {
-				events.emit('BASKET_DELETE_ITEM', { product, basketView });
-			},
-		});
-		return productView.render(product);
-	};
-}
-
-function createCatalogItem(product: Product) {
-	const productView = new CatalogProductView({
-		onProductCardClick: () => {
-			events.emit('CARD_SELECT', { id: product.id });
-		},
-	});
-	return productView.render(product);
-}
-
-function createProductPreview(product: Product) {
-	const productView = new FullProductView({
-		toggleBasket: () => {
-			events.emit('CARD_TOGGLE_BASKET', { product });
-			modalView.close();
-		},
-	});
-	return productView.render({
-		...product,
-		isInBasket: basketState.findItem(product) !== undefined,
-	});
-}
-
 // ~~~~~~~~~~~~~~ приложение ~~~~~~~~~~~~~ //
 
 const events = new EventEmitter<AppEvents>();
@@ -61,6 +26,7 @@ const events = new EventEmitter<AppEvents>();
 // Чтобы мониторить все события, для отладки
 events.onAll(({ eventName, data }) => {
 	console.log(eventName, data);
+	console.log(orderState.email);
 });
 
 const basketState = new BasketState();
@@ -110,7 +76,7 @@ const orderContactsStepView = new OrderContactsStepView({
 		events.emit('ORDER_CHANGE_PHONE', { phone: value });
 	},
 	submit: () => {
-		events.emit('ORDER_CONTACT_SUBMIT');
+		events.emit('ORDER_CONTACT_SUBMIT', orderState.value);
 	},
 });
 
@@ -167,12 +133,12 @@ events.on<{ product: Product; basketView: BasketView }>(
 );
 
 events.on<{ items: Product[] }>('BASKET_START_ORDER', ({ items }) => {
-	const validation = Object.values(orderState.validation).join('\n');
 	orderState.items = items;
 	modalView.render({
 		content: orderPaymentStepView.render({
 			payment: orderState.value.payment,
-			validation
+			validation: [],
+			submitDisabled: true,
 		}),
 	});
 });
@@ -185,27 +151,30 @@ events.on('ORDER_TOGGLE_PAYMENT_TYPE', () => {
 events.on<{ address: string }>('ORDER_CHANGE_ADDRESS', ({ address }) => {
 	orderState.address = address;
 	orderPaymentStepView.render({
-		isPaymentValidated: orderState.isPaymentValidated,
+		validation: orderState.validation(['address', 'items']),
 	});
 });
 
 events.on('ORDER_PAYMENT_SUBMIT', () => {
 	modalView.render({
-		content: orderContactsStepView.render(),
+		content: orderContactsStepView.render({
+			validation: [],
+			submitDisabled: true,
+		}),
 	});
 });
 
 events.on<{ email: string }>('ORDER_CHANGE_EMAIL', ({ email }) => {
 	orderState.email = email;
 	orderContactsStepView.render({
-		isContactsValidated: orderState.isContactsValidated,
+		validation: orderState.validation(['email', 'phone']),
 	});
 });
 
 events.on<{ phone: string }>('ORDER_CHANGE_PHONE', ({ phone }) => {
 	orderState.phone = phone;
 	orderContactsStepView.render({
-		isContactsValidated: orderState.isContactsValidated,
+		validation: orderState.validation(['email', 'phone']),
 	});
 });
 
@@ -229,3 +198,38 @@ events.on('SUCCESS_CLOSE', () => {
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
 
 events.emit('START');
+
+// ~~~~~~~ вспомогательные функции ~~~~~~~ //
+
+function createBasketItem(basketView: BasketView) {
+	return (product: Product) => {
+		const productView = new BasketProductView({
+			onDeleteClick: () => {
+				events.emit('BASKET_DELETE_ITEM', { product, basketView });
+			},
+		});
+		return productView.render(product);
+	};
+}
+
+function createCatalogItem(product: Product) {
+	const productView = new CatalogProductView({
+		onProductCardClick: () => {
+			events.emit('CARD_SELECT', { id: product.id });
+		},
+	});
+	return productView.render(product);
+}
+
+function createProductPreview(product: Product) {
+	const productView = new FullProductView({
+		toggleBasket: () => {
+			events.emit('CARD_TOGGLE_BASKET', { product });
+			modalView.close();
+		},
+	});
+	return productView.render({
+		...product,
+		isInBasket: basketState.findItem(product) !== undefined,
+	});
+}
