@@ -1,5 +1,6 @@
 import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement } from '../utils/utils';
+import { AppComponent, AvailableContainer } from './AppComponent';
 
 interface IOrderViewModel {
 	payment: 'card' | 'cash';
@@ -20,12 +21,11 @@ interface IOrderContactsStepEvents {
 	submit: () => void;
 }
 
-abstract class OrderView extends Component<IOrderViewModel> {
+abstract class OrderView extends AppComponent<IOrderViewModel> {
 	protected _submitButton: HTMLButtonElement;
 
-	constructor(template: HTMLTemplateElement) {
-		const container = cloneTemplate(template);
-		super(container);
+	constructor(element: AvailableContainer) {
+		super(element);
 
 		this._submitButton = ensureElement<HTMLButtonElement>(
 			'button[type="submit"]',
@@ -39,11 +39,8 @@ export class OrderPaymentStepView extends OrderView {
 	private _buttonOnReceipt: HTMLButtonElement;
 	private _addressInput: HTMLInputElement;
 
-	constructor(
-		template: HTMLTemplateElement,
-		events: IOrderPaymentStepViewEvents
-	) {
-		super(template);
+	constructor(events: IOrderPaymentStepViewEvents) {
+		super('orderTemplate');
 
 		this._buttonOnline = ensureElement<HTMLButtonElement>(
 			'button[name="card"]',
@@ -101,8 +98,8 @@ export class OrderContactsStepView extends OrderView {
 	private _emailInput: HTMLInputElement;
 	private _phoneNumberInput: HTMLInputElement;
 
-	constructor(template: HTMLTemplateElement, events: IOrderContactsStepEvents) {
-		super(template);
+	constructor(events: IOrderContactsStepEvents) {
+		super('contactsTemplate');
 
 		this._emailInput = ensureElement<HTMLInputElement>(
 			'input[name="email"]',

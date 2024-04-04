@@ -40,14 +40,11 @@ function createBasketItem(basketView: BasketView) {
 }
 
 function createCatalogItem(product: Product) {
-	const productView = new CatalogProductView(
-		UiConfig.templates.cardCatalogTemplate,
-		{
-			onProductCardClick: () => {
-				events.emit(Events.CARD_SELECT, { id: product.id });
-			},
-		}
-	);
+	const productView = new CatalogProductView({
+		onProductCardClick: () => {
+			events.emit(Events.CARD_SELECT, { id: product.id });
+		},
+	});
 	return productView.render(product);
 }
 
@@ -86,13 +83,13 @@ const orderService = new OrderService();
 
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
-const modalView = new ModalView(UiConfig.predefinedElements.modalContainer);
+const modalView = new ModalView();
 
 const homeView = new HomeView({
 	onBasketOpenClick: () => events.emit(Events.BASKET_OPEN),
 });
 
-const basketView = new BasketView(UiConfig.templates.basketTemplate, {
+const basketView = new BasketView({
 	startOrder: () => {
 		events.emit<{ items: Product[] }>(Events.BASKET_START_ORDER, {
 			items: basketState.items,
@@ -100,40 +97,34 @@ const basketView = new BasketView(UiConfig.templates.basketTemplate, {
 	},
 });
 
-const orderPaymentStepView = new OrderPaymentStepView(
-	UiConfig.templates.orderTemplate,
-	{
-		buttonOnlineClick: () => {
-			events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
-		},
-		buttonOnReceiptClick: () => {
-			events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
-		},
-		addressChange: (value) => {
-			events.emit(Events.ORDER_CHANGE_ADDRESS, { address: value });
-		},
-		submit: () => {
-			events.emit(Events.ORDER_PAYMENT_SUBMIT);
-		},
-	}
-);
+const orderPaymentStepView = new OrderPaymentStepView({
+	buttonOnlineClick: () => {
+		events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
+	},
+	buttonOnReceiptClick: () => {
+		events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
+	},
+	addressChange: (value) => {
+		events.emit(Events.ORDER_CHANGE_ADDRESS, { address: value });
+	},
+	submit: () => {
+		events.emit(Events.ORDER_PAYMENT_SUBMIT);
+	},
+});
 
-const orderContactsStepView = new OrderContactsStepView(
-	UiConfig.templates.contactsTemplate,
-	{
-		emailChange: (value) => {
-			events.emit(Events.ORDER_CHANGE_EMAIL, { email: value });
-		},
-		phoneNumberChange: (value) => {
-			events.emit(Events.ORDER_CHANGE_PHONE, { phone: value });
-		},
-		submit: () => {
-			events.emit(Events.ORDER_CONTACT_SUBMIT);
-		},
-	}
-);
+const orderContactsStepView = new OrderContactsStepView({
+	emailChange: (value) => {
+		events.emit(Events.ORDER_CHANGE_EMAIL, { email: value });
+	},
+	phoneNumberChange: (value) => {
+		events.emit(Events.ORDER_CHANGE_PHONE, { phone: value });
+	},
+	submit: () => {
+		events.emit(Events.ORDER_CONTACT_SUBMIT);
+	},
+});
 
-const successView = new SuccessView(UiConfig.templates.successTemplate, {
+const successView = new SuccessView({
 	onClose: () => {
 		events.emit(Events.SUCCESS_CLOSE);
 	},

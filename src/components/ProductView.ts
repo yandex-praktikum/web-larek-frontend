@@ -1,5 +1,5 @@
-import { Component } from '../ui/Component';
-import { cloneTemplate, ensureElement, isEmpty } from '../utils/utils';
+import { ensureElement, isEmpty } from '../utils/utils';
+import { AppComponent, AvailableContainer } from './AppComponent';
 
 interface IProductViewModel {
 	description: string;
@@ -17,7 +17,7 @@ interface IProductViewEvents {
 	onDeleteClick: () => void;
 }
 
-abstract class ProductView extends Component<IProductViewModel> {
+abstract class ProductView extends AppComponent<IProductViewModel> {
 	protected _image: HTMLImageElement;
 	protected _title: HTMLElement;
 	protected _category: HTMLElement;
@@ -34,12 +34,11 @@ abstract class ProductView extends Component<IProductViewModel> {
 		);
 	}
 
-	constructor(template: HTMLTemplateElement) {
-		const container = cloneTemplate(template);
-		super(container);
+	constructor(templateName: AvailableContainer) {
+		super(templateName);
 
-		this._title = ensureElement<HTMLElement>('.card__title', container);
-		this._price = ensureElement<HTMLElement>('.card__price', container);
+		this._title = ensureElement<HTMLElement>('.card__title', this.container);
+		this._price = ensureElement<HTMLElement>('.card__price', this.container);
 	}
 
 	render(model: IProductViewModel) {
@@ -65,11 +64,8 @@ abstract class ProductView extends Component<IProductViewModel> {
 }
 
 export class CatalogProductView extends ProductView {
-	constructor(
-		template: HTMLTemplateElement,
-		events: Pick<IProductViewEvents, 'onProductCardClick'>
-	) {
-		super(template);
+	constructor(events: Pick<IProductViewEvents, 'onProductCardClick'>) {
+		super('cardCatalogTemplate');
 
 		this.ensureCategory();
 		this.ensureImage();
@@ -86,7 +82,7 @@ export class FullProductView extends ProductView {
 		template: HTMLTemplateElement,
 		events: Pick<IProductViewEvents, 'toggleBasket'>
 	) {
-		super(template);
+		super('cardPreviewTemplate');
 
 		this.ensureCategory();
 		this.ensureImage();
@@ -119,7 +115,7 @@ export class BasketProductView extends ProductView {
 		template: HTMLTemplateElement,
 		events: Pick<IProductViewEvents, 'onDeleteClick'>
 	) {
-		super(template);
+		super('cardBasketTemplate');
 
 		this._itemIndex = ensureElement<HTMLElement>(
 			'.basket__item-index',

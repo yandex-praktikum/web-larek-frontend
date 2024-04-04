@@ -1,5 +1,5 @@
-import { Component } from '../ui/Component';
-import { cloneTemplate, ensureElement } from '../utils/utils';
+import { ensureElement } from '../utils/utils';
+import { AppComponent } from './AppComponent';
 
 interface IBasketViewModel {
 	items: HTMLElement[];
@@ -11,20 +11,19 @@ interface IBasketViewEvents {
 	startOrder: () => void;
 }
 
-export class BasketView extends Component<IBasketViewModel> {
+export class BasketView extends AppComponent<IBasketViewModel> {
 	private _items: HTMLElement;
 	private _total: HTMLElement;
 	private _submitButton: HTMLButtonElement;
 
-	constructor(template: HTMLTemplateElement, events: IBasketViewEvents) {
-		const container = cloneTemplate(template);
-		super(container);
+	constructor(events: IBasketViewEvents) {
+		super('basketTemplate');
 
-		this._items = ensureElement<HTMLElement>('.basket__list', container);
-		this._total = ensureElement<HTMLElement>('.basket__price', container);
+		this._items = ensureElement<HTMLElement>('.basket__list', this.container);
+		this._total = ensureElement<HTMLElement>('.basket__price', this.container);
 		this._submitButton = ensureElement<HTMLButtonElement>(
 			'.basket__button',
-			container
+			this.container
 		);
 
 		this._submitButton.addEventListener('click', () => {

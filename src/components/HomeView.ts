@@ -1,5 +1,5 @@
-import { Component } from '../ui/Component';
 import { ensureElement } from '../utils/utils';
+import { AppComponent } from './AppComponent';
 
 interface IHomeViewModel {
 	counter: number;
@@ -11,7 +11,7 @@ interface IHomeViewEvents {
 	onBasketOpenClick: () => void;
 }
 
-export class HomeView extends Component<IHomeViewModel> {
+export class HomeView extends AppComponent<IHomeViewModel> {
 	protected _headerCounter: HTMLElement;
 	protected _gallery: HTMLElement;
 	protected _headerBasket: HTMLElement;

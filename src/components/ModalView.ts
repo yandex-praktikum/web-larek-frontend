@@ -1,5 +1,5 @@
-import { Component } from '../ui/Component';
 import { ensureElement } from '../utils/utils';
+import { AppComponent } from './AppComponent';
 
 interface IModalData {
 	content: HTMLElement;
@@ -10,18 +10,21 @@ interface IModalEvents {
 	onClose?: () => void;
 }
 
-export class ModalView extends Component<IModalData> {
+export class ModalView extends AppComponent<IModalData> {
 	protected _closeButton: HTMLButtonElement;
 	protected _content: HTMLElement;
 
-	constructor(container: HTMLElement, protected events?: IModalEvents) {
-		super(container);
+	constructor(protected events?: IModalEvents) {
+		super('modalContainer');
 
 		this._closeButton = ensureElement<HTMLButtonElement>(
 			'.modal__close',
-			container
+			this.container
 		);
-		this._content = ensureElement<HTMLElement>('.modal__content', container);
+		this._content = ensureElement<HTMLElement>(
+			'.modal__content',
+			this.container
+		);
 
 		this._closeButton.addEventListener('click', this.close.bind(this));
 		this.container.addEventListener('click', this.close.bind(this));

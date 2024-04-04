@@ -1,19 +1,18 @@
-import { Component } from '../ui/Component';
-import { cloneTemplate, ensureElement } from '../utils/utils';
+import { ensureElement } from '../utils/utils';
+import { AppComponent } from './AppComponent';
 
 interface ISuccessViewEvents {
 	onClose: () => void;
 }
 
-export class SuccessView extends Component<undefined> {
+export class SuccessView extends AppComponent<undefined> {
 	private _closeButton: HTMLButtonElement;
-	constructor(template: HTMLTemplateElement, events: ISuccessViewEvents) {
-		const container = cloneTemplate(template);
-		super(container);
+	constructor(events: ISuccessViewEvents) {
+		super('successTemplate');
 
 		this._closeButton = ensureElement<HTMLButtonElement>(
 			'.order-success__close',
-			container
+			this.container
 		);
 		this._closeButton.addEventListener('click', () => {
 			events.onClose();
