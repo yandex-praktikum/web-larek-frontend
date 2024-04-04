@@ -10,9 +10,10 @@ interface IOrderViewModel {
 	isContantsValidated: boolean;
 }
 
-interface IOrderViewEvents {
+interface IOrderPaymentStepViewEvents {
 	buttonOnlineClick: () => void;
 	buttonOnReceiptClick: () => void;
+	addressChange: (value: string) => void;
 }
 
 abstract class OrderView extends Component<IOrderViewModel> {
@@ -32,8 +33,12 @@ abstract class OrderView extends Component<IOrderViewModel> {
 export class OrderPaymentStepView extends OrderView {
 	private _buttonOnline: HTMLButtonElement;
 	private _buttonOnReceipt: HTMLButtonElement;
+	private _addressInput: HTMLInputElement;
 
-	constructor(template: HTMLTemplateElement, events: IOrderViewEvents) {
+	constructor(
+		template: HTMLTemplateElement,
+		events: IOrderPaymentStepViewEvents
+	) {
 		super(template);
 
 		this._buttonOnline = ensureElement<HTMLButtonElement>(
@@ -45,12 +50,23 @@ export class OrderPaymentStepView extends OrderView {
 			this.container
 		);
 
+		this._addressInput = ensureElement<HTMLInputElement>(
+			'input[name="address"]',
+			this.container
+		);
+
 		this._buttonOnline.addEventListener('click', () => {
 			events.buttonOnlineClick();
 		});
 
 		this._buttonOnReceipt.addEventListener('click', () => {
 			events.buttonOnReceiptClick();
+		});
+
+		this._addressInput.addEventListener('input', (ev: InputEvent) => {
+			return 'value' in ev.target
+				? events.addressChange(String(ev.target.value))
+				: '';
 		});
 	}
 

@@ -74,4 +74,12 @@ export class OrderState {
 	set payment(value: Order['payment']) {
 		this._value.payment = value;
 	}
+
+	get address(): Order['address'] {
+		return this._value.address;
+	}
+
+	set address(value: string) {
+		this._value.address = value;
+	}
 }

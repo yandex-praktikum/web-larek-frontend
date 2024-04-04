@@ -104,6 +104,9 @@ const orderPaymentStepView = new OrderPaymentStepView(
 		buttonOnReceiptClick: () => {
 			events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
 		},
+		addressChange: (value) => {
+			events.emit(Events.ORDER_CHANGE_ADDRESS, { address: value });
+		},
 	}
 );
 
@@ -165,6 +168,13 @@ events.on<{ items: Product[] }>(Events.BASKET_START_ORDER, ({ items }) => {
 events.on(Events.ORDER_TOGGLE_PAYMENT_TYPE, () => {
 	orderState.payment = togglePaymentType(orderState.value.payment);
 	orderPaymentStepView.render({ payment: orderState.value.payment });
+});
+
+events.on<{ address: string }>(Events.ORDER_CHANGE_ADDRESS, ({ address }) => {
+	orderState.address = address;
+	orderPaymentStepView.render({
+		isPaymentValidated: orderState.isPaymentValidated,
+	});
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
