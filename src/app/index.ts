@@ -15,9 +15,8 @@ import {
 import { SuccessView } from '../components/SuccessView';
 import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
-import { Product, ProductId, togglePaymentType } from '../types';
+import { AppEvents, Product, ProductId, togglePaymentType } from '../types';
 import { EventEmitter } from './events';
-import { Events } from './events.const';
 import { BasketState, OrderState } from './state';
 
 // ~~~~~~~ вспомогательные функции ~~~~~~~ //
@@ -28,7 +27,7 @@ function createBasketItem(basketView: BasketView) {
 	return (product: Product) => {
 		const productView = new BasketProductView({
 			onDeleteClick: () => {
-				events.emit(Events.BASKET_DELETE_ITEM, { product, basketView });
+				events.emit('BASKET_DELETE_ITEM', { product, basketView });
 			},
 		});
 		return productView.render(product);
@@ -38,7 +37,7 @@ function createBasketItem(basketView: BasketView) {
 function createCatalogItem(product: Product) {
 	const productView = new CatalogProductView({
 		onProductCardClick: () => {
-			events.emit(Events.CARD_SELECT, { id: product.id });
+			events.emit('CARD_SELECT', { id: product.id });
 		},
 	});
 	return productView.render(product);
@@ -47,7 +46,7 @@ function createCatalogItem(product: Product) {
 function createProductPreview(product: Product) {
 	const productView = new FullProductView({
 		toggleBasket: () => {
-			events.emit(Events.CARD_TOGGLE_BASKET, { product });
+			events.emit('CARD_TOGGLE_BASKET', { product });
 			modalView.close();
 		},
 	});
@@ -59,7 +58,7 @@ function createProductPreview(product: Product) {
 
 // ~~~~~~~~~~~~~~ приложение ~~~~~~~~~~~~~ //
 
-const events = new EventEmitter();
+const events = new EventEmitter<AppEvents>();
 
 // Чтобы мониторить все события, для отладки
 events.onAll(({ eventName, data }) => {
@@ -79,12 +78,12 @@ const orderService = new OrderService();
 const modalView = new ModalView();
 
 const homeView = new HomeView({
-	onBasketOpenClick: () => events.emit(Events.BASKET_OPEN),
+	onBasketOpenClick: () => events.emit('BASKET_OPEN'),
 });
 
 const basketView = new BasketView({
 	startOrder: () => {
-		events.emit<{ items: Product[] }>(Events.BASKET_START_ORDER, {
+		events.emit<{ items: Product[] }>('BASKET_START_ORDER', {
 			items: basketState.items,
 		});
 	},
@@ -92,52 +91,52 @@ const basketView = new BasketView({
 
 const orderPaymentStepView = new OrderPaymentStepView({
 	buttonOnlineClick: () => {
-		events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
+		events.emit('ORDER_TOGGLE_PAYMENT_TYPE');
 	},
 	buttonOnReceiptClick: () => {
-		events.emit(Events.ORDER_TOGGLE_PAYMENT_TYPE);
+		events.emit('ORDER_TOGGLE_PAYMENT_TYPE');
 	},
 	addressChange: (value) => {
-		events.emit(Events.ORDER_CHANGE_ADDRESS, { address: value });
+		events.emit('ORDER_CHANGE_ADDRESS', { address: value });
 	},
 	submit: () => {
-		events.emit(Events.ORDER_PAYMENT_SUBMIT);
+		events.emit('ORDER_PAYMENT_SUBMIT');
 	},
 });
 
 const orderContactsStepView = new OrderContactsStepView({
 	emailChange: (value) => {
-		events.emit(Events.ORDER_CHANGE_EMAIL, { email: value });
+		events.emit('ORDER_CHANGE_EMAIL', { email: value });
 	},
 	phoneNumberChange: (value) => {
-		events.emit(Events.ORDER_CHANGE_PHONE, { phone: value });
+		events.emit('ORDER_CHANGE_PHONE', { phone: value });
 	},
 	submit: () => {
-		events.emit(Events.ORDER_CONTACT_SUBMIT);
+		events.emit('ORDER_CONTACT_SUBMIT');
 	},
 });
 
 const successView = new SuccessView({
 	onClose: () => {
-		events.emit(Events.SUCCESS_CLOSE);
+		events.emit('SUCCESS_CLOSE');
 	},
 });
 
 // ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
-events.on(Events.START, () => {
+events.on('START', () => {
 	productService.getProducts().then((products): void => {
 		homeView.render({ gallery: products.map(createCatalogItem) });
 	});
 });
 
-events.on<{ id: ProductId }>(Events.CARD_SELECT, ({ id }) => {
+events.on<{ id: ProductId }>('CARD_SELECT', ({ id }) => {
 	productService.getProduct(id).then((product) => {
 		modalView.render({ content: createProductPreview(product) });
 	});
 });
 
-events.on(Events.BASKET_OPEN, () => {
+events.on('BASKET_OPEN', () => {
 	const content = basketView.render({
 		items: basketState.items.map(createBasketItem(basketView)),
 		total: basketState.total,
@@ -146,7 +145,7 @@ events.on(Events.BASKET_OPEN, () => {
 	modalView.render({ content });
 });
 
-events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
+events.on<{ product: Product }>('CARD_TOGGLE_BASKET', ({ product }) => {
 	const itemIndex = basketState.findItem(product);
 	if (itemIndex === undefined) {
 		basketState.addItem(product);
@@ -157,7 +156,7 @@ events.on<{ product: Product }>(Events.CARD_TOGGLE_BASKET, ({ product }) => {
 });
 
 events.on<{ product: Product; basketView: BasketView }>(
-	Events.BASKET_DELETE_ITEM,
+	'BASKET_DELETE_ITEM',
 	({ product, basketView }) => {
 		basketState.removeItem(product);
 		homeView.render({ counter: basketState.count() });
@@ -170,7 +169,7 @@ events.on<{ product: Product; basketView: BasketView }>(
 	}
 );
 
-events.on<{ items: Product[] }>(Events.BASKET_START_ORDER, ({ items }) => {
+events.on<{ items: Product[] }>('BASKET_START_ORDER', ({ items }) => {
 	orderState.items = items;
 	modalView.render({
 		content: orderPaymentStepView.render({
@@ -179,39 +178,39 @@ events.on<{ items: Product[] }>(Events.BASKET_START_ORDER, ({ items }) => {
 	});
 });
 
-events.on(Events.ORDER_TOGGLE_PAYMENT_TYPE, () => {
+events.on('ORDER_TOGGLE_PAYMENT_TYPE', () => {
 	orderState.payment = togglePaymentType(orderState.value.payment);
 	orderPaymentStepView.render({ payment: orderState.value.payment });
 });
 
-events.on<{ address: string }>(Events.ORDER_CHANGE_ADDRESS, ({ address }) => {
+events.on<{ address: string }>('ORDER_CHANGE_ADDRESS', ({ address }) => {
 	orderState.address = address;
 	orderPaymentStepView.render({
 		isPaymentValidated: orderState.isPaymentValidated,
 	});
 });
 
-events.on(Events.ORDER_PAYMENT_SUBMIT, () => {
+events.on('ORDER_PAYMENT_SUBMIT', () => {
 	modalView.render({
 		content: orderContactsStepView.render(),
 	});
 });
 
-events.on<{ email: string }>(Events.ORDER_CHANGE_EMAIL, ({ email }) => {
+events.on<{ email: string }>('ORDER_CHANGE_EMAIL', ({ email }) => {
 	orderState.email = email;
 	orderContactsStepView.render({
 		isContactsValidated: orderState.isContactsValidated,
 	});
 });
 
-events.on<{ phone: string }>(Events.ORDER_CHANGE_PHONE, ({ phone }) => {
+events.on<{ phone: string }>('ORDER_CHANGE_PHONE', ({ phone }) => {
 	orderState.phone = phone;
 	orderContactsStepView.render({
 		isContactsValidated: orderState.isContactsValidated,
 	});
 });
 
-events.on(Events.ORDER_CONTACT_SUBMIT, () => {
+events.on('ORDER_CONTACT_SUBMIT', () => {
 	orderService.sendOrder(orderState.value).then((res) => {
 		if ('error' in res) {
 			console.log(res);
@@ -223,11 +222,11 @@ events.on(Events.ORDER_CONTACT_SUBMIT, () => {
 	});
 });
 
-events.on(Events.SUCCESS_CLOSE, () => {
+events.on('SUCCESS_CLOSE', () => {
 	modalView.close();
 	homeView.render({ counter: basketState.count() });
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
 
-events.emit(Events.START);
+events.emit('START');
