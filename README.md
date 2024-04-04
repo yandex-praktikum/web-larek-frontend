@@ -273,5 +273,6 @@ class Home extends PageView<IHomeModel> {
 
 ### Диаграмма
 
-[Документация UML](https://www.visual-paradigm.com/guide/uml-unified-modeling-language/uml-class-diagram-tutorial/)
+[Про UML](https://www.visual-paradigm.com/guide/uml-unified-modeling-language/uml-class-diagram-tutorial/)
+
 ![Диаграмма зависимостей](./doc/web-larek-frontend-dependency-diagram.png)
