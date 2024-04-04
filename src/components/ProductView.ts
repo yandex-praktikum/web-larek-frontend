@@ -78,10 +78,7 @@ export class FullProductView extends ProductView {
 	private _description: HTMLElement;
 	private _toBasketButton: HTMLButtonElement;
 
-	constructor(
-		template: HTMLTemplateElement,
-		events: Pick<IProductViewEvents, 'toggleBasket'>
-	) {
+	constructor(events: Pick<IProductViewEvents, 'toggleBasket'>) {
 		super('cardPreviewTemplate');
 
 		this.ensureCategory();
@@ -111,10 +108,7 @@ export class BasketProductView extends ProductView {
 	private _itemIndex: HTMLElement;
 	private _deleteFromBasketButton: HTMLElement;
 
-	constructor(
-		template: HTMLTemplateElement,
-		events: Pick<IProductViewEvents, 'onDeleteClick'>
-	) {
+	constructor(events: Pick<IProductViewEvents, 'onDeleteClick'>) {
 		super('cardBasketTemplate');
 
 		this._itemIndex = ensureElement<HTMLElement>(

@@ -12,14 +12,13 @@ import {
 	CatalogProductView,
 	FullProductView,
 } from '../components/ProductView';
-import { BasketState, OrderState } from './state';
+import { SuccessView } from '../components/SuccessView';
 import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
 import { Product, ProductId, togglePaymentType } from '../types';
 import { EventEmitter } from './events';
 import { Events } from './events.const';
-import { UiConfig } from './uiConfig';
-import { SuccessView } from '../components/SuccessView';
+import { BasketState, OrderState } from './state';
 
 // ~~~~~~~ вспомогательные функции ~~~~~~~ //
 
@@ -27,14 +26,11 @@ import { SuccessView } from '../components/SuccessView';
 
 function createBasketItem(basketView: BasketView) {
 	return (product: Product) => {
-		const productView = new BasketProductView(
-			UiConfig.templates.cardBasketTemplate,
-			{
-				onDeleteClick: () => {
-					events.emit(Events.BASKET_DELETE_ITEM, { product, basketView });
-				},
-			}
-		);
+		const productView = new BasketProductView({
+			onDeleteClick: () => {
+				events.emit(Events.BASKET_DELETE_ITEM, { product, basketView });
+			},
+		});
 		return productView.render(product);
 	};
 }
@@ -49,15 +45,12 @@ function createCatalogItem(product: Product) {
 }
 
 function createProductPreview(product: Product) {
-	const productView = new FullProductView(
-		UiConfig.templates.cardPreviewTemplate,
-		{
-			toggleBasket: () => {
-				events.emit(Events.CARD_TOGGLE_BASKET, { product });
-				modalView.close();
-			},
-		}
-	);
+	const productView = new FullProductView({
+		toggleBasket: () => {
+			events.emit(Events.CARD_TOGGLE_BASKET, { product });
+			modalView.close();
+		},
+	});
 	return productView.render({
 		...product,
 		isInBasket: basketState.findItem(product) !== undefined,
