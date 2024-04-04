@@ -18,10 +18,21 @@ interface IProductViewEvents {
 }
 
 abstract class ProductView extends AppComponent<IProductViewModel> {
-	protected _image: HTMLImageElement | undefined = undefined;
-	protected _category: HTMLElement | undefined = undefined;
+	protected _image: HTMLImageElement;
 	protected _title: HTMLElement;
+	protected _category: HTMLElement;
 	protected _price: HTMLElement;
+
+	protected ensureCategory() {
+		this._category = ensureElement('.card__category', this.container);
+	}
+
+	protected ensureImage() {
+		this._image = ensureElement<HTMLImageElement>(
+			'.card__image',
+			this.container
+		);
+	}
 
 	constructor(templateName: AvailableContainer) {
 		super(templateName);
@@ -47,7 +58,8 @@ abstract class ProductView extends AppComponent<IProductViewModel> {
 	}
 
 	set price(value: number | null) {
-		this._price.textContent = isEmpty(value) ? '' : String(value);
+		this._price &&
+			(this._price.textContent = isEmpty(value) ? '' : String(value));
 	}
 }
 
@@ -55,11 +67,8 @@ export class CatalogProductView extends ProductView {
 	constructor(events: Pick<IProductViewEvents, 'onProductCardClick'>) {
 		super('cardCatalogTemplate');
 
-		this._category = ensureElement('.card__category', this.container);
-		this._image = ensureElement<HTMLImageElement>(
-			'.card__image',
-			this.container
-		);
+		this.ensureCategory();
+		this.ensureImage();
 
 		this.container.addEventListener('click', () => events.onProductCardClick());
 	}
@@ -69,14 +78,14 @@ export class FullProductView extends ProductView {
 	private _description: HTMLElement;
 	private _toBasketButton: HTMLButtonElement;
 
-	constructor(events: Pick<IProductViewEvents, 'toggleBasket'>) {
+	constructor(
+		template: HTMLTemplateElement,
+		events: Pick<IProductViewEvents, 'toggleBasket'>
+	) {
 		super('cardPreviewTemplate');
 
-		this._category = ensureElement('.card__category', this.container);
-		this._image = ensureElement<HTMLImageElement>(
-			'.card__image',
-			this.container
-		);
+		this.ensureCategory();
+		this.ensureImage();
 		this._description = ensureElement<HTMLElement>(
 			'.card__text',
 			this.container
@@ -102,7 +111,10 @@ export class BasketProductView extends ProductView {
 	private _itemIndex: HTMLElement;
 	private _deleteFromBasketButton: HTMLElement;
 
-	constructor(events: Pick<IProductViewEvents, 'onDeleteClick'>) {
+	constructor(
+		template: HTMLTemplateElement,
+		events: Pick<IProductViewEvents, 'onDeleteClick'>
+	) {
 		super('cardBasketTemplate');
 
 		this._itemIndex = ensureElement<HTMLElement>(
