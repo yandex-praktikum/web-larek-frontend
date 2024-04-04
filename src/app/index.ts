@@ -19,6 +19,7 @@ import { Product, ProductId, togglePaymentType } from '../types';
 import { EventEmitter } from './events';
 import { Events } from './events.const';
 import { UiConfig } from './uiConfig';
+import { SuccessView } from '../components/SuccessView';
 
 // ~~~~~~~ вспомогательные функции ~~~~~~~ //
 
@@ -81,6 +82,7 @@ const orderState = new OrderState();
 // ~~~~~~~~~~~~~~~ сервисы ~~~~~~~~~~~~~~~ //
 
 const productService = new ProductService();
+const orderService = new OrderService();
 
 // ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
 
@@ -131,6 +133,12 @@ const orderContactsStepView = new OrderContactsStepView(
 	}
 );
 
+const successView = new SuccessView(UiConfig.templates.successTemplate, {
+	onClose: () => {
+		events.emit(Events.SUCCESS_CLOSE);
+	},
+});
+
 // ~~~~~~~~~~~~~~~ события ~~~~~~~~~~~~~~~ //
 
 events.on(Events.START, () => {
@@ -179,7 +187,7 @@ events.on<{ product: Product; basketView: BasketView }>(
 );
 
 events.on<{ items: Product[] }>(Events.BASKET_START_ORDER, ({ items }) => {
-	orderState.items = items.map((item) => item.id);
+	orderState.items = items;
 	modalView.render({
 		content: orderPaymentStepView.render({
 			payment: orderState.value.payment,
@@ -217,6 +225,23 @@ events.on<{ phone: string }>(Events.ORDER_CHANGE_PHONE, ({ phone }) => {
 	orderContactsStepView.render({
 		isContactsValidated: orderState.isContactsValidated,
 	});
+});
+
+events.on(Events.ORDER_CONTACT_SUBMIT, () => {
+	orderService.sendOrder(orderState.value).then((res) => {
+		if ('error' in res) {
+			console.log(res);
+			return;
+		}
+		basketState.clear();
+		orderState.clear();
+		modalView.render({ content: successView.render() });
+	});
+});
+
+events.on(Events.SUCCESS_CLOSE, () => {
+	modalView.close();
+	homeView.render({ counter: basketState.count() });
 });
 
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //

@@ -51,6 +51,10 @@ export class OrderState {
 		this._value = emptyOrder();
 	}
 
+	clear() {
+		this._value = emptyOrder();
+	}
+
 	get value(): Order {
 		return this._value;
 	}
@@ -105,5 +109,6 @@ export class OrderState {
 
 	set items(value: Order['items']) {
 		this._value.items = value;
+		this._value.total = value.reduce((acc, x) => acc + x.price || 0, 0);
 	}
 }

@@ -3,9 +3,6 @@ import { cloneTemplate, ensureElement } from '../utils/utils';
 
 interface IOrderViewModel {
 	payment: 'card' | 'cash';
-	address: string;
-	email: string;
-	phone: string;
 	isPaymentValidated: boolean;
 	isContactsValidated: boolean;
 }

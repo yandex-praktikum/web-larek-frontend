@@ -25,7 +25,7 @@ export type Order = {
 	phone: string;
 	address: string;
 	total: number;
-	items: ProductId[];
+	items: Product[];
 };
 
 type OrderId = string;

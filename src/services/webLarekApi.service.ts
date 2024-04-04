@@ -33,7 +33,7 @@ export class WebLarekApi implements IWebLarekApi {
 
 	async postOrder(order: Order): Promise<SentOrder> {
 		return this.api
-			.post('/order', order)
+			.post('/order', { ...order, items: order.items.map((x) => x.id) })
 			.then((res: Pick<SentOrder, 'id' | 'total'>) => {
 				return { ...order, ...res };
 			});
