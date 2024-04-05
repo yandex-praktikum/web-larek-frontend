@@ -1,6 +1,6 @@
-import { Order, Product, ProductId, SentOrder } from '../models';
+import { Order, Product, ProductId, SentOrder } from './models';
 
-export * from '../models';
+export * from './models';
 
 export type AppEvents =
 	| 'START'

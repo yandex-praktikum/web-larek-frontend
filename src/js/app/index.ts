@@ -1,18 +1,18 @@
 // Application layer
 
-import { BasketView } from '../components/BasketView';
-import { HomeView } from '../components/HomeView';
-import { ModalView } from '../components/ModalView';
+import { BasketView } from '../views/BasketView';
+import { HomeView } from '../views/HomeView';
+import { ModalView } from '../views/ModalView';
 import {
 	OrderContactsStepView,
 	OrderPaymentStepView,
-} from '../components/OrderView';
+} from '../views/OrderView';
 import {
 	BasketProductView,
 	CatalogProductView,
 	FullProductView,
-} from '../components/ProductView';
-import { SuccessView } from '../components/SuccessView';
+} from '../views/ProductView';
+import { SuccessView } from '../views/SuccessView';
 import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
 import { AppEvents, Product, ProductId, togglePaymentType } from '../types';
