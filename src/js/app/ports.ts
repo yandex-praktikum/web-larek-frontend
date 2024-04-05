@@ -1,6 +1,17 @@
-// ~~~~~~~~~~~ Порт "Services" ~~~~~~~~~~~ //
+/**
+ * Порт - это интерфейс, через который слой приложения взаимодействует с
+ * сервисом или gui-компонентом
+ *
+ * Интерфейс порта показывает, как приложение и сервис должны общаться между собой
+ *
+ * Предназначен для того, чтобы можно было заменить любой сервис или gui-компонент
+ * без изменения основного приложения
+ */
 
 import { Order, Product, ProductId, SentOrder } from '../models';
+
+// ~~~~~~~~~~~ Порты "Services" ~~~~~~~~~~ //
+
 
 export interface IProductService {
 	getProducts: () => Promise<Product[]>;
@@ -17,7 +28,7 @@ export interface IWebLarekApi {
 	postOrder: (order: Order) => Promise<SentOrder>;
 }
 
-// ~~~~~~~~~~~~~ Порт "View" ~~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~~ Порты "View" ~~~~~~~~~~~~ //
 
 export interface IModalView<H> {
 	content: H;

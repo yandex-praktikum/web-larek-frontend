@@ -1,4 +1,6 @@
-// Application layer
+/**
+ * Вся логика приложения находится здесь
+ */
 
 import { Product, ProductId, togglePaymentType } from '../models';
 import { OrderService } from '../services/order.service';

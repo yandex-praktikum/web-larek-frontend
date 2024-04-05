@@ -1,3 +1,7 @@
+/**
+ * Взаимодействие с Fetch API браузера
+ */
+
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
 export class Api {

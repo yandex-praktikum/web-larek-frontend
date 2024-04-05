@@ -1,3 +1,6 @@
+/**
+ * Управление общим состоянием
+ */
 
 import { Order, Product, emptyOrder } from '../models';
 

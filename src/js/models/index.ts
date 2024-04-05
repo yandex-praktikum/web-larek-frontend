@@ -1,3 +1,7 @@
+/**
+ * Модели: их типы и связанные с ними вспомогательные функции
+ */
+
 export type ProductId = string;
 
 export type Product = {
