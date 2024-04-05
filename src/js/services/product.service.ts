@@ -1,5 +1,5 @@
 import { IProductService, Product } from '../types';
-import { API_URL, CDN_URL } from '../../utils/constants';
+import { API_URL, CDN_URL } from '../utils/constants';
 import { WebLarekApi } from './webLarekApi.service';
 
 // TODO: передавать api в конструктор

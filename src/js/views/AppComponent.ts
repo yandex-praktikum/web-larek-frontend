@@ -1,4 +1,4 @@
-import { cloneTemplate, ensureElement } from '../../utils/utils';
+import { cloneTemplate, ensureElement } from '../utils/utils';
 import { IAppView } from '../types';
 import { Component } from '../ui/Component';
 
