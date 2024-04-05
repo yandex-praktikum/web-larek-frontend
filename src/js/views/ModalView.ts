@@ -1,5 +1,5 @@
+import { IModalView } from '../app/ports';
 import { ensureElement } from '../utils/utils';
-import { IModalView } from '../types';
 import { AppView } from './AppView.base';
 
 interface IModalData {

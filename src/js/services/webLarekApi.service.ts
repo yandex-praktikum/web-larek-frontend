@@ -1,5 +1,6 @@
 import { Api } from '../adapters/api.adapter';
-import { IWebLarekApi, Order, Product, ProductId, SentOrder } from '../types';
+import { IWebLarekApi } from '../app/ports';
+import { Order, Product, ProductId, SentOrder } from '../models';
 
 type ApiListResponse<Type> = {
 	total: number;

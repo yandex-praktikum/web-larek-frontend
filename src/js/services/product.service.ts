@@ -1,4 +1,5 @@
-import { IProductService, Product } from '../types';
+import { IProductService } from '../app/ports';
+import { Product } from '../models';
 import { API_URL, CDN_URL } from '../utils/constants';
 import { WebLarekApi } from './webLarekApi.service';
 

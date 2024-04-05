@@ -1,5 +1,4 @@
-import { Order, emptyBasket, emptyOrder } from '../models';
-import { Basket, Product } from '../types';
+import { Basket, Order, Product, emptyBasket, emptyOrder } from '../models';
 
 export class BasketState {
 	constructor() {
