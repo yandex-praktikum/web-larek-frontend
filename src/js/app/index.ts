@@ -1,5 +1,8 @@
 // Application layer
 
+import { OrderService } from '../services/order.service';
+import { ProductService } from '../services/product.service';
+import { AppEvents, Product, ProductId, togglePaymentType } from '../types';
 import { BasketView } from '../views/BasketView';
 import { HomeView } from '../views/HomeView';
 import { ModalView } from '../views/ModalView';
@@ -13,9 +16,6 @@ import {
 	FullProductView,
 } from '../views/ProductView';
 import { SuccessView } from '../views/SuccessView';
-import { OrderService } from '../services/order.service';
-import { ProductService } from '../services/product.service';
-import { AppEvents, Product, ProductId, togglePaymentType } from '../types';
 import { EventEmitter } from './events';
 import { BasketState, OrderState } from './state';
 
