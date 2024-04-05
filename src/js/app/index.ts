@@ -1,8 +1,9 @@
 // Application layer
 
+import { Product, ProductId, togglePaymentType } from '../models';
 import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
-import { AppEvents, Product, ProductId, togglePaymentType } from '../types';
+import { AppEvents } from '../types';
 import { BasketView } from '../views/BasketView';
 import { HomeView } from '../views/HomeView';
 import { ModalView } from '../views/ModalView';

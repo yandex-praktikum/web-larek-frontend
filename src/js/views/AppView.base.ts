@@ -1,6 +1,6 @@
 import { cloneTemplate, ensureElement } from '../utils/utils';
-import { IAppView } from '../types';
 import { Component } from '../ui/Component';
+import { IAppView } from '../app/ports';
 
 export type AvailableContainer =
 	| keyof typeof AppView.templates
