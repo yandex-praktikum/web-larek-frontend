@@ -17,7 +17,7 @@ export type AppEvents =
 	| 'ORDER_CONTACT_SUBMIT'
 	| 'SUCCESS_CLOSE';
 
-// ~~~~~~~~~ Интерфейсы сервисов ~~~~~~~~~ //
+// ~~~~~~~~~~~ Порт "Services" ~~~~~~~~~~~ //
 
 export interface IProductService {
 	getProducts: () => Promise<Product[]>;
@@ -32,4 +32,17 @@ export interface IWebLarekApi {
 	getProducts: () => Promise<Product[]>;
 	getProduct: (id: ProductId) => Promise<Product>;
 	postOrder: (order: Order) => Promise<SentOrder>;
+}
+
+// ~~~~~~~~~~~~~ Порт "View" ~~~~~~~~~~~~~ //
+
+export interface IModalView<H> {
+	content: H;
+	render: (data: { content: H }) => H;
+	open: () => void;
+	close: () => void;
+}
+
+export interface IAppView<T, H> {
+	render: (data?: Partial<T>) => H;
 }

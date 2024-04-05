@@ -1,4 +1,5 @@
 import { ensureElement } from '../../utils/utils';
+import { IModalView } from '../types';
 import { AppComponent } from './AppComponent';
 
 interface IModalData {
@@ -10,7 +11,10 @@ interface IModalEvents {
 	onClose?: () => void;
 }
 
-export class ModalView extends AppComponent<IModalData> {
+export class ModalView
+	extends AppComponent<IModalData>
+	implements IModalView<HTMLElement>
+{
 	protected _closeButton: HTMLButtonElement;
 	protected _content: HTMLElement;
 

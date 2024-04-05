@@ -1,11 +1,15 @@
-import { Component } from '../ui/Component';
 import { cloneTemplate, ensureElement } from '../../utils/utils';
+import { IAppView } from '../types';
+import { Component } from '../ui/Component';
 
 export type AvailableContainer =
 	| keyof typeof AppComponent.templates
 	| keyof typeof AppComponent.predefinedElements;
 
-export abstract class AppComponent<T> extends Component<T> {
+export abstract class AppComponent<T>
+	extends Component<T>
+	implements IAppView<T, HTMLElement>
+{
 	static templates = {
 		successTemplate: ensureElement<HTMLTemplateElement>('#success'),
 		cardCatalogTemplate: ensureElement<HTMLTemplateElement>('#card-catalog'),
