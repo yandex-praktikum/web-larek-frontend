@@ -1,5 +1,5 @@
 import { ensureElement } from '../utils/utils';
-import { AppComponent } from './AppComponent';
+import { AppView } from './AppView.base';
 
 interface IBasketViewModel {
 	items: HTMLElement[];
@@ -10,7 +10,7 @@ interface IBasketViewEvents {
 	startOrder: () => void;
 }
 
-export class BasketView extends AppComponent<IBasketViewModel> {
+export class BasketView extends AppView<IBasketViewModel> {
 	private _items: HTMLElement;
 	private _total: HTMLElement;
 	private _submitButton: HTMLButtonElement;

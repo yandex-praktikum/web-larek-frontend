@@ -1,11 +1,11 @@
 import { ensureElement } from '../utils/utils';
-import { AppComponent } from './AppComponent';
+import { AppView } from './AppView.base';
 
 interface ISuccessViewEvents {
 	onClose: () => void;
 }
 
-export class SuccessView extends AppComponent<undefined> {
+export class SuccessView extends AppView<undefined> {
 	private _closeButton: HTMLButtonElement;
 	constructor(events: ISuccessViewEvents) {
 		super('successTemplate');

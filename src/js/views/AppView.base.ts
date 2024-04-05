@@ -3,10 +3,10 @@ import { IAppView } from '../types';
 import { Component } from '../ui/Component';
 
 export type AvailableContainer =
-	| keyof typeof AppComponent.templates
-	| keyof typeof AppComponent.predefinedElements;
+	| keyof typeof AppView.templates
+	| keyof typeof AppView.predefinedElements;
 
-export abstract class AppComponent<T>
+export abstract class AppView<T>
 	extends Component<T>
 	implements IAppView<T, HTMLElement>
 {
@@ -30,10 +30,10 @@ export abstract class AppComponent<T>
 		} else {
 			switch (element) {
 				case 'modalContainer':
-					super(AppComponent.predefinedElements.modalContainer);
+					super(AppView.predefinedElements.modalContainer);
 					break;
 				default:
-					super(cloneTemplate(AppComponent.templates[element]));
+					super(cloneTemplate(AppView.templates[element]));
 			}
 		}
 	}

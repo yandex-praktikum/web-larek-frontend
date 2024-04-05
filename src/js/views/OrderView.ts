@@ -1,5 +1,5 @@
 import { ensureElement } from '../utils/utils';
-import { AppComponent, AvailableContainer } from './AppComponent';
+import { AppView, AvailableContainer } from './AppView.base';
 
 interface IOrderViewModel {
 	payment: 'card' | 'cash';
@@ -20,7 +20,7 @@ interface IOrderContactsStepEvents {
 	submit: () => void;
 }
 
-abstract class OrderView extends AppComponent<IOrderViewModel> {
+abstract class OrderView extends AppView<IOrderViewModel> {
 	protected _submitButton: HTMLButtonElement;
 	protected _formErrors: HTMLElement;
 

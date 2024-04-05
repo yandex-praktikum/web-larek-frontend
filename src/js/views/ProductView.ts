@@ -1,5 +1,5 @@
 import { ensureElement, isEmpty } from '../utils/utils';
-import { AppComponent, AvailableContainer } from './AppComponent';
+import { AppView, AvailableContainer } from './AppView.base';
 
 interface IProductViewModel {
 	description: string;
@@ -17,7 +17,7 @@ interface IProductViewEvents {
 	onDeleteClick: () => void;
 }
 
-abstract class ProductView extends AppComponent<IProductViewModel> {
+abstract class ProductView extends AppView<IProductViewModel> {
 	protected _image: HTMLImageElement;
 	protected _title: HTMLElement;
 	protected _category: HTMLElement;
