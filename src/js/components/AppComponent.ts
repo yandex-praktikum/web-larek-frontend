@@ -1,5 +1,5 @@
 import { Component } from '../ui/Component';
-import { cloneTemplate, ensureElement } from '../utils/utils';
+import { cloneTemplate, ensureElement } from '../../utils/utils';
 
 export type AvailableContainer =
 	| keyof typeof AppComponent.templates
