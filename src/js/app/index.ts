@@ -19,6 +19,41 @@ import { SuccessView } from '../views/SuccessView';
 import { EventEmitter } from './events';
 import { BasketState, OrderState } from './state';
 
+// ~~~~~~~ вспомогательные функции ~~~~~~~ //
+
+function createBasketItem(basketView: BasketView) {
+	return (product: Product) => {
+		const productView = new BasketProductView({
+			onDeleteClick: () => {
+				events.emit('BASKET_DELETE_ITEM', { product, basketView });
+			},
+		});
+		return productView.render(product);
+	};
+}
+
+function createCatalogItem(product: Product) {
+	const productView = new CatalogProductView({
+		onProductCardClick: () => {
+			events.emit('CARD_SELECT', { id: product.id });
+		},
+	});
+	return productView.render(product);
+}
+
+function createProductPreview(product: Product) {
+	const productView = new FullProductView({
+		toggleBasket: () => {
+			events.emit('CARD_TOGGLE_BASKET', { product });
+			modalView.close();
+		},
+	});
+	return productView.render({
+		...product,
+		isInBasket: basketState.findItem(product) !== undefined,
+	});
+}
+
 // ~~~~~~~~~~~~~~ приложение ~~~~~~~~~~~~~ //
 
 const events = new EventEmitter<AppEvents>();
@@ -26,7 +61,6 @@ const events = new EventEmitter<AppEvents>();
 // Чтобы мониторить все события, для отладки
 events.onAll(({ eventName, data }) => {
 	console.log(eventName, data);
-	console.log(orderState.email);
 });
 
 const basketState = new BasketState();
@@ -37,7 +71,7 @@ const orderState = new OrderState();
 const productService = new ProductService();
 const orderService = new OrderService();
 
-// ~~~~~~~~~~~~ представления ~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~~~~~ views ~~~~~~~~~~~~~~~~ //
 
 const modalView = new ModalView();
 
@@ -198,38 +232,3 @@ events.on('SUCCESS_CLOSE', () => {
 // ~~~~~~~~~~~~~ точка входа ~~~~~~~~~~~~~ //
 
 events.emit('START');
-
-// ~~~~~~~ вспомогательные функции ~~~~~~~ //
-
-function createBasketItem(basketView: BasketView) {
-	return (product: Product) => {
-		const productView = new BasketProductView({
-			onDeleteClick: () => {
-				events.emit('BASKET_DELETE_ITEM', { product, basketView });
-			},
-		});
-		return productView.render(product);
-	};
-}
-
-function createCatalogItem(product: Product) {
-	const productView = new CatalogProductView({
-		onProductCardClick: () => {
-			events.emit('CARD_SELECT', { id: product.id });
-		},
-	});
-	return productView.render(product);
-}
-
-function createProductPreview(product: Product) {
-	const productView = new FullProductView({
-		toggleBasket: () => {
-			events.emit('CARD_TOGGLE_BASKET', { product });
-			modalView.close();
-		},
-	});
-	return productView.render({
-		...product,
-		isInBasket: basketState.findItem(product) !== undefined,
-	});
-}
