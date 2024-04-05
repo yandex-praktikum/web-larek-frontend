@@ -1,11 +1,12 @@
-import { Basket, Order, Product, emptyBasket, emptyOrder } from '../models';
+
+import { Order, Product, emptyOrder } from '../models';
 
 export class BasketState {
-	constructor() {
-		this._value = emptyBasket();
-	}
+	private _value: { items: Product[] };
 
-	private _value: Basket;
+	constructor() {
+		this._value = { items: [] };
+	}
 
 	findItem(product: Product): number | undefined {
 		const res = this._value.items.findIndex((value) => value.id === product.id);

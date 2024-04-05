@@ -9,14 +9,6 @@ export type Product = {
 	price: number | null;
 };
 
-export type Basket = {
-	items: Product[];
-};
-
-export function emptyBasket(): Basket {
-	return { items: [] };
-}
-
 export type PaymentType = 'card' | 'cash';
 
 export type Order = {

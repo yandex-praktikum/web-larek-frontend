@@ -82,7 +82,7 @@ const homeView = new HomeView({
 
 const basketView = new BasketView({
 	startOrder: () => {
-		events.emit<{ items: Product[] }>('BASKET_START_ORDER', {
+		events.emit('BASKET_START_ORDER', {
 			items: basketState.items,
 		});
 	},
