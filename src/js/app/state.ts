@@ -43,7 +43,6 @@ export class BasketState {
 	}
 }
 
-type Validation = { key: string; value: string }[];
 type OrderValidationKeys = 'items' | 'address' | 'email' | 'phone';
 
 export class OrderState {

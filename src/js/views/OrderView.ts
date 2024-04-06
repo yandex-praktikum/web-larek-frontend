@@ -3,7 +3,7 @@ import { AppView, AvailableContainer } from './AppView.base';
 
 interface IOrderViewModel {
 	payment: 'card' | 'cash';
-	validation?: { key: string; value: string }[];
+	validation?: Validation;
 	submitDisabled?: boolean;
 }
 

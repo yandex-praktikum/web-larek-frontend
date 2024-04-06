@@ -9,7 +9,7 @@ interface IProductViewModel {
 	price: number | null;
 	isInBasket?: boolean;
 	itemIndex?: number;
-	validation?: { key: string; value: string }[];
+	validation?: Validation;
 }
 
 interface IProductViewEvents {
