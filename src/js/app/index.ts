@@ -145,9 +145,14 @@ events.on<{ id: ProductId }>('CARD_SELECT', ({ id }) => {
 });
 
 events.on('BASKET_OPEN', () => {
+	const validation =
+		basketState.total === 0
+			? [{ key: 'total', value: 'Итог по корзине равен нулю' }]
+			: [];
 	const content = basketView.render({
 		items: basketState.items.map(createBasketItem(basketView)),
 		total: basketState.total,
+		validation,
 	});
 	modalView.render({ content });
 });
@@ -166,11 +171,16 @@ events.on<{ product: Product; basketView: BasketView }>(
 	'BASKET_DELETE_ITEM',
 	({ product, basketView }) => {
 		basketState.removeItem(product);
+		const validation =
+			basketState.total === 0
+				? [{ key: 'total', value: 'Итог по корзине равен нулю' }]
+				: [];
 		homeView.render({ counter: basketState.count() });
 		modalView.render({
 			content: basketView.render({
 				items: basketState.items.map(createBasketItem(basketView)),
 				total: basketState.total,
+				validation,
 			}),
 		});
 	}

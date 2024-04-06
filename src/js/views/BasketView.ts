@@ -4,6 +4,7 @@ import { AppView } from './AppView.base';
 interface IBasketViewModel {
 	items: HTMLElement[];
 	total: number;
+	validation?: Validation;
 }
 
 interface IBasketViewEvents {
@@ -35,5 +36,9 @@ export class BasketView extends AppView<IBasketViewModel> {
 
 	set total(value: number) {
 		this.setText(this._total, value);
+	}
+
+	set validation(value: Validation) {
+		this.setDisabled(this._submitButton, value.length !== 0);
 	}
 }
