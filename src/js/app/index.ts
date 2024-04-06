@@ -6,6 +6,7 @@ import { Product, ProductId, togglePaymentType } from '../models';
 import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
 import { AppEvents } from '../types';
+import { isEmpty } from '../utils/utils';
 import { BasketView } from '../views/BasketView';
 import { HomeView } from '../views/HomeView';
 import { ModalView } from '../views/ModalView';
@@ -51,9 +52,13 @@ function createProductPreview(product: Product) {
 			modalView.close();
 		},
 	});
+	const validation = isEmpty(product.price)
+		? [{ key: 'price', value: 'Этот товар нельзя купить. Он бесценен!' }]
+		: [];
 	return productView.render({
 		...product,
 		isInBasket: basketState.findItem(product) !== undefined,
+		validation,
 	});
 }
 

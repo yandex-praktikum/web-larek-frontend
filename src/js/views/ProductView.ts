@@ -9,6 +9,7 @@ interface IProductViewModel {
 	price: number | null;
 	isInBasket?: boolean;
 	itemIndex?: number;
+	validation?: { key: string; value: string }[];
 }
 
 interface IProductViewEvents {
@@ -101,6 +102,19 @@ export class FullProductView extends ProductView {
 
 	set isInBasket(inBasket: boolean) {
 		this.setText(this._toBasketButton, inBasket ? 'Убрать' : 'В корзину');
+	}
+
+	set validation(value: IProductViewModel['validation']) {
+		if (value.length != 0) {
+			this.setDisabled(this._toBasketButton, true);
+			this._toBasketButton.setAttribute(
+				'title',
+				value.map((x) => x.value).join('; ')
+			);
+		} else {
+			this.setDisabled(this._toBasketButton, false);
+			this._toBasketButton.setAttribute('title', '');
+		}
 	}
 }
 
