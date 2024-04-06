@@ -1,3 +1,3 @@
 import './scss/styles.scss';
 
-import './app';
+import './js/app';
