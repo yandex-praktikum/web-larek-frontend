@@ -6,6 +6,7 @@ import { Product, ProductId, togglePaymentType } from '../models';
 import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
 import { AppEvents } from '../types';
+import { settings } from '../utils/constants';
 import { isEmpty } from '../utils/utils';
 import { BasketView } from '../views/BasketView';
 import { HomeView } from '../views/HomeView';
@@ -67,9 +68,10 @@ function createProductPreview(product: Product) {
 const events = new EventEmitter<AppEvents>();
 
 // Чтобы мониторить все события, для отладки
-events.onAll(({ eventName, data }) => {
-	console.log(eventName, data);
-});
+settings.mode !== 'production' &&
+	events.onAll(({ eventName, data }) => {
+		console.log(eventName, data);
+	});
 
 const basketState = new BasketState();
 const orderState = new OrderState();
