@@ -12,4 +12,3 @@ export type AppEvents =
 	| 'ORDER_PAYMENT_SUBMIT'
 	| 'ORDER_CONTACT_SUBMIT'
 	| 'SUCCESS_CLOSE';
-

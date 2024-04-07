@@ -10,6 +10,7 @@ interface IProductViewModel {
 	isInBasket?: boolean;
 	itemIndex?: number;
 	validation?: Validation;
+	categoryClass: string;
 }
 
 interface IProductViewEvents {
@@ -61,6 +62,16 @@ abstract class ProductView extends AppView<IProductViewModel> {
 	set price(value: number | null) {
 		this._price &&
 			(this._price.textContent = isEmpty(value) ? '' : String(value));
+	}
+
+	set categoryClass(value: string) {
+		if (this._category) {
+			this._category.classList.forEach(
+				(x) =>
+					x.startsWith('card__category_') && this._category.classList.remove(x)
+			);
+			this._category.classList.add(`card__category_${value}`);
+		}
 	}
 }
 

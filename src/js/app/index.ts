@@ -24,6 +24,14 @@ import { SuccessView } from '../views/SuccessView';
 import { EventEmitter } from './events';
 import { BasketState, OrderState } from './state';
 
+const categories: Record<string, string> = {
+	'софт-скил': 'soft',
+	другое: 'other',
+	дополнительное: 'additional',
+	кнопка: 'button',
+	'хард-скил': 'hard',
+};
+
 // ~~~~~~~ вспомогательные функции ~~~~~~~ //
 
 function createBasketItem(basketView: BasketView) {
@@ -33,7 +41,10 @@ function createBasketItem(basketView: BasketView) {
 				events.emit('BASKET_DELETE_ITEM', { product, basketView });
 			},
 		});
-		return productView.render(product);
+		return productView.render({
+			...product,
+			categoryClass: categories[product.category],
+		});
 	};
 }
 
@@ -43,7 +54,10 @@ function createCatalogItem(product: Product) {
 			events.emit('CARD_SELECT', { id: product.id });
 		},
 	});
-	return productView.render(product);
+	return productView.render({
+		...product,
+		categoryClass: categories[product.category],
+	});
 }
 
 function createProductPreview(product: Product) {
@@ -58,6 +72,7 @@ function createProductPreview(product: Product) {
 		: [];
 	return productView.render({
 		...product,
+		categoryClass: categories[product.category],
 		isInBasket: basketState.findItem(product) !== undefined,
 		validation,
 	});
@@ -240,9 +255,11 @@ events.on('ORDER_CONTACT_SUBMIT', () => {
 		}
 		basketState.clear();
 		orderState.clear();
-		modalView.render({ content: successView.render({
-			description: `Списано ${res.total} синапсов`
-		}) });
+		modalView.render({
+			content: successView.render({
+				description: `Списано ${res.total} синапсов`,
+			}),
+		});
 	});
 });
 
