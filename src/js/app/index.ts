@@ -240,7 +240,9 @@ events.on('ORDER_CONTACT_SUBMIT', () => {
 		}
 		basketState.clear();
 		orderState.clear();
-		modalView.render({ content: successView.render() });
+		modalView.render({ content: successView.render({
+			description: `Списано ${res.total} синапсов`
+		}) });
 	});
 });
 

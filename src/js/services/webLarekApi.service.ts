@@ -8,13 +8,13 @@ type ApiListResponse<Type> = {
 };
 
 export class WebLarekApi implements IWebLarekApi {
-	private api: Api;
-	readonly cdn: string;
-
-	constructor(cdn: string, baseUrl: string, options?: RequestInit) {
-		this.api = new Api(baseUrl, options);
-		this.cdn = cdn;
-	}
+	/**
+	 * Создает экземпляр WebLarekApi.
+	 * @param {Api} api - получите этот аргумент с помощью функции getApi()
+	 * @param {string} cdn
+	 * @memberof WebLarekApi
+	 */
+	constructor(private api: Api, private cdn: string) {}
 
 	async getProducts(): Promise<Product[]> {
 		return this.api.get('/product').then((data: ApiListResponse<Product>) =>
@@ -40,4 +40,8 @@ export class WebLarekApi implements IWebLarekApi {
 			});
 		// ошибка обрабатывается в классе Api
 	}
+}
+
+export function getApi(baseUrl: string): Api {
+	return new Api(baseUrl);
 }
