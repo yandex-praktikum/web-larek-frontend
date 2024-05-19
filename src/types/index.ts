@@ -1,7 +1,7 @@
 
-export interface IProduct {
+export interface ICard {
   category: string,
-  _id: number,
+  id: string,
   name: string,
   description: string,
   picture: string,
@@ -14,23 +14,33 @@ export interface IOrder {
   telephone: string,
   email: string,
   total: number,
-  items: IProduct[]
+  items: ICard[]
 }
 
-export interface IProductsData {
-  products: IProduct[],
-  preview: string | null,
-  addProduct(product: IProduct): void,
-  deleteProduct(productId: string): void,
-  getProduct(productId: string): IProduct
+export interface ICardsData {
+  _cards: ICard[],
+  _preview: string | null,
+  addCard(card: ICard): void,
+  deleteCard(cardId: string): void,
+  getCard(cardId: string): ICard
 }
 
+export interface IOrderData {
+  paymentType: TOrder | string,
+  address: TOrder | string,
+  telephone: TOrder |string,
+  email: TOrder | string,
+  total: TOrderSuccess | number,
+  items: ICard[],
+  addOrder (order: TOrder) : void
+  checkValidation (order: TOrder) : boolean
+}
 
-export type TProductInfo = Pick<IProduct, 'category' | 'name' | 'picture' | 'price'>
+export type TCardInfo = Pick<ICard, 'category' | 'name' | 'picture' | 'price'>
 
-export type TProductDetails = Pick<IProduct, 'category' | 'name' | 'description' | 'picture' | 'price'>;
+export type TCardPreview = Pick<ICard, 'category' | 'name' | 'description' | 'picture' | 'price'>;
 
-export type TCart = Pick<IProduct, 'name' | 'price'>;
+export type TBasket = Pick<ICard, 'name' | 'price'>;
 
 export type TOrder = Partial<IOrder>;
 
