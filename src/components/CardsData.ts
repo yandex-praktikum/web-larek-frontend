@@ -25,6 +25,7 @@ export class CardsData {
     this.events.emit('cards:changed');
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   deleteCard (cardId: string, payload: Function | null = null): void {
     this._cards = this._cards.filter(function(card) {card.id !== cardId})
     if (payload) {
@@ -39,5 +40,20 @@ export class CardsData {
     return this._cards.find(function(card) {card.id === cardId})
   }
 
+  set preview(cardId) {
+    if(!cardId) {
+      this._preview = null
+      return
+    }
+    const selectedCard = this.getCard(cardId)
+    if (selectedCard) {
+      this._preview = cardId
+      this.events.emit("card:selected")
+    }
+  }
+
+  get preview() {
+    return this._preview;
+  }
 }
 
