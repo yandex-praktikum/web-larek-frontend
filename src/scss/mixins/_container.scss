@@ -1,7 +1,7 @@
 @use "variables" as *;
 
 @mixin container($top: $defaultPadding, $bottom: $defaultPadding) {
-  margin: 0 auto;
+  margin: auto;
   width: 100%;
   box-sizing: border-box;
   max-width: $maxPageWidth;
