@@ -1,7 +1,7 @@
-import { IOrder, IOrderData, TOrderContacts, TOrderDelivery, TOrderInfo } from "../types";
+import { IOrder, IOrderBuilder, TOrderContacts, TOrderDelivery, TOrderInfo } from "../types";
 import { IEvents } from "./base/events";
 
-class OrderBuilder implements IOrder {
+class OrderBuilder implements IOrderBuilder {
   protected order: IOrder;
   events: IEvents;
 
@@ -24,5 +24,7 @@ class OrderBuilder implements IOrder {
     this.order.telephone = info.telephone
   }
 
-  set 
+  getOrderData () {
+    return this.order;
+  }
 }
