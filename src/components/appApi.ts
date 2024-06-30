@@ -4,7 +4,7 @@ import { IAppApi, ICard, IOrder, TOrderSuccess } from "../types/index"
 export class AppApi extends Api implements IAppApi {
   protected cdn: string; 
 
-  constructor(cdn: string, baseUrl: string, options?: RequestInit) {
+  constructor(cdn: string, baseUrl: string, options: RequestInit={}) {
     super(baseUrl, options);
     this.cdn = cdn;
   }

@@ -1,8 +1,8 @@
 import { IOrder, PaymentMethod
-} from '../types/index'
+} from '../../types/index'
 
 
-class OrderData implements IOrder {
+export class OrderData implements IOrder {
   protected _paymentType: PaymentMethod;
   protected _address: string;
   protected _telephone: string;

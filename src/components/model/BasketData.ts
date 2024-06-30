@@ -1,40 +1,45 @@
-import { IBasketData } from "../types";
-import { IEvents } from "./base/events";
-import { ICard } from "../types";
+import { IBasketData } from "../../types/index";
+import { IEvents } from "../base/events";
+import { ICard } from "../../types/index";
 
-class BasketData implements IBasketData{
-  goods: string[];
+export class BasketData implements IBasketData{
+  protected _goods: ICard[] = [];
   total: 0;
   events: IEvents;
   
   constructor (events: IEvents) {
     this.events = events;
+
   }
 
-  isInBasket(card: ICard) {                       //проверить, есть ли в корзине
-    this.goods.includes(card.id);
+  get goods() {
+    return this._goods
   }
 
-  addToBasket(card: ICard) {                      //добавить в корзину
-    this.goods.push(card.id)
+  isInBasket(id: string) {                                                     //проверить, есть ли в корзине
+    return Boolean(this._goods.find(good => good.id === id));
+  }
+
+  addToBasket(card: ICard) {                                                   //добавить в корзину
+    this._goods.push(card)
     this.total += card.price
     this.events.emit('basket:changed')
   }
 
-  removeFromBasket(card:ICard) {                  //удалить из корзины
-    this.goods.filter((id)=> id !== card.id)
+  removeFromBasket(card:ICard) {                                               //удалить из корзины
+    this._goods.filter((good)=> {good.id !== card.id})
     this.total -=card.price
     this.events.emit('basket:changed')
   }
 
-  clearBasket() {                                 //очистить корзину
-    this.goods = [];
+  clearBasket() {                                                              //очистить корзину
+    this._goods = [];
     this.total = 0;
     this.events.emit('basket:changed');
   }
 
   getGoodsNumber(): number {                      // получить общее количество добавленных товаров в корзину
-    return this.goods.length
+    return this._goods.length
   }
 
 };

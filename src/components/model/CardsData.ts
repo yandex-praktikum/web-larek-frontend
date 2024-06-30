@@ -1,15 +1,11 @@
-import {
-  IBasketData,
-  ICard, ICardsData } from '../types/index'
-import { IEvents } from './base/events';
+import { ICard } from "../../types/index";
+import { ICardsData } from "../../types/index";
+import { IEvents } from "../base/events";
 
 export class CardsData implements ICardsData {
   _cards: ICard[];
   _preview: ICard | null;
-  basket: IBasketData = {
-    goods: [],
-    total: 0
-  };
+
   events: IEvents;
 
   constructor (events: IEvents) {
@@ -30,26 +26,8 @@ export class CardsData implements ICardsData {
     this.events.emit('preview:changed', this._preview);
   }
 
-  isInBasket(card: ICard) {
-    this.basket.goods.includes(card.id);
-  }
-
-  addToBasket(card: ICard) {
-    this.basket.goods.push(card.id)
-    this.basket.total += card.price
-    this.events.emit('basket:changed', this.basket)
-  }
-
-  removeFromBasket(card:ICard) {
-    this.basket.goods.filter((id)=> id !== card.id)
-    this.basket.total -=card.price
-    this.events.emit('basket:changed', this.basket)
-  }
-
-  clearBasket() {
-    this.basket.goods = [];
-    this.basket.total = 0;
-    this.events.emit('basket:changed', this.basket);
+  getPreview() {
+    return this._preview;
   }
 }
 

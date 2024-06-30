@@ -27,15 +27,19 @@ export interface IOrderData {
 }
 
 export interface IOrderBuilder{
-  
+    orderInfo: TOrderInfo;
+    orderDelivery: TOrderDelivery;
+    orderContacts: TOrderContacts;
+    getOrderData(): IOrder;
 }
 
-export interface ISuccessData {
-  orderSuccess: TSuccessData;
+
+export interface IOrderSuccess {
+  orderSuccess: TOrderSuccess;
 }
 
 export interface IBasketData {
-  goods: string[];
+  goods: ICard[];
   total: number;
 }
 
@@ -58,9 +62,7 @@ export type TOrderDelivery = Pick<IOrder, 'paymentType' | 'address'>;
 
 export type TOrderContacts = Pick<IOrder, 'email' | 'telephone'>;
 
-export type TOrderSuccess = Pick<IOrder, 'total'>;
-
-export type TSuccessData = {id: string; total: number};
+export type TOrderSuccess =  Pick<IOrder, 'items' | 'total'>;
 
 export interface IAppApi {
   getCards(): Promise<ICard[]>;
