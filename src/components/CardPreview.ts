@@ -10,7 +10,7 @@ export class CardPreview extends Card {
     const cardItem = template.content.cloneNode(true) as HTMLElement;
     this.cardDescription = cardItem.querySelector('.card__text') as HTMLElement;
     this.basketButton = cardItem.querySelector('.button') as HTMLButtonElement;
-    this.basketButton.addEventListener('click', () => addToBasket(evt))
+    // this.basketButton.addEventListener('click', () => addToBasket(evt))
   }
 
   render(data: ICard): HTMLElement {

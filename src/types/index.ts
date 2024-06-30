@@ -9,36 +9,37 @@ export interface ICard {
 };
 
 export interface IOrder {
-  paymentType: string,
+  paymentType: PaymentMethod,
   address: string,
   telephone: string,
   email: string,
   total: number,
-  items: ICard[]
+  items: string[]
 }
 
 export interface ICardsData {
-  _cards: ICard[],
-  _preview: string | null,
+ _cards: ICard[],
+  _preview: ICard | null,
 }
 
 export interface IOrderData {
-  orderInfo: IOrder;
-  addCard(card: ICard): void;
-  deleteCard(id: string): void;
+  orderFullInfo: IOrder;
 }
 
-// export interface IBasketData {
-//   cardsInBasket: ICard[];
-//   addCard(value: ICard): void;
-//   deleteCard(id: string): void;
-//   getNumber(): number;
-//   inBasket(id: string): boolean;
-//   getTotal(): number;
-//   getIdList(): string[];
-//   clear(): void;
-// }
+export interface IOrderBuilder{
+  
+}
 
+export interface ISuccessData {
+  orderSuccess: TSuccessData;
+}
+
+export interface IBasketData {
+  goods: string[];
+  total: number;
+}
+
+export type PaymentMethod = 'cash' | 'card';
 
 
 export type TCardInfo = Pick<ICard, 'category' | 'name' | 'image' | 'price'>
@@ -49,17 +50,28 @@ export type TBasket = Pick<ICard, 'name' | 'price'>;
 
 export type TOrder = Partial<IOrder>;
 
-export type TOrderOrder = Pick<IOrder, 'paymentType' | 'address'>;
+export type TOrderInfo = Pick<IOrder, 'total' | 'items'>
+
+export type TPayment = Pick<IOrder, 'paymentType'>;
+
+export type TOrderDelivery = Pick<IOrder, 'paymentType' | 'address'>;
 
 export type TOrderContacts = Pick<IOrder, 'email' | 'telephone'>;
 
 export type TOrderSuccess = Pick<IOrder, 'total'>;
 
+export type TSuccessData = {id: string; total: number};
+
 export interface IAppApi {
-  getProducts(): Promise<ICard[]>;
-  getProductById(id: string): Promise<ICard>;
+  getCards(): Promise<ICard[]>;
+  getCardById(id: string): Promise<ICard>;
   postOrder(order: IOrder): Promise<TOrderSuccess>;
 }
+
+export interface IOrderConstructor {
+  new (): IOrderData;
+}
+
 
 // ________________________________________________
 

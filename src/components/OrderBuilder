@@ -1,0 +1,28 @@
+import { IOrder, IOrderData, TOrderContacts, TOrderDelivery, TOrderInfo } from "../types";
+import { IEvents } from "./base/events";
+
+class OrderBuilder implements IOrder {
+  protected order: IOrder;
+  events: IEvents;
+
+  constructor(events: IEvents) {
+    this.events = events
+  }
+
+  set orderInfo(info: TOrderInfo) {
+    this.order.total = info.total;
+    this.order.items = info.items
+  } 
+
+  set orderDelivery (info: TOrderDelivery) {
+    this.order.paymentType = info.paymentType;
+    this.order.address = info.address
+  }
+  
+  set orderContacts (info: TOrderContacts) {
+    this.order.email = info.email;
+    this.order.telephone = info.telephone
+  }
+
+  set 
+}

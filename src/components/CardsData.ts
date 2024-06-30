@@ -1,11 +1,16 @@
 import {
-  ICard } from '../types/index'
+  IBasketData,
+  ICard, ICardsData } from '../types/index'
 import { IEvents } from './base/events';
 
-export class CardsData {
-  protected _cards: ICard[];
-  protected _preview: string | null;
-  protected events: IEvents;
+export class CardsData implements ICardsData {
+  _cards: ICard[];
+  _preview: ICard | null;
+  basket: IBasketData = {
+    goods: [],
+    total: 0
+  };
+  events: IEvents;
 
   constructor (events: IEvents) {
     this.events = events;
@@ -13,47 +18,38 @@ export class CardsData {
 
   set cards(cards: ICard[]) {
     this._cards = cards;
-    this.events.emit('cards:changed');
+    this.events.emit('cards:changed', this.cards);
   }
 
   get cards() {
     return this._cards;
   }
 
-  addCard(card: ICard) {
-    this._cards = [card, ...this._cards];
-    this.events.emit('cards:changed');
+  setPreview(card: ICard) {
+    this._preview = card;
+    this.events.emit('preview:changed', this._preview);
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  deleteCard (cardId: string, payload: Function | null = null): void {
-    this._cards = this._cards.filter(function(card) {card.id !== cardId})
-    if (payload) {
-      payload()
-    }
-    else {
-      this.events.emit('cards:changed')
-    }
+  isInBasket(card: ICard) {
+    this.basket.goods.includes(card.id);
   }
 
-  getCard (cardId: string) {
-    return this._cards.find(function(card) {card.id === cardId})
+  addToBasket(card: ICard) {
+    this.basket.goods.push(card.id)
+    this.basket.total += card.price
+    this.events.emit('basket:changed', this.basket)
   }
 
-  set preview(cardId) {
-    if(!cardId) {
-      this._preview = null
-      return
-    }
-    const selectedCard = this.getCard(cardId)
-    if (selectedCard) {
-      this._preview = cardId
-      this.events.emit("card:selected")
-    }
+  removeFromBasket(card:ICard) {
+    this.basket.goods.filter((id)=> id !== card.id)
+    this.basket.total -=card.price
+    this.events.emit('basket:changed', this.basket)
   }
 
-  get preview() {
-    return this._preview;
+  clearBasket() {
+    this.basket.goods = [];
+    this.basket.total = 0;
+    this.events.emit('basket:changed', this.basket);
   }
 }
 
