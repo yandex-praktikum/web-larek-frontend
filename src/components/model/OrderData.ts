@@ -1,9 +1,9 @@
-import { IOrder, PaymentMethod
+import { IOrder, TPaymentMethod
 } from '../../types/index'
 
 
 export class OrderData implements IOrder {
-  protected _paymentType: PaymentMethod;
+  protected _paymentType: TPaymentMethod;
   protected _address: string;
   protected _telephone: string;
   protected _email: string;
@@ -13,12 +13,12 @@ export class OrderData implements IOrder {
   constructor() {
   }
 
-  set paymentType(type: PaymentMethod) {      //метод оплаты
+  set paymentType(type: TPaymentMethod) {      //метод оплаты
     this._paymentType = type;
   }
   
   set email(value: string) {                  //email покупателя
-  this._email = value;
+    this._email = value;
   }
 
   set address(value: string){                 //адрес покупателя
@@ -30,22 +30,22 @@ export class OrderData implements IOrder {
   }
 
   set total(value: number) {                  // общая стоимость покупок
-  this._total = value;;
+    this._total = value;;
   }
 
   set items(value: string[]) {                // массив всех id товаров в заказе
-  this._items = value;    
+    this._items = value;    
   } 
   
   get orderInfo() {                           // вся информация о заказе. 
-  return {
-  paymentType: this._paymentType,
-  email: this._email,
-  telephone: this._telephone,
-  address: this._address,
-  total: this._total,
-  items: this._items
-  }
+    return {
+      paymentType: this._paymentType,
+      email: this._email,
+      telephone: this._telephone,
+      address: this._address,
+      total: this._total,
+      items: this._items
+    }
   }
 }
 

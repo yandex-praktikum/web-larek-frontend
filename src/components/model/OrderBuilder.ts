@@ -5,9 +5,8 @@ export class OrderBuilder implements IOrderBuilder {
   protected order: IOrder;
   events: IEvents;
 
-  constructor(events: IEvents, orderData: IOrder) {
+  constructor(events: IEvents) {
     this.events = events
-    this.order = orderData;
   }
 
   set orderInfo(info: TOrderInfo) {

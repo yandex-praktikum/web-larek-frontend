@@ -60,29 +60,30 @@ api.getCards().then((data) => {
 
   })
 
+// console.log(basketData.goods);
+// basketData.addToBasket(cardSample)
+// console.log(basketData.goods)
 
 
+// orderData.paymentType = orderSample.paymentType;
+// orderData.address = orderSample.address;
+// orderData.telephone = orderSample.telephone;
+// orderData.email = orderSample.email;
+// orderData.items = orderSample.items;
+// orderData.total = basketData.total;
 
-console.log(basketData.goods);
-basketData.addToBasket(cardSample)
-console.log(basketData.goods)
 
+// const orderBuilder = new OrderBuilder(events, orderData);
+// orderBuilder.setOrderContacts(orderData);
+// orderBuilder.setOrderDelivery(orderData);
+// orderBuilder.setOrderInfo(orderData);
+// console.log(orderBuilder.getOrderData())
+// // orderBuilder.orderDelivery = orderData;
+// // orderBuilder.orderContacts = orderData;
+// // console.log(orderBuilder.getOrderData())
 
-orderData.paymentType = orderSample.paymentType;
-orderData.address = orderSample.address;
-orderData.telephone = orderSample.telephone;
-orderData.email = orderSample.email;
-orderData.items = orderSample.items;
-orderData.total = basketData.total;
-
-const orderBuilder = new OrderBuilder(events, orderData);
-orderBuilder.orderInfo = orderData;
-orderBuilder.orderDelivery = orderData;
-orderBuilder.orderContacts = orderData;
-console.log(orderBuilder.getOrderData())
-
-// const productCard = new Card(cardFullTemplate);
-// cardContainer.prepend(productCard.render(cardSample))
+// // const productCard = new Card(cardFullTemplate);
+// // cardContainer.prepend(productCard.render(cardSample))
 
 
 
