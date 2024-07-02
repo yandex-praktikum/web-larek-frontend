@@ -282,8 +282,8 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 
 В классе содержатся следующие поля:
 -  protected _id: string;                     - уникальный id карточки для ее идентификации 
--  protected _name: HTMLHeadingElement;       - название товара в карточке
--  protected _price: HTMLSpanElement;         - цена товара в карточке
+-  protected _name: HTMLHeadingElement;       - DOM элемент (заголовок) названия товара в карточке
+-  protected _price: HTMLSpanElement;         - спан цены товара в карточке
 
 Методы, геттеры и сеттеры:
 геттеры и сетеры полей интерфейса IViewCard:
@@ -293,6 +293,23 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 - get name  -   получает значение name
 - set price -   устанавливает значение price 
 - get price -   получает значение price
+
+###### Класс ViewCardCatalogue
+Расширяет класс `ViewCard`, служит шаблоном для всех карточек слоя представления.
+Принимает в конструктор параметры родителя `container: HTMLElement` и `evenits:IEvents`.
+
+В классе содержатся следующие поля:
+- protected _image: HTMLImageElement;       - DOM элемент (img) изображения в карточке
+- protected _category: HTMLSpanElement;     - спан названия категории
+
+
+Методы, геттеры и сеттеры:
+геттеры и сетеры полей интерфейса IViewCardCatalogue:
+- set image  -   устанавливает изображение товара (ссылку и альт-текст)
+- get image  -   получает ссылку изображения товара
+- set category  -  устанавливает название категории и доп класс в зависимости от названия
+- get category - получает название категории (текстКОнтент)
+- addClassToCategory(value: string) - добавляет спану категории доп класс в зависимости от ее текстКонтента
 
 
 ##### Класс ViewForm
