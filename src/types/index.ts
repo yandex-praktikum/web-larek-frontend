@@ -88,6 +88,11 @@ export interface IViewCard {
   price: string;
 }
 
+export interface IViewCardCatalogue{
+  image: string;
+  category: string;
+}
+
 export interface IViewForm {
   valid: boolean;
   errorMessage: string[];
@@ -106,5 +111,8 @@ export interface IViewFormContacts {
   telephone: string;
   valid: boolean;
 }
+
+export type TCategoryClassNames = 'soft' |'other' | 'additional' | 'button' | 'hard';
+export type TCategoryClasses = Record<string, TCategoryClassNames>;
 
 

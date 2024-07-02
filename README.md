@@ -276,6 +276,25 @@ protected events: IEvents - объект класса `EventEmitter` для ин
 
 render(data?: Partial<T>): HTMLElement - возвращает отрисованный html элемент по переданным данным
 
+##### Класс ViewCard
+Расширяет класс `View`, служит шаблоном для всех карточек слоя представления.
+Принимает в конструктор параметры родителя `container: HTMLElement` и `evenits:IEvents`.
+
+В классе содержатся следующие поля:
+-  protected _id: string;                     - уникальный id карточки для ее идентификации 
+-  protected _name: HTMLHeadingElement;       - название товара в карточке
+-  protected _price: HTMLSpanElement;         - цена товара в карточке
+
+Методы, геттеры и сеттеры:
+геттеры и сетеры полей интерфейса IViewCard:
+- set id  -   устанавливает значение id 
+- get id  -   получает значение id
+- set name  -   устанавливает значение name
+- get name  -   получает значение name
+- set price -   устанавливает значение price 
+- get price -   получает значение price
+
+
 ##### Класс ViewForm
 Расширяет класс `View`, служит шаблоном для всех форм слоя представления.
 

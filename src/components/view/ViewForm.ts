@@ -42,7 +42,7 @@ export class ViewForm extends View <TViewForm> implements IViewForm {
     });
   } 
 
-  get valid(): boolean {                                                           //проверка валидации формы
+  get valid(): boolean {                                                           //проверка валидности формы (валидна/невалидна)
     return this.inputs.every(input => input.value.length === 0);
   }
 
