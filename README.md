@@ -276,6 +276,18 @@ protected events: IEvents - объект класса `EventEmitter` для ин
 
 render(data?: Partial<T>): HTMLElement - возвращает отрисованный html элемент по переданным данным
 
+##### Класс ViewPage
+Расширяет класс `View`, служит шаблоном для представления страницы.
+
+Принимает в конструктор параметры `container: HTMLElement` и `evenits:IEvents.
+
+В классе хранятся следующие поля:
+
+  - protected _gallery: HTMLElement;              - галерея/каталог, контейнер для отрендереных карточек товаров на стартовой странице 
+  - protected buttonBasket: HTMLButtonElement;    - кнопка корзины
+  - protected _counter: HTMLSpanElement;          - спан счетчика товаров в корзине
+  - protected screen: HTMLDivElement;             - DOM элемент (div), оборачивающий содержание страницы
+
 ##### Класс ViewCard
 Расширяет класс `View`, служит шаблоном для всех карточек слоя представления.
 Принимает в конструктор параметры родителя `container: HTMLElement` и `evenits:IEvents`.
@@ -296,7 +308,7 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 
 ###### Класс ViewCardCatalogue
 Расширяет класс `ViewCard`, служит шаблоном для всех карточек слоя представления.
-Принимает в конструктор параметры родителя `container: HTMLElement` и `evenits:IEvents`.
+Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 - protected _image: HTMLImageElement;       - DOM элемент (img) изображения в карточке
@@ -311,11 +323,25 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 - get category - получает название категории (текстКОнтент)
 - addClassToCategory(value: string) - добавляет спану категории доп класс в зависимости от ее текстКонтента
 
+###### Класс ViewCardPreview
+Расширяет класс `ViewCard`, служит шаблоном для карточки в формате Preview (представление одной карточки на странице).
+Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
+
+В классе содержатся следующие поля:
+- protected _description: HTMLParagraphElement;       - DOM элемент (р) описания товара
+- protected buttonBuy: HTMLButtonElement;             - DOM элемент кнопки "добавить в корзину" 
+
+
+Методы, геттеры и сеттеры:
+
+  - set description - устанавливает текст описания товара;
+  - get description - возвращает текст описания товара;
+  - setButtonBuy(value: string) - устанавливает текст кнопки
 
 ##### Класс ViewForm
 Расширяет класс `View`, служит шаблоном для всех форм слоя представления.
 
-Принимает в конструктор параметры родителя `container: HTMLElement` и `evenits:IEvents`.
+Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 

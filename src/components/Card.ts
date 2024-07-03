@@ -8,6 +8,7 @@ protected cardImage: HTMLImageElement
 protected cardPrice: HTMLElement
 
 
+
 constructor (template: HTMLTemplateElement) {
   const cardElement = template.content.cloneNode(true) as HTMLElement;
   this.cardItem = cardElement.querySelector('.card') as HTMLButtonElement;

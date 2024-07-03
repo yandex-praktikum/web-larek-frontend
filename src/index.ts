@@ -1,6 +1,6 @@
 import './scss/styles.scss';
 import {Card} from './components/Card'
-import { IAppApi, ICard } from './types';
+import { IAppApi, ICard, IViewCardCatalogue } from './types';
 import { API_URL, CDN_URL } from './utils/constants';
 import { AppApi } from './components/appApi';
 import { EventEmitter } from './components/base/events';
@@ -16,19 +16,14 @@ import { cloneTemplate, ensureElement } from './utils/utils';
 import { ViewCard } from './components/view/ViewCard';
 import { ViewCardCatalogue } from './components/view/ViewCardCatalogue';
 import { TCategoryClasses } from './types/index';
+import { ViewCardPreview } from './components/view/ViewCardPreview';
+import { ViewPage } from './components/view/ViewPage';
 // import { categories } from './utils/constants';
 // import { CardsData } from './components/CardsData';
 
 const cardFullTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement
 const cardContainer = document.querySelector('.gallery') as HTMLElement;
 
-const cardSample: ICard =  {
-    category: 'sample category',
-    id: '12345',
-    name: 'sample name',
-    description: 'sample description',
-    image: 'https://multivarenie.ru/images/multivarenie/2015/01/83.jpg',
-    price: 15}
 
 const orderSample: IOrder = {
   paymentType: 'cash',
@@ -39,10 +34,16 @@ const orderSample: IOrder = {
   items: ['c101ab44-ed99-4a54-990d-47aa2bb4e7d9']
 } 
 
+//константы данных
 const events = new EventEmitter;
 const cardsData = new CardsData(events);
 const basketData = new BasketData(events);
 const orderData = new OrderData
+
+//константы представления
+const containerPage = ensureElement<HTMLElement>('.page');
+const templateCardCatalog = ensureElement<HTMLTemplateElement>('#card-catalog');
+const page = new ViewPage(containerPage, events);
 //
 
 
@@ -52,11 +53,6 @@ const api:IAppApi = new AppApi(CDN_URL, API_URL);
 //получаем данные о продуктах с сервера
 api.getCards().then((data) => {
     cardsData.cards = data
-    const productCard = new Card(cardFullTemplate);
-    cardsData.cards.forEach((item) => {
-      cardContainer.prepend(productCard.render(item))
-    })
-    
   }).catch(console.error) 
 
   api.getCardById('c101ab44-ed99-4a54-990d-47aa2bb4e7d9').then((data) => {
@@ -64,32 +60,13 @@ api.getCards().then((data) => {
   })
 
 
-  //check View
-  // const modalContainer = document.querySelector ('.modal__container') as HTMLElement;
-  // const view = new View (modalContainer, events)
-  // const viewButton = modalContainer.querySelector('.modal__close') as HTMLElement;
-  // view.setDisabled(viewButton, false)
-  
-  // console.log (view.render())
+//реагируем на изменение (получение) данных о продуктах 
+events.on('cards:changed', (cards: ICard[]) => {
+  const cardsList = cards.map((card) => {
+    const viewCard = new ViewCardCatalogue<IViewCardCatalogue>(cloneTemplate(templateCardCatalog), events);
+    return viewCard.render(card)
+ })
 
-  // const headerContainer = document.querySelector('.header__container') as HTMLElement;
-  // const view1 = new View (headerContainer, events);
-  // const viewImage = document.querySelector('.header__logo-image') as HTMLImageElement;
-  // view1.setImage(viewImage, 'https://multivarenie.ru/images/multivarenie/2015/01/83.jpg')
-
-  // check ViewCard
-  // const basketContainer = document.querySelector ('.basket__item') as HTMLElement;
-  // const viewCard = new ViewCard (basketContainer, events);
-  // viewCard.id = 'c101ab44-ed99-4a54-990d-47aa2bb4e7d9'
-  // console.log(viewCard.price)
-  // console.log(viewCard)
-
-  // check ViewCardCatalogue
-    const gallery = document.querySelector('.gallery') as HTMLElement;
-    const template = ensureElement<HTMLTemplateElement>('#card-catalog')
-    const viewCardCatalogue = new ViewCardCatalogue (cloneTemplate(template), events)
-    viewCardCatalogue.category = 'другое'
-    console.log(viewCardCatalogue)
-
-
+  page.render({catalog: cardsList})
+});
 

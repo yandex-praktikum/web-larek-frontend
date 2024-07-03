@@ -88,9 +88,13 @@ export interface IViewCard {
   price: string;
 }
 
-export interface IViewCardCatalogue{
+export interface IViewCardCatalogue {
   image: string;
   category: string;
+}
+
+export interface IViewCardPreview {
+  description: string;
 }
 
 export interface IViewForm {
@@ -112,7 +116,14 @@ export interface IViewFormContacts {
   valid: boolean;
 }
 
-export type TCategoryClassNames = 'soft' |'other' | 'additional' | 'button' | 'hard';
+export interface IPage {
+  catalog: HTMLElement[];
+  counter: number;
+  lockScreen(value: boolean): void;
+}
+
+export type TCategoryClassNames = 'soft' | 'other' | 'additional' | 'button' | 'hard';
 export type TCategoryClasses = Record<string, TCategoryClassNames>;
+
 
 
