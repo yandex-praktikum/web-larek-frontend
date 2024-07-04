@@ -12,21 +12,21 @@ export class CardsData implements ICardsData {
     this.events = events;
   }
 
-  set cards(cards: ICard[]) {
+  set cards(cards: ICard[]) {                             // записывает данные карточек товаров
     this._cards = cards;
     this.events.emit('cards:changed', this.cards);
   }
 
-  get cards() {
+  get cards() {                                           // получает данные карточек товаров
     return this._cards;
   }
 
-  setPreview(card: ICard) {
+  setPreview(card: ICard) {                               // записывает данные карточки товара для показа в формате preview
     this._preview = card;
     this.events.emit('preview:changed', this._preview);
   }
 
-  getPreview() {
+  getPreview() {                                         // получает данные карточки товара, показываемого в формате preview   
     return this._preview;
   }
 }

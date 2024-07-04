@@ -11,7 +11,7 @@ export class ViewCardPreview extends ViewCardCatalogue<ICard> {
     super(container, events)
     this._description = ensureElement<HTMLParagraphElement>('.card__text', container);
     this.buttonBuy = ensureElement<HTMLButtonElement>('.button', container);
-    this.buttonBuy.addEventListener('click', () => this.events.emit('cardPreview:addToBasket', {id: this.id}))
+    this.buttonBuy.addEventListener('click', () => this.events.emit('viewCard:addToBasket', {id: this.id}))
   }
 
   set description (value: string) {
@@ -26,7 +26,7 @@ export class ViewCardPreview extends ViewCardCatalogue<ICard> {
       return ''
     }
   }
-  
+
   setButtonBuy (value: string) {
     this.setText(this.buttonBuy, value);
   }

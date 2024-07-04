@@ -263,9 +263,12 @@ total: number - общая стоимость товаров, добавленн
 ### Слой отображения на сайте (View)
 
 #### Класс View
-Абстрактный класс View служит шаблоном для классов слоя представления
+Класс View служит шаблоном для всех классов слоя представления. Внутри него будет выводиться контент, созданный дополнительно. 
 
-Принимает в конструктор параметры `container: HTMLElement` и `evenits:IEvents`
+Принимает в конструктор параметры: 
+- `container: HTMLElement`        - контейнер, в котором будут рендериться элементы разметки, создаваемые в дочерних классах. 
+- `events:IEvents`                - событие из брокера событий
+
 
 В классе хранятся следующие поля:
 
@@ -279,7 +282,7 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 ##### Класс ViewPage
 Расширяет класс `View`, служит шаблоном для представления страницы.
 
-Принимает в конструктор параметры `container: HTMLElement` и `evenits:IEvents.
+Принимает в конструктор параметры `container: HTMLElement` и `events:IEvents`.
 
 В классе хранятся следующие поля:
 
@@ -290,7 +293,7 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 
 ##### Класс ViewCard
 Расширяет класс `View`, служит шаблоном для всех карточек слоя представления.
-Принимает в конструктор параметры родителя `container: HTMLElement` и `evenits:IEvents`.
+Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 -  protected _id: string;                     - уникальный id карточки для ее идентификации 
@@ -331,12 +334,26 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 - protected _description: HTMLParagraphElement;       - DOM элемент (р) описания товара
 - protected buttonBuy: HTMLButtonElement;             - DOM элемент кнопки "добавить в корзину" 
 
-
 Методы, геттеры и сеттеры:
 
   - set description - устанавливает текст описания товара;
   - get description - возвращает текст описания товара;
   - setButtonBuy(value: string) - устанавливает текст кнопки
+
+###### Класс ViewCardBasket
+Расширяет класс `ViewCard`, служит шаблоном для представления карточки корзине.
+
+Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
+
+В классе содержатся следующие поля:
+- protected _index: HTMLSpanElement;          - DOM элемент (спан) порядкового номера товара в корзине
+- protected buttonDelete: HTMLButtonElement;  - DOM элемент кнопки удаления товара из корзины
+
+Методы, геттеры и сеттеры:
+
+  - set index(value: number) - устанавливает значение порядкового номера товара в корзине;
+  - get index -  возвращает значение порядкового номера товара в корзине;
+  - setButtonDelete(value: string) - устанавливает текст кнопки
 
 ##### Класс ViewForm
 Расширяет класс `View`, служит шаблоном для всех форм слоя представления.
@@ -345,29 +362,29 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 
 В классе содержатся следующие поля:
 
-- protected container: HTMLFormElement; - DOM элемент формы
-- protected inputs: HTMLInputElement[]; - все поля ввода формы
-- protected submitButton: HTMLButtonElement; - кнопка сабмита формы
-- protected errorSpan: HTMLElement; - спан с текстом ошибки
+- protected container: HTMLFormElement;         - DOM элемент формы
+- protected inputs: HTMLInputElement[];         - все поля ввода формы
+- protected submitButton: HTMLButtonElement;    - кнопка сабмита формы
+- protected errorSpan: HTMLElement;             - спан с текстом ошибки
 
 Методы, геттеры и сеттеры:
-- changeInput(inputName: string, inputValue: string) - функция изменения данных ввода с эмитом брокера события input:change
-- clear() - функция очистки формы
-- render(data: Partial<TViewForm> & TViewForm ) - рендер формы в разметку
-- set valid - активация/блокировка кнопки сабмита при валидности/невалидности кнопки 
-- get valid - проверка валидности формы (валидна/невалидна)
-- set errorMessage(value: string[]) - установка сообщения об ошибке
+- changeInput(inputName: string, inputValue: string)  - функция изменения данных ввода с эмитом брокера события input:change
+- clear()                                             - функция очистки формы
+- render(data: Partial<TViewForm> & TViewForm )       - рендер формы в разметку
+- set valid                                           - активация/блокировка кнопки сабмита при валидности/невалидности кнопки 
+- get valid                                           - проверка валидности формы (валидна/невалидна)
+- set errorMessage(value: string[])                   - установка сообщения об ошибке
 
 ###### Класс ViewFormOrder
 
 Расширяет класс `ViewForm`, определяет форму ввода информации о заказе.
-Принимает в конструктор параметры родителя `container: HTMLElement` и `evenits:IEvents`.
+Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
-- protected buttonsContainer: HTMLElement; - DOM-элемент контейнера с кнопками
-- protected buttonOnline: HTMLButtonElement; - DOM-элемент кнопки оплаты онлайн   
-- protected buttonOnDelivery: HTMLButtonElement; - DOM-элемент кнопки оплаты по получении
-- protected addressInput: HTMLInputElement; - DOM-элемент поля ввода адреса
+- protected buttonsContainer: HTMLElement;        - DOM-элемент контейнера с кнопками
+- protected buttonOnline: HTMLButtonElement;      - DOM-элемент кнопки оплаты онлайн   
+- protected buttonOnDelivery: HTMLButtonElement;  - DOM-элемент кнопки оплаты по получении
+- protected addressInput: HTMLInputElement;       - DOM-элемент поля ввода адреса
 
 Методы, геттеры и сеттеры:
 - protected getButtonActive(): HTMLButtonElement | null - возвращает кнопку, которая активна
@@ -377,15 +394,15 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 ###### Класс ViewFormContacts
 
 Расширяет класс `ViewForm`, определяет форму ввода контактных данных заказчика.
-Принимает в конструктор параметры родителя `container: HTMLElement` и `evenits:IEvents`.
+Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 - protected emailInput: HTMLInputElement;
 - protected telephoneInput: HTMLInputElement;
 
 Методы, геттеры и сеттеры:
-- get email() - устанавливает эмейл из данных, введенных в поле ввода эмейла
-- get telephone() - устанавливает номе телефона из данных, введенных в поле ввода номера телефона
+- get email()           - устанавливает эмейл из данных, введенных в поле ввода эмейла
+- get telephone()       - устанавливает номе телефона из данных, введенных в поле ввода номера телефона
 
 
 
@@ -395,8 +412,8 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 
 Поля класса: 
 - поля класса `View`
-- _content: HTMLElement - содержание модального окна;
-- closeButton: HTMLButtonElement - кнопка закрытия модального окна;
+- _content: HTMLElement           - содержание модального окна;
+- closeButton: HTMLButtonElement  - кнопка закрытия модального окна;
 - submitButton: HTMLButtonElement - кнопка сабмита модального окна;
 
 Методы класса:
@@ -448,8 +465,6 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 - `basket:changed` - изменение корзины с товарами;
 - `order:changed` - изменение данных заказа;
 - `order:succeeded` - заказ выполнен;
-
-
 
 
 *События взаимодействия пользователя с интерфейсом*

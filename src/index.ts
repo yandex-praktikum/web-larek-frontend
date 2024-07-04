@@ -1,5 +1,4 @@
 import './scss/styles.scss';
-import {Card} from './components/Card'
 import { IAppApi, ICard, IViewCardCatalogue } from './types';
 import { API_URL, CDN_URL } from './utils/constants';
 import { AppApi } from './components/appApi';
@@ -18,8 +17,7 @@ import { ViewCardCatalogue } from './components/view/ViewCardCatalogue';
 import { TCategoryClasses } from './types/index';
 import { ViewCardPreview } from './components/view/ViewCardPreview';
 import { ViewPage } from './components/view/ViewPage';
-// import { categories } from './utils/constants';
-// import { CardsData } from './components/CardsData';
+
 
 const cardFullTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement
 const cardContainer = document.querySelector('.gallery') as HTMLElement;
@@ -50,7 +48,7 @@ const page = new ViewPage(containerPage, events);
 //получаем Api - экземпляр класса AppApi
 const api:IAppApi = new AppApi(CDN_URL, API_URL);
 
-//получаем данные о продуктах с сервера
+//получаем данные о товарах с сервера
 api.getCards().then((data) => {
     cardsData.cards = data
   }).catch(console.error) 
@@ -60,7 +58,7 @@ api.getCards().then((data) => {
   })
 
 
-//реагируем на изменение (получение) данных о продуктах 
+//выведение карточек товаров в каталог   
 events.on('cards:changed', (cards: ICard[]) => {
   const cardsList = cards.map((card) => {
     const viewCard = new ViewCardCatalogue<IViewCardCatalogue>(cloneTemplate(templateCardCatalog), events);

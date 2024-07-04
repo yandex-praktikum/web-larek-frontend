@@ -82,6 +82,13 @@ export interface IOrderConstructor {
 
 // интерфейсы представления
 
+export interface IViewModal {
+  content: HTMLElement;
+  buttonClose: HTMLButtonElement;
+  open(): void;
+  close(): void
+}
+
 export interface IViewCard {
   id: string;
   name: string;
@@ -95,6 +102,10 @@ export interface IViewCardCatalogue {
 
 export interface IViewCardPreview {
   description: string;
+}
+
+export interface IViewCardBasket {
+  index: number;
 }
 
 export interface IViewForm {
