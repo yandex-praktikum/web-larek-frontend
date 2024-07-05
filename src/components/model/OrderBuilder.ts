@@ -27,7 +27,7 @@ export class OrderBuilder implements IOrderBuilder {
     this.events.emit('order:changed', this.order);
   }
 
-  getOrderData () {                                           // возвращает все данные о заказе                                      
+  getOrderData () {                                           // возвращает все данные о                                       
     return this.order;
   }
 }

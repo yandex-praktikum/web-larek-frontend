@@ -12,11 +12,11 @@ export class ViewCardCatalogue<T> extends ViewCard<T> implements IViewCardCatalo
     super(container, events)
     this._image = ensureElement<HTMLImageElement>('.card__image', container);
     this._category = ensureElement<HTMLSpanElement>('.card__category', container);
-    this.container.addEventListener('click', () => this.events.emit('modalViewCardPreview:open', {id: this.id}))    
+    this.container.addEventListener('click', () => this.events.emit('viewCardPreview:open', {id: this.id}))    
   }
 
   set image(src: string) {                                  // запись изображения товара
-    this.setImage(this._image, src, this.name);
+    this.setImage(this._image, src, this.title);
   }
 
   get image() {                                             // получение ссылки на изображение товара

@@ -21,6 +21,14 @@ export class CardsData implements ICardsData {
     return this._cards;
   }
 
+  getCard (id: string) {                                  //находит карточку товара по id 
+    return this._cards.find((card) => {
+      if (card.id === id) {
+        return card
+      }
+    })     
+  }
+
   setPreview(card: ICard) {                               // записывает данные карточки товара для показа в формате preview
     this._preview = card;
     this.events.emit('preview:changed', this._preview);

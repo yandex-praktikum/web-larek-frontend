@@ -17,7 +17,7 @@ export class View<T> {
   }
 
                                                                                  
-  toggleClass(element: HTMLElement, className: string, method?: boolean) {       // Переключить класс
+  toggleClass(element: HTMLElement, className: string, method?: boolean) {        // Переключить класс
     element.classList.toggle(className, method);
   }
 

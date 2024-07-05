@@ -1,9 +1,9 @@
-import { IViewModal } from "../../types";
+import { IViewModal } from "../../types/index";
 import { ensureElement } from "../../utils/utils";
 import { IEvents } from "../base/events";
 import { View } from "./View";
 
-class ViewModal<IViewModal> extends View<IViewModal> {
+export class ViewModal<IViewModal> extends View<IViewModal> {
   protected _content: HTMLElement;
   protected _buttonClose: HTMLButtonElement;
 

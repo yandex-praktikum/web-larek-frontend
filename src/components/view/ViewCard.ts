@@ -6,12 +6,12 @@ import { ensureElement } from "../../utils/utils";
 
 export class ViewCard<T> extends View<T> implements IViewCard {
   protected _id: string;
-  protected _name: HTMLHeadingElement;
+  protected _title: HTMLHeadingElement;
   protected _price: HTMLSpanElement;
 
   constructor (container: HTMLElement, events:IEvents) {
     super(container, events);
-    this._name = ensureElement<HTMLHeadingElement>('.card__title', container);
+    this._title = ensureElement<HTMLHeadingElement>('.card__title', container);
     this._price = ensureElement<HTMLSpanElement>('.card__price', container);
   }
 
@@ -23,12 +23,12 @@ get id() {                                                                      
     return this._id;
 }
 
-set name(value: string) {                                                        //запись имени карточки товара
-    this.setText(this._name, value);
+set title(value: string) {                                                        //запись имени карточки товара
+    this.setText(this._title, value);
 }
 
-get name() {                                                                     // получение имени карточки товара
-    return this._name.textContent ?? '';
+get title() {                                                                     // получение имени карточки товара
+    return this._title.textContent ?? '';
 }
 
 set price(value: string) {                                                       // запись цены товара

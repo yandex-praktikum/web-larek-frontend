@@ -1,10 +1,10 @@
 import { View } from "./View";
-import { IPage } from "../../types/index";
+import { IViewPage } from "../../types/index";
 import { IEvents } from "../base/events";
 import { ensureElement } from "../../utils/utils";
 
 
-export class ViewPage extends View<IPage> implements IPage {
+export class ViewPage<IViewPage> extends View<IViewPage> {
     protected _gallery: HTMLElement;
     protected buttonBasket: HTMLButtonElement;
     protected _counter: HTMLSpanElement;

@@ -1,5 +1,5 @@
-import { IOrder, TPaymentMethod
-} from '../../types/index'
+import { IOrder, TPaymentMethod, TOrderInfo} from '../../types/index'
+import { IEvents } from '../base/events';
 
 
 export class OrderData implements IOrder {
@@ -9,9 +9,8 @@ export class OrderData implements IOrder {
   protected _email: string;
   protected _total: number;
   protected _items: string[];
-  
-  constructor() {
-  }
+  protected order: IOrder; 
+  events: IEvents;
 
   set paymentType(type: TPaymentMethod) {      //записывает данные в метод оплаты
     this._paymentType = type;
@@ -37,8 +36,8 @@ export class OrderData implements IOrder {
     this._items = value;    
   } 
   
-  get orderInfo() {                           // возвращает всю информация о заказе. 
-    return {
+  getOrder () {                               // возвращает всю информация о заказе. 
+    return this.order = {
       paymentType: this._paymentType,
       email: this._email,
       telephone: this._telephone,
@@ -47,6 +46,8 @@ export class OrderData implements IOrder {
       items: this._items
     }
   }
+
+
 }
 
 

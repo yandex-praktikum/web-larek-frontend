@@ -2,7 +2,7 @@
 export interface ICard {            //данные карточки продукта
   category: string,
   id: string,
-  name: string,
+  title: string,
   description: string,
   image: string,
   price: number
@@ -52,11 +52,11 @@ export interface IBasketData {
 export type TPaymentMethod = 'cash' | 'card';
 
 
-export type TCardInfo = Pick<ICard, 'category' | 'name' | 'image' | 'price'>
+export type TCardInfo = Pick<ICard, 'category' | 'title' | 'image' | 'price'>
 
-export type TCardPreview = Pick<ICard, 'category' | 'name' | 'description' | 'image' | 'price'>;
+export type TCardPreview = Pick<ICard, 'category' | 'title' | 'description' | 'image' | 'price'>;
 
-export type TBasket = Pick<ICard, 'name' | 'price'>;
+export type TBasket = Pick<ICard, 'title' | 'price'>;
 
 export type TOrder = Partial<IOrder>;
 
@@ -91,7 +91,7 @@ export interface IViewModal {
 
 export interface IViewCard {
   id: string;
-  name: string;
+  title: string;
   price: string;
 }
 
@@ -127,7 +127,11 @@ export interface IViewFormContacts {
   valid: boolean;
 }
 
-export interface IPage {
+export interface IViewSuccess {
+  message: string;
+}
+
+export interface IViewPage {
   catalog: HTMLElement[];
   counter: number;
   lockScreen(value: boolean): void;
@@ -135,6 +139,7 @@ export interface IPage {
 
 export type TCategoryClassNames = 'soft' | 'other' | 'additional' | 'button' | 'hard';
 export type TCategoryClasses = Record<string, TCategoryClassNames>;
+export type TId = {id: string}
 
 
 

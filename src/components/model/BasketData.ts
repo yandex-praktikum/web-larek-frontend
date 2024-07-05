@@ -9,7 +9,6 @@ export class BasketData implements IBasketData{
   
   constructor (events: IEvents) {
     this.events = events;
-
   }
 
   get goods() {
@@ -38,7 +37,7 @@ export class BasketData implements IBasketData{
     this.events.emit('basketData:changed');
   }
 
-  getGoodsNumber(): number {                      // получить общее количество добавленных товаров в корзину
+  getGoodsNumber(): number {                                                    // получить общее количество добавленных товаров в корзину
     return this._goods.length
   }
 
