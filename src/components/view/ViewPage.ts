@@ -13,7 +13,7 @@ export class ViewPage<IViewPage> extends View<IViewPage> {
  constructor(container: HTMLElement, events: IEvents) {
     super(container, events);
     this.buttonBasket = ensureElement<HTMLButtonElement>('.header__basket', container);
-    this.buttonBasket.addEventListener('click', () => events.emit('modal-basket:open'));
+    this.buttonBasket.addEventListener('click', () => events.emit('viewBasket:open'));
     this._counter = ensureElement<HTMLSpanElement>('.header__basket-counter', this.buttonBasket);
     this._gallery = ensureElement<HTMLElement>('.gallery', container);
     this.screen = ensureElement<HTMLDivElement>('.page__wrapper', container)

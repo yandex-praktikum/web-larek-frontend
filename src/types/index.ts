@@ -102,6 +102,7 @@ export interface IViewCardCatalogue {
 
 export interface IViewCardPreview {
   description: string;
+  state: boolean;
 }
 
 export interface IViewCardBasket {
@@ -139,7 +140,8 @@ export interface IViewPage {
 
 export type TCategoryClassNames = 'soft' | 'other' | 'additional' | 'button' | 'hard';
 export type TCategoryClasses = Record<string, TCategoryClassNames>;
-export type TId = {id: string}
+export type TId = {id: string};
+export type TViewBasket = {cards: HTMLElement[], total: number}
 
 
 

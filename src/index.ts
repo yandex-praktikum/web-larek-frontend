@@ -18,6 +18,8 @@ import { TCategoryClasses } from './types/index';
 import { ViewCardPreview } from './components/view/ViewCardPreview';
 import { ViewPage } from './components/view/ViewPage';
 import { ViewModal} from './components/view/ViewModal';
+import { ViewCardBasket } from './components/view/ViewCardBasket';
+import { ViewBasket } from './components/view/ViewBasket';
 
 
 
@@ -34,7 +36,7 @@ const orderSample: IOrder = {
   items: ['c101ab44-ed99-4a54-990d-47aa2bb4e7d9']
 } 
 
-//константы данных
+//константы данных: инстансы классов данных
 const events = new EventEmitter;
 const cardsData = new CardsData(events);
 const basketData = new BasketData(events);
@@ -47,13 +49,15 @@ const containerViewModal = ensureElement<HTMLElement>('#modal-container');
 //константы представления: шаблоны
 const templateViewCardPreview = ensureElement<HTMLTemplateElement>('#card-preview');
 const templateViewCardCatalog = ensureElement<HTMLTemplateElement>('#card-catalog');
+const templateViewCardBasket = ensureElement<HTMLTemplateElement>('#card-basket');
+const templateViewBasket = ensureElement<HTMLTemplateElement>('#basket');
 
 //константы представления: инстансы классов представления
 const viewPage = new ViewPage(containerViewPage, events);
 const viewModal = new ViewModal(containerViewModal, events);
 const viewCardPreview = new ViewCardPreview (cloneTemplate(templateViewCardPreview), events); 
-
-
+const viewCardBasket = new ViewCardBasket (cloneTemplate(templateViewCardBasket), events);
+const viewBasket = new ViewBasket (cloneTemplate(templateViewBasket), events);
 
 //получаем Api - экземпляр класса AppApi
 const api:IAppApi = new AppApi(CDN_URL, API_URL);
@@ -75,7 +79,7 @@ events.on('cards:changed', (cards: ICard[]) => {
   viewPage.render({catalog: cardsList})
 });
 
-//блокировка страницы при открытии модального окна - перенести в конец?
+//блокировка страницы при открытии модального окна
 events.on('viewModal:open', () => {
   viewPage.lockScreen(true);
 });
@@ -85,15 +89,45 @@ events.on('viewModal:close', () => {
   viewPage.lockScreen(false);
 });
 
-//обработка события на клик по карточке каталога - открытия модального окна с карточкой превью
+//обработка события: открытие модального окна с карточкой превью
 events.on('viewCardPreview:open', (dataId: TId) => {
   const cardToPreview = cardsData.getCard(dataId.id);
   if(cardToPreview) { 
   const viewCardToPreview = viewCardPreview.render(cardToPreview)
   viewModal.render({content: viewCardToPreview});
-  // viewModal.render(viewCardPreview.render(cardToPreview));
-  // console.log(viewModal.render(viewCardPreview.render(cardToPreview)))
   viewModal.open();
   }
 });
 
+//обработка события: добавления товара в корзину 
+events.on('viewCard:addToBasket', (dataId: TId) => {
+  const cardToAdd = cardsData.getCard(dataId.id);
+  if(cardToAdd) {
+  basketData.addToBasket(cardToAdd)
+  }
+});
+
+//обработка события: удаление товара из корзины
+events.on('viewCard:deleteFromBasket', (dataId: TId) => {
+  const cardToRemove = cardsData.getCard(dataId.id);
+   if(cardToRemove) {
+    
+  basketData.removeFromBasket(cardToRemove)}
+});
+
+//обработка события: изменение данных в корзине, отражается на счетчике и содержимом корзины
+events.on('basketData:changed', (dataId: TId) => {
+  viewPage.render({counter: basketData.getGoodsNumber()})                                                     //обновление счетчика
+  const goodsList = basketData.goods.map((good, index) => {                                                   //создание из массива товаров в корзине DOM-элементов - инстансов ViewCardBasket 
+    const viewCardBasket = new ViewCardBasket(cloneTemplate(templateViewCardBasket), events);
+    return viewCardBasket.render({...good, index: index++})
+  })
+  viewBasket.render({cards: goodsList, total: basketData.getTotal()})
+  }
+)
+
+//обработка события, клик по иконке(кнопке) корзины на главной старанице - открытие корзины
+events.on('viewBasket:open', () => {
+  viewModal.render({ content: viewBasket.render({total: basketData.getTotal()})});
+  viewModal.open();
+});

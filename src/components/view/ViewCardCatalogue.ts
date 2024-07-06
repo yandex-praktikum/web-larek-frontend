@@ -26,7 +26,6 @@ export class ViewCardCatalogue<T> extends ViewCard<T> implements IViewCardCatalo
 
   addClassToCategory(value: string) {                       // добавление дополнительных классов категории в зависимости от ее содержания 
     if (value in categories) {
-      console.log(categories[value])
       this._category.classList.replace('card__category_soft', `card__category_${categories[value]}`)
     }
   }

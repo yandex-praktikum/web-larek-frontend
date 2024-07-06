@@ -19,7 +19,7 @@ export class ViewCardBasket<T> extends ViewCard<T> implements IViewCardBasket {
   }
 
   set index (value: number) {                                   // устанавливает порядковый номер (как тексовое значение спана) товара в корзине
-    this.setText(this._index, value)
+    this.setText(this._index, value+1)
   }
 
   get index () {                                                // возвращает порядковый номер (как номер на основе текстового значения) товара в корзине
