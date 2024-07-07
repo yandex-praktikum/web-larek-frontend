@@ -11,9 +11,9 @@ export class ViewForm<T> extends View <TViewForm> implements IViewForm {
 
   constructor(container: HTMLElement, events: IEvents) {
     super(container, events);
-    this.inputs = ensureAllElements<HTMLInputElement>('.form__input', container); //найти все элементы с классом '.form__input' в DOM элементе формы
-    this.submitButton = ensureElement<HTMLButtonElement>('.button', container);   //найти элемент с классом '.button' в DOM элементе формы
-    this.errorSpan = ensureElement<HTMLSpanElement>('.form__errors', container);      //найти элемент с классом '.form__errors' в DOM элементе формы
+    this.inputs = ensureAllElements<HTMLInputElement>('.form__input', container); //находит все элементы с классом '.form__input' в DOM элементе формы
+    this.submitButton = ensureElement<HTMLButtonElement>('.button', container);   //находит элемент с классом '.button' в DOM элементе формы
+    this.errorSpan = ensureElement<HTMLSpanElement>('.form__errors', container);      //находит элемент с классом '.form__errors' в DOM элементе формы
      
 
     this.container.addEventListener('input', (event: Event) => {
@@ -50,7 +50,7 @@ export class ViewForm<T> extends View <TViewForm> implements IViewForm {
     this.submitButton.disabled = !value;
   }
 
-  set errorMessage(value: string[]) {                                             // установка сообщения об ошибке
+  set errorMessage(value: string) {                                             // установка сообщения об ошибке
     this.setText(this.errorSpan, value);
   }
 

@@ -183,11 +183,15 @@ events.on('contacts:submit', () => {
     viewFormOrder.clear();
     viewFormContacts.clear();
     basketData.clearBasket();
-  }).catch(console.error)
+   }).catch(console.error)
+   viewModal.render({
+    content: viewSuccess.render({
+      message: String(order.total)
+    })
+  })
 });
 
-events.on('success:changed', (data: TOrderSuccess) => {
-  viewModal.render({
-    content: viewSuccess.render({
-      message: String(data.total)})})
-});
+//закрытие окна при нажатии кнопки "За новыми покупками"
+events.on('success:submit', ()=> {
+  viewModal.close();
+})

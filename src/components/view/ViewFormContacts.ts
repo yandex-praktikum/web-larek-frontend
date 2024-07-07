@@ -20,4 +20,28 @@ export class ViewFormContacts extends ViewForm<TViewFormContacts> implements IVi
   get telephone() {
     return this.telephoneInput.value
   }
+
+  get valid() {
+    if(Boolean(this.emailInput.value) && Boolean(this.telephoneInput.value)) {
+      this.errorMessage ='';
+      return false
+    }
+    else if(super.valid) {
+      this.errorMessage ='Заполните поля эл. почты и телефона';
+      return true
+    }
+    else if(!Boolean(this.emailInput.value) && Boolean(this.telephoneInput.value)) {
+      this.errorMessage ='Заполните поле эл. почты';
+      return true
+    }
+    else if(Boolean(this.emailInput.value) && !Boolean(this.telephoneInput.value)) {
+      this.errorMessage ='Заполните поле телефона';
+      return true
+    }
+    return true
+  }
+
+  set valid(value: boolean) {
+    super.valid = value;
+  }
 }

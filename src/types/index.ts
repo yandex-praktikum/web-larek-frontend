@@ -114,7 +114,7 @@ export interface IViewCardBasket {
 
 export interface IViewForm {
   valid: boolean;
-  errorMessage: string[];
+  errorMessage: string;
   clear(): void;
 }
 
