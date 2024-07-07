@@ -20,6 +20,7 @@ import { ViewPage } from './components/view/ViewPage';
 import { ViewModal} from './components/view/ViewModal';
 import { ViewCardBasket } from './components/view/ViewCardBasket';
 import { ViewBasket } from './components/view/ViewBasket';
+import { ViewFormContacts } from './components/view/ViewFormContacts';
 
 
 
@@ -40,7 +41,8 @@ const orderSample: IOrder = {
 const events = new EventEmitter;
 const cardsData = new CardsData(events);
 const basketData = new BasketData(events);
-const orderData = new OrderData 
+const orderData = new OrderData;
+const orderBuilder = new OrderBuilder(events, OrderData);
 
 //константы представления: контейнеры
 const containerViewPage = ensureElement<HTMLElement>('.page');
@@ -51,13 +53,18 @@ const templateViewCardPreview = ensureElement<HTMLTemplateElement>('#card-previe
 const templateViewCardCatalog = ensureElement<HTMLTemplateElement>('#card-catalog');
 const templateViewCardBasket = ensureElement<HTMLTemplateElement>('#card-basket');
 const templateViewBasket = ensureElement<HTMLTemplateElement>('#basket');
+const templateViewOrder = ensureElement<HTMLTemplateElement>('#order');
+const templateViewContacts = ensureElement<HTMLTemplateElement>('#contacts');
+
 
 //константы представления: инстансы классов представления
 const viewPage = new ViewPage(containerViewPage, events);
 const viewModal = new ViewModal(containerViewModal, events);
 const viewCardPreview = new ViewCardPreview (cloneTemplate(templateViewCardPreview), events); 
-const viewCardBasket = new ViewCardBasket (cloneTemplate(templateViewCardBasket), events);
+// const viewCardBasket = new ViewCardBasket (cloneTemplate(templateViewCardBasket), events);
 const viewBasket = new ViewBasket (cloneTemplate(templateViewBasket), events);
+const viewFormOrder = new ViewFormOrder (cloneTemplate(templateViewOrder), events);
+const viewFormContacts = new ViewFormContacts(cloneTemplate(templateViewContacts), events)
 
 //получаем Api - экземпляр класса AppApi
 const api:IAppApi = new AppApi(CDN_URL, API_URL);
@@ -111,8 +118,7 @@ events.on('viewCard:addToBasket', (dataId: TId) => {
 events.on('viewCard:deleteFromBasket', (dataId: TId) => {
   const cardToRemove = cardsData.getCard(dataId.id);
    if(cardToRemove) {
-    
-  basketData.removeFromBasket(cardToRemove)}
+    basketData.removeFromBasket(cardToRemove)}
 });
 
 //обработка события: изменение данных в корзине, отражается на счетчике и содержимом корзины
@@ -121,13 +127,43 @@ events.on('basketData:changed', (dataId: TId) => {
   const goodsList = basketData.goods.map((good, index) => {                                                   //создание из массива товаров в корзине DOM-элементов - инстансов ViewCardBasket 
     const viewCardBasket = new ViewCardBasket(cloneTemplate(templateViewCardBasket), events);
     return viewCardBasket.render({...good, index: index++})
-  })
+    })
   viewBasket.render({cards: goodsList, total: basketData.getTotal()})
   }
 )
 
-//обработка события, клик по иконке(кнопке) корзины на главной старанице - открытие корзины
+//обработка события: клик по иконке(кнопке) корзины на главной старанице - открытие корзины
 events.on('viewBasket:open', () => {
   viewModal.render({ content: viewBasket.render({total: basketData.getTotal()})});
   viewModal.open();
+});
+
+//обработка события: открытие формы с информацией о заказе
+events.on('viewOrder:open', () => {
+  orderBuilder.orderInfo = {total: basketData.getTotal(), items: basketData.getIdsOfGoods()}
+  viewModal.render({ 
+    content: viewFormOrder.render({
+      valid: viewFormOrder.valid,
+      errorMessage: []
+    })})
+})
+
+//обработка события: открытие формы с информацией о контактах
+events.on('order:valid', () => {
+  viewFormContacts.valid = viewFormOrder.valid;
+  orderBuilder.orderDelivery = {paymentType: viewFormOrder.paymentMethod, address: viewFormOrder.address}
+})
+
+//обработка события 
+events.on(`order:submit`, () => {
+  return viewModal.render({ content: viewFormContacts.render({
+    valid: viewFormContacts.valid,
+    errorMessage: []
+  }) });
+});
+
+//обработаем взаимодействие пользователя с полями формы контактных данных
+events.on('contacts:valid', () => {
+  viewFormContacts.valid = viewFormContacts.valid;
+  orderBuilder.orderContacts = {email: viewFormContacts.email, telephone: viewFormContacts.telephone};
 });

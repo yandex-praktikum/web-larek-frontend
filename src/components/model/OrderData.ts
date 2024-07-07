@@ -9,7 +9,6 @@ export class OrderData implements IOrder {
   protected _email: string;
   protected _total: number;
   protected _items: string[];
-  protected order: IOrder; 
   events: IEvents;
 
   set paymentType(type: TPaymentMethod) {      //записывает данные в метод оплаты
@@ -36,8 +35,8 @@ export class OrderData implements IOrder {
     this._items = value;    
   } 
   
-  getOrder () {                               // возвращает всю информация о заказе. 
-    return this.order = {
+  get orderFullInfo () {                               // возвращает всю информация о заказе. 
+    return {
       paymentType: this._paymentType,
       email: this._email,
       telephone: this._telephone,
@@ -46,8 +45,6 @@ export class OrderData implements IOrder {
       items: this._items
     }
   }
-
-
 }
 
 

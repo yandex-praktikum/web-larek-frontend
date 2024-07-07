@@ -3,22 +3,22 @@ import { View } from '../view/View';
 import { ensureAllElements, ensureElement } from '../../utils/utils';
 import { IEvents } from '../base/events';
 
-export class ViewForm extends View <TViewForm> implements IViewForm {
+export class ViewForm<T> extends View <TViewForm> implements IViewForm {
   protected container: HTMLFormElement;                     //DOM элемент формы
   protected inputs: HTMLInputElement[];                     //все поля ввода формы
   protected submitButton: HTMLButtonElement;                //кнопка сабмита формы
-  protected errorSpan: HTMLElement;                         //спан с текстом ошибки
+  protected errorSpan: HTMLSpanElement;                         //спан с текстом ошибки
 
   constructor(container: HTMLElement, events: IEvents) {
     super(container, events);
     this.inputs = ensureAllElements<HTMLInputElement>('.form__input', container); //найти все элементы с классом '.form__input' в DOM элементе формы
     this.submitButton = ensureElement<HTMLButtonElement>('.button', container);   //найти элемент с классом '.button' в DOM элементе формы
-    this.errorSpan = ensureElement<HTMLElement>('.form__errors', container);      //найти элемент с классом '.form__errors' в DOM элементе формы
+    this.errorSpan = ensureElement<HTMLSpanElement>('.form__errors', container);      //найти элемент с классом '.form__errors' в DOM элементе формы
      
 
     this.container.addEventListener('input', (event: Event) => {
       const target = event.target as HTMLInputElement;
-      const inputName = target.name as string;
+      const inputName = target.name as keyof TViewForm;
       const inputValue = target.value;
       this.changeInput (inputName, inputValue);
   });
@@ -43,7 +43,7 @@ export class ViewForm extends View <TViewForm> implements IViewForm {
   } 
 
   get valid(): boolean {                                                           //проверка валидности формы (валидна/невалидна)
-    return this.inputs.every(input => input.value.length === 0);
+    return this.inputs.every((input) => {input.value.length === 0});
   }
 
   set valid(value: boolean) {                                                      //активация/блокировка кнопки сабмита при валидности/невалидности кнопки 
@@ -58,7 +58,7 @@ export class ViewForm extends View <TViewForm> implements IViewForm {
     this.container.reset
   }
 
-  render(data: Partial<TViewForm> & TViewForm ) {                                                     // рендер формы
+  render(data: Partial<TViewForm> & TViewForm ) {                                 // рендер формы
     const {valid, errorMessage, ...inputs} = data;
     super.render({valid, errorMessage});
     Object.assign(this, inputs);

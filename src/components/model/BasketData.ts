@@ -20,7 +20,7 @@ export class BasketData implements IBasketData{
     this._goods = cards;
   }
 
-  isInBasket(id: string) {                                                     //проверить, есть ли в корзине
+  isInBasket(id: string) {                                                     // проверяет наличие продукта в корзине по id
     return Boolean(this._goods.find(good => good.id === id));
   }
 
@@ -46,8 +46,13 @@ export class BasketData implements IBasketData{
     return this._goods.length
   }
 
-  getTotal() {                                                                 // получить общую сумму и стоимость всех товаров, добавленных в корзину
+  getTotal(): number {                                                                 // получить общую сумму и стоимость всех товаров, добавленных в корзину
     return this._goods.reduce((sum, good) => { return sum + good.price }, 0);
 }
+
+  getIdsOfGoods() {
+    const ids = this._goods.map((good) => {return good.id})
+    return ids
+  }
 
 };

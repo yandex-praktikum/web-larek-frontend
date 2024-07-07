@@ -18,11 +18,15 @@ export class ViewBasket extends View<TViewBasket> {
     this.basketToOrder.addEventListener('click', () => this.events.emit('viewOrder:open'))
   }
 
-  set cards(items: HTMLElement[]) {            // устанавливает список карточек добавленных товаров в корзину
+  set cards(items: HTMLElement[]) {               // устанавливает список карточек добавленных товаров в корзину
     this._cardList.replaceChildren(...items)
   }
 
   set total(value: number) {                      // устанавливает общую стоимость товаров
     this.setText(this.totalCost, `${value} синапсов`);
   }
+
+  set emptyCheck(state: boolean) {                // блокирует кнопку "Оформить" в пустой корзине
+    this.setDisabled(this.basketToOrder, state); 
+}
 }

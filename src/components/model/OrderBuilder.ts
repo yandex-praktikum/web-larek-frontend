@@ -1,11 +1,12 @@
-import { IOrder, IOrderBuilder, TOrderContacts, TOrderDelivery, TOrderInfo } from "../../types";
+import { IOrderData, IOrderBuilder, TOrderContacts, TOrderDelivery, TOrderInfo, IOrderConstructor } from "../../types";
 import { IEvents } from "../base/events";
 
 export class OrderBuilder implements IOrderBuilder {
-  protected order: IOrder;
+  protected order: IOrderData;
   events: IEvents;
 
-  constructor(events: IEvents) {
+  constructor(events: IEvents, orderConstructor: IOrderConstructor) {
+    this.order = new orderConstructor();
     this.events = events
   }
 

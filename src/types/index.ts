@@ -22,7 +22,7 @@ export interface ICardsData {
  _preview: ICard | null,
 }
 
-export interface IOrderData {
+export interface IOrderData extends IOrder {
   orderFullInfo: IOrder;
 }
 
@@ -33,6 +33,9 @@ export interface IOrderBuilder{
     getOrderData(): IOrder;
 }
 
+export interface IOrderConstructor {
+  new (): IOrderData;
+}
 
 export interface IOrderSuccess {
   orderSuccess: TOrderSuccess;
@@ -141,6 +144,8 @@ export interface IViewPage {
 export type TCategoryClassNames = 'soft' | 'other' | 'additional' | 'button' | 'hard';
 export type TCategoryClasses = Record<string, TCategoryClassNames>;
 export type TId = {id: string};
+export type TViewFormOrder = {payment: TPayment; address: string};
+export type TViewFormContacts = {email: string; telephone: string};
 export type TViewBasket = {cards: HTMLElement[], total: number}
 
 
