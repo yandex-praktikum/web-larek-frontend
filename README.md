@@ -71,19 +71,54 @@ export interface IOrder {
 Интерфейс для модели данных карточек
 ```
 export interface ICardsData {
-  _cards: ICard[],
-  _preview: string | null,
+_cards: ICard[],
 }
 ```
 
 Интерфейс для модели данных заказа
 ```
 export interface IOrderData {
-  orderInfo: IOrder;
-  addCard(card: ICard): void;
-  deleteCard(id: string): void;
+  orderFullInfo: IOrder;
 }
+```
 
+Интерфейс для бильдера данных заказа
+```
+export interface IOrderBuilder{
+    orderInfo: TOrderInfo;
+    orderDelivery: TOrderDelivery;
+    orderContacts: TOrderContacts;
+    getOrderData(): IOrder;
+}
+```
+
+Интерфейс для конструктора инстанса c интерфейсом IOrderData
+```
+export interface IOrderConstructor {
+  new (): IOrderData;
+}
+```
+
+Интерфейс для данных в корзине
+```
+export interface IBasketData {
+  goods: ICard[];
+  total: number;
+  isInBasket(id:string): boolean;
+  addToBasket(card: ICard): void;
+  removeFromBasket(card: ICard): void;
+  clearBasket(): void;
+  getGoodsNumber(): number;
+  getTotal(): number;
+  getIdsOfGoods(): string[];
+}
+```
+
+Интерфейс для данных успешного заказа
+```
+export interface IOrderSuccess {
+  orderSuccess: TOrderSuccess;
+}
 ```
 
 Данные карточки, которые выводятся на главной странице
@@ -120,6 +155,83 @@ export type TOrderContacts = Pick<IOrder, 'email' | 'telephone'>;
 ```
 export type TOrderSuccess = Pick<IOrder, 'total'>;
 ```
+
+Интерфейс обработки Api
+```
+export interface IAppApi {
+  getCards(): Promise<ICard[]>;
+  getCardById(id: string): Promise<ICard>;
+  postOrder(order: IOrder): Promise<TOrderSuccess>;
+}
+```
+
+// интерфейсы представления
+
+export interface IViewModal {
+  content: HTMLElement;
+  buttonClose: HTMLButtonElement;
+  open(): void;
+  close(): void
+}
+
+export interface IViewCard {
+  id: string;
+  title: string;
+  price: string;
+}
+
+export interface IViewCardCatalogue {
+  image: string;
+  category: string;
+}
+
+export interface IViewCardPreview {
+  description: string;
+  state: boolean;
+}
+
+export interface IViewCardBasket {
+  index: number;
+}
+
+export interface IViewForm {
+  valid: boolean;
+  errorMessage: string;
+  clear(): void;
+}
+
+export interface IViewFormOrder {
+  paymentMethod: TPaymentMethod | null;
+  address: string;
+  valid: boolean;}
+
+export type TViewForm = {valid: boolean; errorMessage: string[];}
+
+export interface IViewFormContacts {
+  email: string;
+  telephone: string;
+  valid: boolean;
+}
+
+export interface IViewSuccess {
+  message: string;
+}
+
+export interface IViewPage {
+  catalog: HTMLElement[];
+  counter: number;
+  lockScreen(value: boolean): void;
+}
+
+export type TCategoryClassNames = 'soft' | 'other' | 'additional' | 'button' | 'hard';
+export type TCategoryClasses = Record<string, TCategoryClassNames>;
+export type TId = {id: string};
+export type TViewFormOrder = {payment: TPayment; address: string};
+export type TViewFormContacts = {email: string; telephone: string};
+export type TViewBasket = {cards: HTMLElement[], total: number}
+export type TViewSuccess = {message: string};
+
+
 ## Архитектура проекта
 
 Код проекта написан в парадигме MVP и разделен на следующие слои: 
@@ -187,26 +299,30 @@ export interface IEvents {
 Методы, геттеры и сеттеры.
 - set cards(cards: ICard[]): void - записывает массив карточек в _cards
 - get cards(): ICard[]            - возвращает массив продуктов _cards
-- setPreview(card:ICard): ICard   - возвращает карточку для превью
+- getCard (id: string)            - находит карточку товара по id 
 
 #### Класс BasketData
 Класс отвечает за хранение и логику товаров, добавленных покупателем в корзину
 
 Конструктор класса принимает параметры: `events: IEvents` - объект класса `EventEmitter` для инициации событий при изменении данных.
 В классе хранятся следующие данные:\
-_goods: ICard[] - массив добавленных товаров в корзине покупателя.
-total: number - общая стоимость товаров, добавленных в корзину
+- _goods: ICard[] - массив добавленных товаров в корзине покупателя;
+- total: number - общая стоимость товаров, добавленных в корзину, начальное знаение = 0
+- events: IEvents;
 
 Методы, геттеры и сеттеры:
 
+- get goods()                               - получает значения товаров, добавленных в корзину
+- set goods(cards: ICard[])                 - записывает данные товаров, добавлыенных в корзину
 - isInBasket(card: ICard): boolean          - проверяет, есть ли карточка в корзине 
 - addToBasket(card: ICard): IBasketData     - добавляет карточку в корзину
 - removeFromBasket(card:ICard): IBasketData - удаляет карточку из корзины
 - clearBasket(): IBasketData                - очищает корзину
 - getGoodsNumber(): number                  - получает количество товаров в корзине 
+- getTotal(): number                        - получает стоимость всех товаров, добавленных в корзину
+- getIdsOfGoods()                           - получает массив id всех товаров, добавленных в корзину
 
 #### Класс OrderData
-
 отвечает за хранение и логику работы данных пользователя при оформлении заказа.\
 
 В классе хранятся следующие данные:\
@@ -216,18 +332,19 @@ total: number - общая стоимость товаров, добавленн
 - _email: string                - адрес электронной почты заказчика;
 - _total: number                - общая стоимость заказа;
 - _items: string[]              - перечень заказанных продуктов;
+- events: IEvents               - события брокера событий
 
-а также методы: 
+Методы, геттеры и сеттеры:
 - getOrderInfo (): IOrder               - возвращение всей информации о заказе;
-- set paymentType(type: PaymentMethod)  - запись способа оплаты
-- set email(value: string): void        - запись email покупателя
-- set phone(value: string): void        - запись номера телефона покупателя
-- set address(value: string): void      - запись адреса покупателя
+- set paymentType(type: PaymentMethod)  - записывает данные в метод оплаты
+- set email(value: string): void        - записывает данные в email покупателя
+- set telephone(value: string): void    - записывает данные в номер телефона покупателя
+- set address(value: string): void      - записывает данные в адрес покупателя
 - set total(value: number): void        - запись общей суммы покупок
 - set items(value: string[])            - запись id товаров заказа
 
 #### Класс OrderDataBuilder
-Позволяет выполнять формирование экзмепляра класса `OrderData` поэтапно (добавление товаров, выбор способа покупки и указание класса доставки, указание е-мейл и телефона). 
+Позволяет выполнять формирование экземпляра класса `OrderData` поэтапно (добавление товаров, выбор способа покупки и указание класса доставки, указание е-мейл и телефона). 
 
 Конструктор класса принимает параметры: `events: IEvents` - объект класса `EventEmitter` для инициации событий при изменении данных и orderConstructor: IOrderConstructor - класс, создающий объекты интерфейса IOrderData.
 
@@ -237,11 +354,15 @@ total: number - общая стоимость товаров, добавленн
 
 Методы, геттеры и сеттеры:
 
-- set purchasesInfo: TOrderInfo - запись информации с корзины 
-- set deliveryInfo: TOrderOrder - запись информации с формы доставки (2 этап)
-- set contactsInfo: TOrderContacts - запись информации с формы контактной информации (3 этап)
-- getOrderData(): IOrder - возвращение готового результата.
+- set orderInfo: TOrderInfo - запись информации о заказе
+- set orderDelivery: TOrderOrder - запись информацию о доставке: тип оплаты и адрес
+- set orderContacts: TOrderContacts - информацию о контактах: эмейл и телефон
+- getOrderData(): IOrder - возвращает все данные о заказе.
 
+#### Класс OrderSuccess
+конструктор класса: 
+- protected _orderSuccess: TOrderSuccess;    - информация об успешном заказе 
+- events: IEvents;
 ### Слой отображения на сайте (View)
 
 #### Класс View
@@ -254,12 +375,18 @@ total: number - общая стоимость товаров, добавленн
 
 В классе хранятся следующие поля:
 
-protected _container: HTMLElement - DOM элемент, передаваемый в конструкторе
-protected events: IEvents - объект класса `EventEmitter` для инициации событий при изменении данных.
+- protected _container: HTMLElement - DOM элемент, передаваемый в конструкторе
+- protected events: IEvents - объект класса `EventEmitter` для инициации событий при изменении данных.
+- private _valid: any; 
 
 Методы, геттеры и сеттеры:
 
-render(data?: Partial<T>): HTMLElement - возвращает отрисованный html элемент по переданным данным
+- render(data?: Partial<T>): HTMLElement - возвращает отрисованный html элемент по переданным данным
+- toggleClass(element: HTMLElement, className: string, method?: boolean) - переключает класс элемента
+- protected setText(element: HTMLElement, value: unknown) - устанавливает тест (textContent) элементу
+- setDisabled(element: HTMLElement, state: boolean)  - устанваливает параметр disabled элементу
+- protected setImage(element: HTMLImageElement, src: string, alt?: string) - устанавливает изображение (ссылка для src) для элементов изображения
+
 
 ##### Класс ViewPage
 Расширяет класс `View`, служит шаблоном для представления страницы.
@@ -273,9 +400,15 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
   - protected _counter: HTMLSpanElement;          - спан счетчика товаров в корзине
   - protected screen: HTMLDivElement;             - DOM элемент (div), оборачивающий содержание страницы
 
+Методы, геттеры и сеттеры:
+- set catalog(viewCards: HTMLElement[]) - устанавливает содержание каталога карточек - заменяет отрендеренными карточками товаров имеющиеся в каталоге\
+- set counter(value: number) - устанавливает значение счетчика товаров в корзине\
+- lockScreen(value: boolean) - блокирует экран (добавляет соответствующие класс экрану)
+
 ##### Класс ViewCard
-Расширяет класс `View`, служит шаблоном для всех карточек слоя представления.
-Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
+Расширяет класс `View`, служит шаблоном для всех карточек слоя представления, на основании класса создается инстанс с интерфейсом IViewCard.
+
+Принимает в конструктор параметр родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 -  protected _id: string;                     - уникальный id карточки для ее идентификации 
@@ -286,14 +419,15 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 геттеры и сетеры полей интерфейса IViewCard:
 - set id  -   устанавливает значение id 
 - get id  -   получает значение id
-- set name  -   устанавливает значение name
-- get name  -   получает значение name
-- set price -   устанавливает значение price 
-- get price -   получает значение price
+- set title  -   запись имени карточки товара в DOM-элемент
+- get title -   получение имени карточки товара 
+- set price -   запись цены товара в DOM-элемент
+- get price -   получение цены товара 
 
 ###### Класс ViewCardCatalogue
-Расширяет класс `ViewCard`, служит шаблоном для всех карточек слоя представления.
-Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
+Расширяет класс `ViewCard`, служит шаблоном для всех карточек слоя представления, на основании класса создается инстанс с интерфейсом IViewCardCatalogue.
+
+Принимает в конструктор параметр родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 - protected _image: HTMLImageElement;       - DOM элемент (img) изображения в карточке
@@ -306,11 +440,11 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 - get image  -   получает ссылку изображения товара
 - set category  -  устанавливает название категории и доп класс в зависимости от названия
 - get category - получает название категории (текстКОнтент)
-- addClassToCategory(value: string) - добавляет спану категории доп класс в зависимости от ее текстКонтента
+- addClassToCategory(value: string) - добавление дополнительных классов категории в зависимости от ее содержания 
 
 ###### Класс ViewCardPreview
 Расширяет класс `ViewCard`, служит шаблоном для карточки в формате Preview (представление одной карточки на странице).
-Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
+Принимает в конструктор параметр родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 - protected _description: HTMLParagraphElement;       - DOM элемент (р) описания товара
@@ -319,11 +453,10 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 Методы, геттеры и сеттеры:
 
   - set description - устанавливает текст описания товара;
-  - get description - возвращает текст описания товара;
-  - setButtonBuy(value: string) - устанавливает текст кнопки
+  - get description - возвращает текст из DOM-элемента описания или '', если текста в DOM-элементе нет;
 
 ###### Класс ViewCardBasket
-Расширяет класс `ViewCard`, служит шаблоном для представления карточки корзине.
+Расширяет класс `ViewCard`, служит шаблоном для представления карточки корзине, на основании класса создается инстанс с интерфейсом IViewCardBasket.
 
 Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
 
@@ -335,10 +468,9 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 
   - set index(value: number) - устанавливает значение порядкового номера товара в корзине;
   - get index -  возвращает значение порядкового номера товара в корзине;
-  - setButtonDelete(value: string) - устанавливает текст кнопки
 
 ##### Класс ViewForm
-Расширяет класс `View`, служит шаблоном для всех форм слоя представления.
+Расширяет класс `View`, служит шаблоном для всех форм слоя представления, на основании класса создается инстанс с интерфейсом IViewForm.
 
 Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
 
@@ -347,20 +479,19 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 - protected container: HTMLFormElement;         - DOM элемент формы
 - protected inputs: HTMLInputElement[];         - все поля ввода формы
 - protected submitButton: HTMLButtonElement;    - кнопка сабмита формы
-- protected errorSpan: HTMLElement;             - спан с текстом ошибки
+- protected errorSpan: HTMLSpanElement;             - спан с текстом ошибки
 
 Методы, геттеры и сеттеры:
-- changeInput(inputName: string, inputValue: string)  - функция изменения данных ввода с эмитом брокера события input:change
-- clear()                                             - функция очистки формы
-- render(data: Partial<TViewForm> & TViewForm )       - рендер формы в разметку
-- set valid                                           - активация/блокировка кнопки сабмита при валидности/невалидности кнопки 
-- get valid                                           - проверка валидности формы (валидна/невалидна)
-- set errorMessage(value: string[])                   - установка сообщения об ошибке
+- changeInput(inputName: string, inputValue: string)  - функция изменения данных ввода с эмитом брокера события input:change;
+- set valid                                           - активация/блокировка кнопки сабмита при валидности/невалидности кнопки; 
+- get valid                                           - проверка валидности формы (валидна/невалидна);
+- clear()                                             - функция очистки формы;
+- render(data: Partial<TViewForm> & TViewForm )       - рендер формы в разметку;
 
 ###### Класс ViewFormOrder
 
 Расширяет класс `ViewForm`, определяет форму ввода информации о заказе.
-Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
+Принимает в конструктор параметр родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 - protected buttonsContainer: HTMLElement;        - DOM-элемент контейнера с кнопками
@@ -370,13 +501,17 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 
 Методы, геттеры и сеттеры:
 - protected getButtonActive(): HTMLButtonElement | null - возвращает кнопку, которая активна
+- protected resetButtons(): void - сбрасывает активный статус кнопки
 - set paymentMethod - устанавливает метод оплаты (card/cash);
 - set address - устанавливает адрес из данных, введенных в поле ввода адреса
+- get valid() - возвращает "валидность"
+- set valid(value: boolean) - устанавливает значение параметра valid
+- clear() - очищает форму, сбрасывает кнопки
 
 ###### Класс ViewFormContacts
 
-Расширяет класс `ViewForm`, определяет форму ввода контактных данных заказчика.
-Принимает в конструктор параметры родителя `container: HTMLElement` и `events:IEvents`.
+Расширяет класс `ViewForm`, определяет форму ввода контактных данных заказчика, на основании класса создается инстанс с интерфейсом IViewFormContacts.
+Принимает в конструктор параметр родителя `container: HTMLElement` и `events:IEvents`.
 
 В классе содержатся следующие поля:
 - protected emailInput: HTMLInputElement;
@@ -386,55 +521,26 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 - get email()           - устанавливает эмейл из данных, введенных в поле ввода эмейла
 - get telephone()       - устанавливает номе телефона из данных, введенных в поле ввода номера телефона
 
-<!-- #### Класс ModalView 
-Расширяет класс `View`, отвечает за работу универсального модального окна, внутри которого будет выводиться контент, созданный дополнительно. 
-Конструктор: constructor (container: HTMLElement, content: HTMLElement, _events:IEvent) - принимает в качестве параметров контейнер из разметки, элемент разметки, который будет составлять содержание (контент) модельного окна и событие брокера
-
-Поля класса: 
-- поля класса `View`
-- _content: HTMLElement           - содержание модального окна;
-- closeButton: HTMLButtonElement  - кнопка закрытия модального окна;
-- submitButton: HTMLButtonElement - кнопка сабмита модального окна;
-
-Методы класса:
-- open(): void - открывает модальное окно;
-- close(): void - закрывает модальное окно;
-- submitModal(): void - передает данные из модального окна при наступлении действия;
-- handleSubmit(): void - функция, привязанная к event'y
-- render(data: <T>): HTMLElement - возвращает HTMLElement модального окна, заполненного контентом
-
-
-#### Класс CardView
-
-Расширяет класс View. Является абстрактным классом, имеющий 
-Расширяет класс `View`. Универсальный класс карточки, в котором задаются общие поля у трех разновидностей карточек в приложении: карточка в каталоге на главной странице (CardCatalogView), карточка подробного описания товара в модальном окне (CardPreviewView) и карточка товара в корзине (CardBasketView), на основании данных с интерфейсом ICard.
-В конструктор передается темплейт и инстанс класса `EventEmitter`.\
-Методы:
-- render(data: ICard): HTMLElement - возвращает заполненный элемент на базе темплейта и данных карточки в зависимости от имеющихся в темплейте полей;\
-а также набор сеттеров и геттеров для получения свойств класса. 
-
-
-#### Класс OrderView
-Отвечает за отображение формы заказа, которая создается на основании заданного в разметке темплейта.
-Принимает в конструктор темплейт из разметки, инстанс класса `EventEmitter`.\
-- protected container: HTMLFormElement - соответствующая форма
-- protected inputsList: HTMLInputElement[] - массив input элементов формы
-- protected submitButton: HTMLButtonElement - кнопка отправки формы
-- protected _errorMessage: HTMLSpanElement - html элемент для отображения ошибок формы.
-
-
-Метод класса:
-- get valid(): boolean - получения статуса валидности формы
-- set valid(value: boolean):void - запись для блокировки (true) / разблокировки (false) кнопки submit
-- set errorMessage(value: string) - установка текста ошибок
-- clear():void - очистка формы
-- render(data: ): HTMLElement - возвращает HTMLElement формы заказа, заполненной контентом -->
 
 ### Слой коммуникации
 
 #### Класс AppApi
 
-расширяет класс `Api` и 
+расширяет класс `Api` и предоставляет методы реализующие взаимодействие с бэкендом сервиса.
+
+Поля
+
+- protected cdn: string - базовый путь до изображений карточек, передаваемый в конструкторе
+Параметры в конструкторе:
+
+параметры Api
+- cdn: string - базовый путь до изображений карточек
+
+Методы, геттеры и сеттеры:
+
+- getProducts(): Promise<ICard[]> - получает с сервера массив объектов всех товаров
+- getProductById(id: string): Promise<ICard> - получает с сервера конкретный товар по id
+- postOrder(order: IOrder): Promise<TOrderSuccess>  - отправляет post запрос на сервер, содержащий данные о заказе и получает по итогу номер заказа (id) и общую сумму заказ (total)
 
 ## Взаимодействие компонентов 
 Код, описывающий взаимодействие компонентов, находится в файле `index.ts`, который выполняет роль презентера.
@@ -450,27 +556,19 @@ render(data?: Partial<T>): HTMLElement - возвращает отрисован
 
 
 *События взаимодействия пользователя с интерфейсом*
-- `card:select` - выбор карточки из массива главного окна для просмотра в модальном окне детального просмотра;
-- `card:delete` - удаление карточки продукта из массива карточек, добавленных в корзину;
-- `cardPreview:open` - открытие модального окна детального просмотра продукта;
-- `cardPreview:addToBasket` - добавление продукта в корзину:
-- `cardPreview:close` - закрытие модального окна детального просмотра продукта;
-- `basket:open` - открытие модального окна с массивом карточек, добавленных в корзину;
-- `basket:close` - закрытие модального окна с массивом карточек, добавленных в корзину;
-- `basket:addToOrder` - передача массива объектов продуктов в информацию о заказе;
-- `order:open` - открытие модальной карточки с оформлением заказа;
-- `order:changed` - добавление данных в поля формы оформления заказа;
-- `order:submit` - передача данных в следующую форму;
-- `order:close` - закрытие модальной карточки;
-- `order:validation` - валидация формы при вводе данных;
-- `contacts:open` - открытие модальной карточки с оформлением заказа;
-- `contacts:change` - добавление данных в поля формы оформления заказа;
-- `contacts:submit` - передача данных о заказе;
-- `contacts:validation` - валидация формы при вводе данных;
-- `contacts:close` - закрытие модальной карточки;
-- `success:open` - открытие модального окна с успешным заказом;
-- `success:close`- закрытие модального окна с успешным заказом;
-- `success:submit` - передача данных об успешном заказе;
+- `viewModal: open` - блокировка экрана при открытии модального окна;
+- `viewModal:close` - снятия блокрировки экрана при закрытии модального окна;
+- `viewCardPreview:open` - открытие модального окна детального просмотра продукта;
+- `viewCard:addToBasket` - добавления товара в корзину;
+- `viewCard:deleteFromBasket` - удаление товара из корзины;
+- `basketData:changed` - изменение данных в корзине;
+- `viewBasket:open` - открытие корзины;
+- `viewOrder:open` - открытие формы с информацией о заказе;
+- `order:valid` - запись введенных данных в заказ;
+- `order:submit` - передача данных в следующую форму, рендер следующей формы;
+- `contacts:valid` - обработка события: запись введенных данных в заказ (информация о контактах);
+- `contacts:submit` - передача записанных данных о заказе на сервер;
+- `success:submit` - закрытие окна при нажатии кнопки "За новыми покупками";
 
 
 

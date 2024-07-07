@@ -35,7 +35,7 @@ export class OrderData implements IOrder {
     this._items = value;    
   } 
   
-  get orderFullInfo () {                               // возвращает всю информация о заказе. 
+  get orderFullInfo () {                       // возвращает всю информация о заказе. 
     return {
       paymentType: this._paymentType,
       email: this._email,

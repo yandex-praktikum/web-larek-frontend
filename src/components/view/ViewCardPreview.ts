@@ -14,21 +14,18 @@ export class ViewCardPreview extends ViewCardCatalogue<ICard> {
     this.buttonBuy.addEventListener('click', () => this.events.emit('viewCard:addToBasket', {id: this.id}))
   }
 
-  set description (value: string) {
+  set description (value: string) {                         //записывет текста в DOM-элементе описания
     this.setText(this._description, value);
   }
 
-  get description () {
+  get description () {                                      //возвращает текст из DOM-элемента описания или '', если текста в DOM-элементе нет
+
     if(this._description.textContent) {
       return this._description.textContent;
     }
     else {
       return ''
     }
-  }
-
-  setButtonBuy (value: string) {
-    this.setText(this.buttonBuy, value);
   }
 
 }

@@ -32,10 +32,4 @@ export class ViewCardBasket<T> extends ViewCard<T> implements IViewCardBasket {
       return 0
     }
   }
-
-  setButtonDelete (value: string) {                             // устанавливает текст на кнопке удаления
-    this.setText(this.buttonDelete, value)
-  }
-
-
 }

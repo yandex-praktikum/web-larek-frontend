@@ -4,8 +4,6 @@ import { IEvents } from "../base/events";
 
 export class CardsData implements ICardsData {
   _cards: ICard[];
-  _preview: ICard | null;
-
   events: IEvents;
 
   constructor (events: IEvents) {
@@ -29,13 +27,5 @@ export class CardsData implements ICardsData {
     })     
   }
 
-  setPreview(card: ICard) {                               // записывает данные карточки товара для показа в формате preview
-    this._preview = card;
-    this.events.emit('preview:changed', this._preview);
-  }
-
-  getPreview() {                                         // получает данные карточки товара, показываемого в формате preview   
-    return this._preview;
-  }
 }
 

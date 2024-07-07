@@ -11,8 +11,7 @@ export class OrderSuccess implements IOrderSuccess {
 
   set orderSuccess (value: TOrderSuccess) {
     this._orderSuccess = value;
-    // this.events.emit('success:changed', this._orderSuccess)
-  }
+   }
 
   get orderSuccess(){
     return this._orderSuccess;
