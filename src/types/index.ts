@@ -147,6 +147,7 @@ export type TId = {id: string};
 export type TViewFormOrder = {payment: TPayment; address: string};
 export type TViewFormContacts = {email: string; telephone: string};
 export type TViewBasket = {cards: HTMLElement[], total: number}
+export type TViewSuccess = {message: string};
 
 
 

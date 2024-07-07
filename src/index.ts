@@ -21,6 +21,9 @@ import { ViewModal} from './components/view/ViewModal';
 import { ViewCardBasket } from './components/view/ViewCardBasket';
 import { ViewBasket } from './components/view/ViewBasket';
 import { ViewFormContacts } from './components/view/ViewFormContacts';
+import { TOrderSuccess } from './types/index';
+import { OrderSuccess } from './components/model/OrderSuccess';
+import { ViewSuccess } from './components/view/ViewSuccess'
 
 
 
@@ -43,6 +46,7 @@ const cardsData = new CardsData(events);
 const basketData = new BasketData(events);
 const orderData = new OrderData;
 const orderBuilder = new OrderBuilder(events, OrderData);
+const orderSuccess = new OrderSuccess( events);
 
 //константы представления: контейнеры
 const containerViewPage = ensureElement<HTMLElement>('.page');
@@ -55,16 +59,18 @@ const templateViewCardBasket = ensureElement<HTMLTemplateElement>('#card-basket'
 const templateViewBasket = ensureElement<HTMLTemplateElement>('#basket');
 const templateViewOrder = ensureElement<HTMLTemplateElement>('#order');
 const templateViewContacts = ensureElement<HTMLTemplateElement>('#contacts');
+const templateViewSuccess = ensureElement<HTMLTemplateElement>('#success');
 
 
 //константы представления: инстансы классов представления
 const viewPage = new ViewPage(containerViewPage, events);
 const viewModal = new ViewModal(containerViewModal, events);
 const viewCardPreview = new ViewCardPreview (cloneTemplate(templateViewCardPreview), events); 
-// const viewCardBasket = new ViewCardBasket (cloneTemplate(templateViewCardBasket), events);
+const viewCardBasket = new ViewCardBasket (cloneTemplate(templateViewCardBasket), events);
 const viewBasket = new ViewBasket (cloneTemplate(templateViewBasket), events);
 const viewFormOrder = new ViewFormOrder (cloneTemplate(templateViewOrder), events);
-const viewFormContacts = new ViewFormContacts(cloneTemplate(templateViewContacts), events)
+const viewFormContacts = new ViewFormContacts(cloneTemplate(templateViewContacts), events);
+const viewSuccess = new ViewSuccess(cloneTemplate(templateViewSuccess), events);
 
 //получаем Api - экземпляр класса AppApi
 const api:IAppApi = new AppApi(CDN_URL, API_URL);
@@ -148,13 +154,13 @@ events.on('viewOrder:open', () => {
     })})
 })
 
-//обработка события: открытие формы с информацией о контактах
+//обработка события: запись введенных данных в заказ (информация о заказе)
 events.on('order:valid', () => {
   viewFormContacts.valid = viewFormOrder.valid;
   orderBuilder.orderDelivery = {paymentType: viewFormOrder.paymentMethod, address: viewFormOrder.address}
 })
 
-//обработка события 
+//обработка события открытие формы с информацией о контактах
 events.on(`order:submit`, () => {
   return viewModal.render({ content: viewFormContacts.render({
     valid: viewFormContacts.valid,
@@ -162,8 +168,26 @@ events.on(`order:submit`, () => {
   }) });
 });
 
-//обработаем взаимодействие пользователя с полями формы контактных данных
+//обработка события: запись введенных данных в заказ (информация о контактах)
 events.on('contacts:valid', () => {
   viewFormContacts.valid = viewFormContacts.valid;
   orderBuilder.orderContacts = {email: viewFormContacts.email, telephone: viewFormContacts.telephone};
+});
+
+
+// передача записанных данных о заказе на сервер
+events.on('contacts:submit', () => {
+  const order = orderBuilder.getOrderData().orderFullInfo;
+  api.postOrder(order).then((data: TOrderSuccess) => {
+    orderSuccess.orderSuccess = data;
+    viewFormOrder.clear();
+    viewFormContacts.clear();
+    basketData.clearBasket();
+  }).catch(console.error)
+});
+
+events.on('success:changed', (data: TOrderSuccess) => {
+  viewModal.render({
+    content: viewSuccess.render({
+      message: String(data.total)})})
 });
