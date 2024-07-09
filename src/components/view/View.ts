@@ -48,17 +48,17 @@ export class View<T> {
 }
 
 
-protected setImage(element: HTMLImageElement, src: string, alt?: string) {        // Установить изображение 
-    if (element) {
-        element.src = src;
-        if (alt) {
-            element.alt = alt;
-        }
-    }
-}
+  protected setImage(element: HTMLImageElement, src: string, alt?: string) {        // Установить изображение 
+      if (element) {
+          element.src = src;
+          if (alt) {
+              element.alt = alt;
+          }
+      }
+  }
 
-render(data?: Partial<T>): HTMLElement {                                         //вернуть отрисованный html элемент по переданным данным
-    Object.assign(this as object, data ?? {});
-    return this.container;
-}
+  render(data?: Partial<T>): HTMLElement {                                         //вернуть отрисованный html элемент по переданным данным
+      Object.assign(this as object, data ?? {});
+      return this.container;
+  }
 }

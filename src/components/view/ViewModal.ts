@@ -15,6 +15,11 @@ export class ViewModal<IViewModal> extends View<IViewModal> {
     this._buttonClose.addEventListener('click', ()=> {
       this.close()
     })
+
+    this.container.addEventListener('click', (evt) => {
+      if (evt.target === evt.currentTarget)
+      this.close()
+    })
   }
 
   open() {                                                      // открыть модальное окно
@@ -29,6 +34,7 @@ export class ViewModal<IViewModal> extends View<IViewModal> {
 
   set content(value: HTMLElement) {                             // запись содержания контента (вставить внутрь модального окна)
     this._content.replaceChildren(value);
+  }
 
-}
+
 }

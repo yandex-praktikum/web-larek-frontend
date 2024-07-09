@@ -1,31 +1,47 @@
 import { ViewCardCatalogue } from "./ViewCardCatalogue";
-import { ICard } from "../../types/index"
+import { ICard, IViewCardPreview, TViewCardPreview } from "../../types/index"
 import { IEvents } from "../base/events";
 import { ensureElement } from "../../utils/utils";
+import { categories } from "../../utils/constants";
+import { ViewCard } from "./ViewCard";
 
-export class ViewCardPreview extends ViewCardCatalogue<ICard> {
-  protected _description: HTMLParagraphElement;
+export class ViewCardPreview<TViewCardPreview> extends ViewCard<TViewCardPreview> implements IViewCardPreview {
   protected buttonBuy: HTMLButtonElement;
+  protected _category: HTMLSpanElement;
 
   constructor (container: HTMLElement, events: IEvents) {
     super(container, events)
-    this._description = ensureElement<HTMLParagraphElement>('.card__text', container);
     this.buttonBuy = ensureElement<HTMLButtonElement>('.button', container);
     this.buttonBuy.addEventListener('click', () => this.events.emit('viewCard:addToBasket', {id: this.id}))
+    this._category = ensureElement<HTMLSpanElement>('.card__category', container);
   }
 
-  set description (value: string) {                         //записывет текста в DOM-элементе описания
-    this.setText(this._description, value);
+  set category(value: string) {                             // запись данных категории товара (текстКонтент и доп класс)
+    this.addClassToCategory(value);
+    console.log(this)
+    this.setText(this._category, value);
   }
 
-  get description () {                                      //возвращает текст из DOM-элемента описания или '', если текста в DOM-элементе нет
+  get category() {                                          // получение категории товара (текстКонтента или ничего, если категория нулевая или неопределенная)
+    return this._category.textContent ?? '';
+  }
 
-    if(this._description.textContent) {
-      return this._description.textContent;
+  set invalidPrice (value: boolean) {
+    this.setDisabled(this.buttonBuy, value)
+  }
+
+  get invalidPrice () {
+    return this.buttonBuy.disabled; 
+  }
+
+  set buttonValidation (value: boolean) {
+    if (this.invalidPrice) {
+      this.setText(this.buttonBuy, 'Не продается');
+    }
+    else if (value) {
+      this.setText(this.buttonBuy, 'Убрать из корзины');
     }
     else {
-      return ''
-    }
+      this.setText(this.buttonBuy, 'Купить')}
   }
-
 }

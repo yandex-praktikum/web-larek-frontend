@@ -7,7 +7,7 @@ export class ViewForm<T> extends View <TViewForm> implements IViewForm {
   protected container: HTMLFormElement;                     //DOM элемент формы
   protected inputs: HTMLInputElement[];                     //все поля ввода формы
   protected submitButton: HTMLButtonElement;                //кнопка сабмита формы
-  protected errorSpan: HTMLSpanElement;                         //спан с текстом ошибки
+  protected errorSpan: HTMLSpanElement;                     //спан с текстом ошибки
 
   constructor(container: HTMLElement, events: IEvents) {
     super(container, events);

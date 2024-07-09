@@ -26,20 +26,6 @@ import { OrderSuccess } from './components/model/OrderSuccess';
 import { ViewSuccess } from './components/view/ViewSuccess'
 
 
-
-const cardFullTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement
-const cardContainer = document.querySelector('.gallery') as HTMLElement;
-
-
-const orderSample: IOrder = {
-  paymentType: 'cash',
-  address: 'Moscow',
-  telephone: '999 99 99',
-  email: '12345@inbox.ru',
-  total: 1,
-  items: ['c101ab44-ed99-4a54-990d-47aa2bb4e7d9']
-} 
-
 //константы данных: инстансы классов данных
 const events = new EventEmitter;
 const cardsData = new CardsData(events);
@@ -54,6 +40,7 @@ const containerViewModal = ensureElement<HTMLElement>('#modal-container');
 
 //константы представления: шаблоны
 const templateViewCardPreview = ensureElement<HTMLTemplateElement>('#card-preview');
+// const viewCardPreviewBuy = ensureElement<HTMLButtonElement>('.card__button', templateViewCardPreview)
 const templateViewCardCatalog = ensureElement<HTMLTemplateElement>('#card-catalog');
 const templateViewCardBasket = ensureElement<HTMLTemplateElement>('#card-basket');
 const templateViewBasket = ensureElement<HTMLTemplateElement>('#basket');
@@ -66,6 +53,7 @@ const templateViewSuccess = ensureElement<HTMLTemplateElement>('#success');
 const viewPage = new ViewPage(containerViewPage, events);
 const viewModal = new ViewModal(containerViewModal, events);
 const viewCardPreview = new ViewCardPreview (cloneTemplate(templateViewCardPreview), events); 
+
 const viewCardBasket = new ViewCardBasket (cloneTemplate(templateViewCardBasket), events);
 const viewBasket = new ViewBasket (cloneTemplate(templateViewBasket), events);
 const viewFormOrder = new ViewFormOrder (cloneTemplate(templateViewOrder), events);
@@ -106,29 +94,30 @@ events.on('viewModal:close', () => {
 events.on('viewCardPreview:open', (dataId: TId) => {
   const cardToPreview = cardsData.getCard(dataId.id);
   if(cardToPreview) { 
-  const viewCardToPreview = viewCardPreview.render(cardToPreview)
-  viewModal.render({content: viewCardToPreview});
+  viewModal.render({content: viewCardPreview.render({...cardToPreview, invalidPrice: Boolean(!cardToPreview.price), buttonValidation: basketData.isInBasket(cardToPreview.id)})});
   viewModal.open();
   }
 });
+
 
 //обработка события: добавления товара в корзину 
 events.on('viewCard:addToBasket', (dataId: TId) => {
   const cardToAdd = cardsData.getCard(dataId.id);
   if(cardToAdd) {
-  basketData.addToBasket(cardToAdd)
+  basketData.addToBasket(cardToAdd)}
   }
-});
+);
 
 //обработка события: удаление товара из корзины
 events.on('viewCard:deleteFromBasket', (dataId: TId) => {
-  const cardToRemove = cardsData.getCard(dataId.id);
-   if(cardToRemove) {
-    basketData.removeFromBasket(cardToRemove)}
-});
+    basketData.removeFromBasket(dataId.id)}
+);
 
 //обработка события: изменение данных в корзине, отражается на счетчике и содержимом корзины
 events.on('basketData:changed', (dataId: TId) => {
+  const cardPreview = cardsData.getCard(dataId.id)
+  if (cardPreview){
+  viewCardPreview.render({invalidPrice: Boolean(!cardPreview.price), buttonValidation: basketData.isInBasket(dataId.id)})}
   viewPage.render({counter: basketData.getGoodsNumber()})                                                     //обновление счетчика
   const goodsList = basketData.goods.map((good, index) => {                                                   //создание из массива товаров в корзине DOM-элементов - инстансов ViewCardBasket 
     const viewCardBasket = new ViewCardBasket(cloneTemplate(templateViewCardBasket), events);

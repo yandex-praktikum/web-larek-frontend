@@ -45,11 +45,11 @@ export interface IBasketData {
   total: number;
   isInBasket(id:string): boolean;
   addToBasket(card: ICard): void;
-  removeFromBasket(card: ICard): void;
+  removeFromBasket(id: string): void;
   clearBasket(): void;
   getGoodsNumber(): number;
   getTotal(): number;
-  getIdsOfGoods(): string[];
+  getIdsOfGoods(): string[]
 }
 
 export type TPaymentMethod = 'cash' | 'card';
@@ -96,16 +96,18 @@ export interface IViewCard {
   id: string;
   title: string;
   price: string;
+  image: string;
+  description: string;
 }
 
 export interface IViewCardCatalogue {
-  image: string;
   category: string;
 }
 
 export interface IViewCardPreview {
-  description: string;
-  state: boolean;
+  category: string;
+  invalidPrice: boolean;
+  buttonValidation: boolean;
 }
 
 export interface IViewCardBasket {
@@ -148,6 +150,8 @@ export type TViewFormOrder = {payment: TPayment; address: string};
 export type TViewFormContacts = {email: string; telephone: string};
 export type TViewBasket = {cards: HTMLElement[], total: number}
 export type TViewSuccess = {message: string};
-
+export type TViewCardPreview = ICard & {invalidPrice: boolean; buttonValidation: boolean};
+export type TViewCardBasket = 
+Pick<ICard, 'id' | 'title' | 'price'> & {index: number};
 
 

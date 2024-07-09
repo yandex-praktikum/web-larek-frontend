@@ -24,6 +24,11 @@ export class BasketData implements IBasketData{
     return Boolean(this._goods.find(good => good.id === id));
   }
 
+  checkBasket(id: string) {
+    if (this.isInBasket(id) === true) {
+      this.events.emit('addToBasket:disabled')
+    }
+  }
 
   addToBasket(card: ICard) {                                                   //добавить в корзину
     this._goods.push(card)
@@ -31,9 +36,11 @@ export class BasketData implements IBasketData{
     this.events.emit('basketData:changed', {id: card.id})
   }
 
-  removeFromBasket(card: ICard) {                                               //удалить из корзины
-    this._goods = this._goods.filter((good)=> {good.id !== card.id})
-    this.events.emit('basketData:changed', {card})
+  removeFromBasket(id: string) {                                               //удалить из корзины
+    this._goods = this._goods.filter((good) => {return good.id !== id})
+    console.log(this._goods)
+    this.events.emit('basketData:changed', {id})
+    
   }
 
   clearBasket() {                                                              //очистить корзину
