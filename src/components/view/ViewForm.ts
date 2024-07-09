@@ -1,4 +1,4 @@
-import { IViewForm, TViewForm } from '../../types';
+import { IViewForm, TViewForm } from '../../types/index';
 import { View } from '../view/View';
 import { ensureAllElements, ensureElement } from '../../utils/utils';
 import { IEvents } from '../base/events';
@@ -18,7 +18,7 @@ export class ViewForm<T> extends View <TViewForm> implements IViewForm {
 
     this.container.addEventListener('input', (event: Event) => {
       const target = event.target as HTMLInputElement;
-      const inputName = target.name as keyof TViewForm;
+      const inputName = target.name;
       const inputValue = target.value;
       this.changeInput (inputName, inputValue);
   });
@@ -43,7 +43,7 @@ export class ViewForm<T> extends View <TViewForm> implements IViewForm {
   } 
 
   get valid(): boolean {                                                           //проверка валидности формы (валидна/невалидна)
-    return this.inputs.every((input) => {input.value.length === 0});
+    return this.inputs.every((input) => {input.value.length !== 0});
   }
 
   set valid(value: boolean) {                                                      //активация/блокировка кнопки сабмита при валидности/невалидности кнопки 
@@ -58,7 +58,7 @@ export class ViewForm<T> extends View <TViewForm> implements IViewForm {
     this.container.reset
   }
 
-  render(data: Partial<TViewForm> & TViewForm ) {                                 // рендер формы
+  render(data: Partial<T> & TViewForm ) {                                 // рендер формы
     const {valid, errorMessage, ...inputs} = data;
     super.render({valid, errorMessage});
     Object.assign(this, inputs);

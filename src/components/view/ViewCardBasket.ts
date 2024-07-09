@@ -23,14 +23,7 @@ export class ViewCardBasket<TViewCardBasket> extends ViewCard<TViewCardBasket> i
   }
 
   get index () {                                                // возвращает порядковый номер (как номер на основе текстового значения) товара в корзине
-
-    if (this._index.textContent && this._index.textContent  !== "Бесценно"){
-      return Number(this._index.textContent)
-    }
-
-    else {
-      return 0
-    }
+    return Number(this._index.textContent)
   }
 
   

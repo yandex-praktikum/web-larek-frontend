@@ -122,10 +122,13 @@ export interface IViewForm {
 
 export interface IViewFormOrder {
   paymentMethod: TPaymentMethod | null;
-  address: string;
+  // address: string;
+  // getButtonActive(): void;
+  resetButtons(): void;
+
   valid: boolean;}
 
-export type TViewForm = {valid: boolean; errorMessage: string[];}
+
 
 export interface IViewFormContacts {
   email: string;
@@ -143,6 +146,7 @@ export interface IViewPage {
   lockScreen(value: boolean): void;
 }
 
+export type TViewForm = {valid: boolean; errorMessage: string;}
 export type TCategoryClassNames = 'soft' | 'other' | 'additional' | 'button' | 'hard';
 export type TCategoryClasses = Record<string, TCategoryClassNames>;
 export type TId = {id: string};
@@ -151,7 +155,7 @@ export type TViewFormContacts = {email: string; telephone: string};
 export type TViewBasket = {cards: HTMLElement[], total: number}
 export type TViewSuccess = {message: string};
 export type TViewCardPreview = ICard & {invalidPrice: boolean; buttonValidation: boolean};
-export type TViewCardBasket = 
-Pick<ICard, 'id' | 'title' | 'price'> & {index: number};
+export type TViewCardBasket = Pick<ICard, 'id' | 'title' | 'price'> & {index: number};
+export type TViewCardCatalogue = Pick<ICard, 'id' | 'title' | 'price' | 'category' | 'image'>
 
 

@@ -1,8 +1,6 @@
-import { ViewCardCatalogue } from "./ViewCardCatalogue";
 import { ICard, IViewCardPreview, TViewCardPreview } from "../../types/index"
 import { IEvents } from "../base/events";
 import { ensureElement } from "../../utils/utils";
-import { categories } from "../../utils/constants";
 import { ViewCard } from "./ViewCard";
 
 export class ViewCardPreview<TViewCardPreview> extends ViewCard<TViewCardPreview> implements IViewCardPreview {
@@ -12,9 +10,16 @@ export class ViewCardPreview<TViewCardPreview> extends ViewCard<TViewCardPreview
   constructor (container: HTMLElement, events: IEvents) {
     super(container, events)
     this.buttonBuy = ensureElement<HTMLButtonElement>('.button', container);
-    this.buttonBuy.addEventListener('click', () => this.events.emit('viewCard:addToBasket', {id: this.id}))
+    this.buttonBuy.addEventListener('click', () => {
+      if (this.buttonBuy.textContent === 'Убрать из корзины') {
+        this.events.emit('viewCard:deleteFromBasket', {id: this.id})
+      }
+      else {this.events.emit('viewCard:addToBasket', {id: this.id})}
+      })
+
     this._category = ensureElement<HTMLSpanElement>('.card__category', container);
   }
+
 
   set category(value: string) {                             // запись данных категории товара (текстКонтент и доп класс)
     this.addClassToCategory(value);

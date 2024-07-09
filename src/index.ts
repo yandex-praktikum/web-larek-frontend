@@ -139,13 +139,12 @@ events.on('viewOrder:open', () => {
   viewModal.render({ 
     content: viewFormOrder.render({
       valid: viewFormOrder.valid,
-      errorMessage: []
+      errorMessage: ''
     })})
 })
 
 //обработка события: запись введенных данных в заказ (информация о заказе)
 events.on('order:valid', () => {
-  viewFormContacts.valid = viewFormOrder.valid;
   orderBuilder.orderDelivery = {paymentType: viewFormOrder.paymentMethod, address: viewFormOrder.address}
 })
 
@@ -153,7 +152,7 @@ events.on('order:valid', () => {
 events.on(`order:submit`, () => {
   return viewModal.render({ content: viewFormContacts.render({
     valid: viewFormContacts.valid,
-    errorMessage: []
+    errorMessage: ''
   }) });
 });
 

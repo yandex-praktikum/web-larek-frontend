@@ -10,14 +10,7 @@ export class View<T> {
     this.container = container;                                                   // DOM элемент компонента
     this.events = events;                                                         // объект класса `EventEmitter` для инициации событий при изменении данных
   }
-
-  public get valid(): any {
-    return this._valid;
-}
-  public set valid(value: any) {
-    this._valid = value;
-}
-                                                                                 
+                                                                                
   toggleClass(element: HTMLElement, className: string, method?: boolean) {        // Переключить класс
     element.classList.toggle(className, method);
   }

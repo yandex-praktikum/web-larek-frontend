@@ -16,30 +16,38 @@ export class ViewFormOrder extends ViewForm<TViewFormOrder> implements IViewForm
     this.buttonOnline = ensureElement<HTMLButtonElement>('.button[name=card]', container);
     this.buttonOnDelivery = ensureElement<HTMLButtonElement>('.button[name=cash]', container);
     this.addressInput = ensureElement<HTMLInputElement>('.form__input[name=address]', container);
-
-    this.buttonsContainer.addEventListener('click', (event) => {                                              // переключает кнопку выбора оплаты метода платежа
-      if((event.target === this.buttonOnline) || (event.target === this.buttonOnDelivery)) {
-        const buttonActive = event.target as HTMLButtonElement;
-        this.resetButtons();
-        this.toggleClass(buttonActive, 'button_alt-active');
-        this.events.emit('order:valid')
-      }
+   
+    this.buttonOnDelivery.addEventListener('click', () => {
+      this.resetButtons();
+      this.toggleClass(this.buttonOnDelivery,'button_alt-active', true) 
+      this.toggleClass(this.buttonOnline, 'button_alt-active', false)
+      this.paymentMethod === 'cash'
+      this.events.emit('order:valid')
     })
-  }
 
-  protected getButtonActive(): HTMLButtonElement | null {                                                        // возвращает кнопку, которая активна
-    if(this.buttonOnline.classList.contains('button_alt-active')) {
-      return this.buttonOnline
-    } 
-
-    else if(this.buttonOnDelivery.classList.contains('button_alt-active')) {
-      return this.buttonOnDelivery
+    this.buttonOnline.addEventListener('click', () => {
+      this.resetButtons();
+      this.toggleClass(this.buttonOnline,'button_alt-active', true) 
+      this.toggleClass(this.buttonOnDelivery, 'button_alt-active', false)
+      this.paymentMethod === 'card'
+      this.events.emit('order:valid')
+    })
     }
 
-    return null;
-  }
 
-  protected resetButtons(): void {                                                                               //сбрасывает активный статус кнопки                                                   
+  // getButtonActive(): HTMLButtonElement | null {                                                        // возвращает кнопку, которая активна
+  //   if(this.buttonOnline.classList.contains('button_alt-active')) {
+  //     return this.buttonOnline
+  //   } 
+
+  //   else if(this.buttonOnDelivery.classList.contains('button_alt-active')) {
+  //     return this.buttonOnDelivery
+  //   }
+
+  //   return null;
+  // }
+
+  resetButtons(): void {                                                                               //сбрасывает активный статус кнопки                                                   
     this.toggleClass(this.buttonOnline, '.button_alt-active', false);
     this.toggleClass(this.buttonOnDelivery, '.button_alt-active', false);
   }
