@@ -6,7 +6,7 @@ import { EventEmitter } from './components/base/events';
 import { CardsData } from './components/model/CardsData';
 import { BasketData } from './components/model/BasketData';
 import { OrderData } from './components/model/OrderData';
-import { IOrder, TId } from './types/index';
+import { TId } from './types/index';
 import { OrderBuilder } from './components/model/OrderBuilder';
 import { View } from './components/view/View';
 import { ViewForm } from './components/view/ViewForm';
@@ -129,12 +129,12 @@ events.on('basketData:changed', (dataId: TId) => {
 
 //обработка события: клик по иконке(кнопке) корзины на главной старанице - открытие корзины
 events.on('viewBasket:open', () => {
-  viewModal.render({ content: viewBasket.render({total: basketData.getTotal()})});
+  viewModal.render({ content: viewBasket.render({total: basketData.getTotal(), emptyCheck: basketData.emptyValidation()})});
   viewModal.open();
 });
 
 //обработка события: открытие формы с информацией о заказе
-events.on('viewOrder:open', () => {
+events.on('viewOrder:open', () =>{
   orderBuilder.orderInfo = {total: basketData.getTotal(), items: basketData.getIdsOfGoods()}
   viewModal.render({ 
     content: viewFormOrder.render({
@@ -143,14 +143,26 @@ events.on('viewOrder:open', () => {
     })})
 })
 
-//обработка события: запись введенных данных в заказ (информация о заказе)
-events.on('order:valid', () => {
-  orderBuilder.orderDelivery = {paymentType: viewFormOrder.paymentMethod, address: viewFormOrder.address}
+events.on('payment:input', () => {
+  if (viewFormOrder.payment) {
+  orderData.paymentType = viewFormOrder.payment
+  }
 })
+
+events.on('address:input', () => {
+  orderData.address = viewFormOrder.address
+}
+)
+
+// обработка события: запись введенных данных в заказ (информация о заказе)
+events.on('order:valid', () => {
+  viewFormOrder.valid = viewFormOrder.valid
+})
+
 
 //обработка события открытие формы с информацией о контактах
 events.on(`order:submit`, () => {
-  return viewModal.render({ content: viewFormContacts.render({
+    return viewModal.render({ content: viewFormContacts.render({
     valid: viewFormContacts.valid,
     errorMessage: ''
   }) });

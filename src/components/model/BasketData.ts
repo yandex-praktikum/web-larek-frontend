@@ -62,4 +62,10 @@ export class BasketData implements IBasketData{
     return ids
   }
 
+  emptyValidation (): boolean {
+    if (this._goods.length === 0) {
+      return true
+    }
+    else {return false}
+  }
 };

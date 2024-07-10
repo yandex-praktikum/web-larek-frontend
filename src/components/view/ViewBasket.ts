@@ -1,10 +1,10 @@
-import { TViewBasket } from "../../types";
+import { TViewBasket, IViewBasket } from "../../types/index";
 import { IEvents } from "../base/events";
 import { View } from './View'
 import { ensureElement } from "../../utils/utils";
 
 
-export class ViewBasket extends View<TViewBasket> {
+export class ViewBasket extends View<TViewBasket> implements IViewBasket {
   protected _cardList: HTMLUListElement;          //DOM элемент списка карточек товаров, добавленных в корзину 
   protected totalCost: HTMLSpanElement;           //DOM элемент спана с общей стоимостью товаров, добвленных в корзину
   protected basketToOrder: HTMLButtonElement;     //DOM элемент кнопки передачи товаров в заказ - "Оформить"
@@ -27,6 +27,6 @@ export class ViewBasket extends View<TViewBasket> {
   }
 
   set emptyCheck(state: boolean) {                // блокирует кнопку "Оформить" в пустой корзине
-    this.setDisabled(this.basketToOrder, state); 
-}
+    this.setDisabled(this.basketToOrder, state);
+  }
 }

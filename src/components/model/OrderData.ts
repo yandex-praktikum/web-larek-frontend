@@ -15,6 +15,10 @@ export class OrderData implements IOrder {
     this._paymentType = type;
   }
   
+  get paymentType() {
+    return this._paymentType
+  }
+  
   set email(value: string) {                  //записывает данные в email покупателя
     this._email = value;
   }

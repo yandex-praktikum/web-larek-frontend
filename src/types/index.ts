@@ -110,6 +110,12 @@ export interface IViewCardPreview {
   buttonValidation: boolean;
 }
 
+export interface IViewBasket {
+  cards: HTMLElement[];
+  total: number;
+  emptyCheck: boolean;
+}
+
 export interface IViewCardBasket {
   index: number;
 }
@@ -121,7 +127,7 @@ export interface IViewForm {
 }
 
 export interface IViewFormOrder {
-  paymentMethod: TPaymentMethod | null;
+  payment: TPaymentMethod | null;
   // address: string;
   // getButtonActive(): void;
   resetButtons(): void;
@@ -152,7 +158,7 @@ export type TCategoryClasses = Record<string, TCategoryClassNames>;
 export type TId = {id: string};
 export type TViewFormOrder = {payment: TPayment; address: string};
 export type TViewFormContacts = {email: string; telephone: string};
-export type TViewBasket = {cards: HTMLElement[], total: number}
+export type TViewBasket = {cards: HTMLElement[], total: number, emptyCheck: boolean}
 export type TViewSuccess = {message: string};
 export type TViewCardPreview = ICard & {invalidPrice: boolean; buttonValidation: boolean};
 export type TViewCardBasket = Pick<ICard, 'id' | 'title' | 'price'> & {index: number};
