@@ -5,8 +5,7 @@ import { ViewCard } from "./ViewCard";
 
 export class ViewCardPreview<TViewCardPreview> extends ViewCard<TViewCardPreview> implements IViewCardPreview {
   protected buttonBuy: HTMLButtonElement;
-  protected _category: HTMLSpanElement;
-
+  
   constructor (container: HTMLElement, events: IEvents) {
     super(container, events)
     this.buttonBuy = ensureElement<HTMLButtonElement>('.button', container);
@@ -17,19 +16,9 @@ export class ViewCardPreview<TViewCardPreview> extends ViewCard<TViewCardPreview
       else {this.events.emit('viewCard:addToBasket', {id: this.id})}
       })
 
-    this._category = ensureElement<HTMLSpanElement>('.card__category', container);
   }
 
 
-  set category(value: string) {                             // запись данных категории товара (текстКонтент и доп класс)
-    this.addClassToCategory(value);
-    console.log(this)
-    this.setText(this._category, value);
-  }
-
-  get category() {                                          // получение категории товара (текстКонтента или ничего, если категория нулевая или неопределенная)
-    return this._category.textContent ?? '';
-  }
 
   set invalidPrice (value: boolean) {
     this.setDisabled(this.buttonBuy, value)

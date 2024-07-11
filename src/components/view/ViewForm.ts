@@ -15,8 +15,7 @@ export class ViewForm<T> extends View <TViewForm> implements IViewForm {
     this.submitButton = ensureElement<HTMLButtonElement>('.button[type=submit]', container);   //находит элемент с классом '.button' в DOM элементе формы
     this.errorSpan = ensureElement<HTMLSpanElement>('.form__errors', container);      //находит элемент с классом '.form__errors' в DOM элементе формы
      
-    this.container.addEventListener('submit', (event: Event) => {                 //слушатель события на сабмит формы с эмитом брокера события form:submit
-      event.preventDefault;
+    this.submitButton.addEventListener('click', () => {                 //слушатель события на сабмит формы с эмитом брокера события form:submit
       this.events.emit(`${this.container.name}:submit`);
     } )
   

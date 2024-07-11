@@ -25,13 +25,6 @@ export interface IOrderData extends IOrder {
   orderFullInfo: IOrder;
 }
 
-export interface IOrderBuilder{
-    orderInfo: TOrderInfo;
-    orderDelivery: TOrderDelivery;
-    orderContacts: TOrderContacts;
-    getOrderData(): IOrder;
-}
-
 export interface IOrderConstructor {
   new (): IOrderData;
 }
@@ -52,25 +45,12 @@ export interface IBasketData {
   getIdsOfGoods(): string[]
 }
 
-export type TPaymentMethod = 'cash' | 'card';
-
-
+export type TPaymentMethod = 'cash' | 'online';
 export type TCardInfo = Pick<ICard, 'category' | 'title' | 'image' | 'price'>
-
 export type TCardPreview = Pick<ICard, 'category' | 'title' | 'description' | 'image' | 'price'>;
-
 export type TBasket = Pick<ICard, 'title' | 'price'>;
-
 export type TOrder = Partial<IOrder>;
-
-export type TOrderInfo = Pick<IOrder, 'total' | 'items'>
-
 export type TPayment = Pick<IOrder, 'paymentType'>;
-
-export type TOrderDelivery = Pick<IOrder, 'paymentType' | 'address'>;
-
-export type TOrderContacts = Pick<IOrder, 'email' | 'telephone'>;
-
 export type TOrderSuccess =  Pick<IOrder, 'items' | 'total'>;
 
 export interface IAppApi {
@@ -125,15 +105,12 @@ export interface IViewForm {
   errorMessage: string;
   clear(): void;
 }
-
 export interface IViewFormOrder {
   payment: TPaymentMethod | null;
-  // address: string;
-  // getButtonActive(): void;
+  address: string;
   resetButtons(): void;
-
-  valid: boolean;}
-
+  valid: boolean;
+}
 
 
 export interface IViewFormContacts {

@@ -7,14 +7,9 @@ import { CardsData } from './components/model/CardsData';
 import { BasketData } from './components/model/BasketData';
 import { OrderData } from './components/model/OrderData';
 import { TId } from './types/index';
-import { OrderBuilder } from './components/model/OrderBuilder';
-import { View } from './components/view/View';
-import { ViewForm } from './components/view/ViewForm';
 import { ViewFormOrder } from './components/view/ViewFormOrder';
 import { cloneTemplate, ensureElement } from './utils/utils';
-import { ViewCard } from './components/view/ViewCard';
 import { ViewCardCatalogue } from './components/view/ViewCardCatalogue';
-import { TCategoryClasses } from './types/index';
 import { ViewCardPreview } from './components/view/ViewCardPreview';
 import { ViewPage } from './components/view/ViewPage';
 import { ViewModal} from './components/view/ViewModal';
@@ -31,7 +26,6 @@ const events = new EventEmitter;
 const cardsData = new CardsData(events);
 const basketData = new BasketData(events);
 const orderData = new OrderData;
-const orderBuilder = new OrderBuilder(events, OrderData);
 const orderSuccess = new OrderSuccess( events);
 
 //константы представления: контейнеры
@@ -40,7 +34,6 @@ const containerViewModal = ensureElement<HTMLElement>('#modal-container');
 
 //константы представления: шаблоны
 const templateViewCardPreview = ensureElement<HTMLTemplateElement>('#card-preview');
-// const viewCardPreviewBuy = ensureElement<HTMLButtonElement>('.card__button', templateViewCardPreview)
 const templateViewCardCatalog = ensureElement<HTMLTemplateElement>('#card-catalog');
 const templateViewCardBasket = ensureElement<HTMLTemplateElement>('#card-basket');
 const templateViewBasket = ensureElement<HTMLTemplateElement>('#basket');
@@ -54,7 +47,7 @@ const viewPage = new ViewPage(containerViewPage, events);
 const viewModal = new ViewModal(containerViewModal, events);
 const viewCardPreview = new ViewCardPreview (cloneTemplate(templateViewCardPreview), events); 
 
-const viewCardBasket = new ViewCardBasket (cloneTemplate(templateViewCardBasket), events);
+// const viewCardBasket = new ViewCardBasket (cloneTemplate(templateViewCardBasket), events);
 const viewBasket = new ViewBasket (cloneTemplate(templateViewBasket), events);
 const viewFormOrder = new ViewFormOrder (cloneTemplate(templateViewOrder), events);
 const viewFormContacts = new ViewFormContacts(cloneTemplate(templateViewContacts), events);
@@ -135,11 +128,12 @@ events.on('viewBasket:open', () => {
 
 //обработка события: открытие формы с информацией о заказе
 events.on('viewOrder:open', () =>{
-  orderBuilder.orderInfo = {total: basketData.getTotal(), items: basketData.getIdsOfGoods()}
+  orderData.total = basketData.getTotal()
+  orderData.items = basketData.getIdsOfGoods()
   viewModal.render({ 
     content: viewFormOrder.render({
       valid: viewFormOrder.valid,
-      errorMessage: ''
+      errorMessage: 'Выберите метод платежа и заполните поле адреса'
     })})
 })
 
@@ -159,39 +153,48 @@ events.on('order:valid', () => {
   viewFormOrder.valid = viewFormOrder.valid
 })
 
-
 //обработка события открытие формы с информацией о контактах
 events.on(`order:submit`, () => {
     return viewModal.render({ content: viewFormContacts.render({
     valid: viewFormContacts.valid,
-    errorMessage: ''
+    errorMessage: 'Заполните поля электронной почты и телефона'
   }) });
 });
+
+events.on('email:input', () => {
+  orderData.email = viewFormContacts.email
+})
+
+events.on('telephone:input', () => {
+  orderData.telephone = viewFormContacts.telephone
+})
+
 
 //обработка события: запись введенных данных в заказ (информация о контактах)
 events.on('contacts:valid', () => {
   viewFormContacts.valid = viewFormContacts.valid;
-  orderBuilder.orderContacts = {email: viewFormContacts.email, telephone: viewFormContacts.telephone};
 });
 
 
 // передача записанных данных о заказе на сервер
 events.on('contacts:submit', () => {
-  const order = orderBuilder.getOrderData().orderFullInfo;
+  const order = orderData.orderFullInfo
   api.postOrder(order).then((data: TOrderSuccess) => {
+    console.log(data);
     orderSuccess.orderSuccess = data;
     viewFormOrder.clear();
     viewFormContacts.clear();
     basketData.clearBasket();
    }).catch(console.error)
-   viewModal.render({
-    content: viewSuccess.render({
+      viewModal.render({
+      content: viewSuccess.render({
       message: String(order.total)
     })
   })
 });
 
 //закрытие окна при нажатии кнопки "За новыми покупками"
-events.on('success:submit', ()=> {
+events.on('success:submit', () => {
+  console.log(viewModal)
   viewModal.close();
 })

@@ -11,6 +11,12 @@ export class ViewFormContacts extends ViewForm<TViewFormContacts> implements IVi
     super(container, events);
     this.emailInput = ensureElement<HTMLInputElement>('.form__input[name=email]', container);
     this.telephoneInput = ensureElement<HTMLInputElement>('.form__input[name=phone]', container);
+    this.emailInput.addEventListener('input', () => {
+      this.events.emit('email:input'); 
+    })
+    this.telephoneInput.addEventListener('input', () => {
+      this.events.emit('telephone:input')
+    })
   }
 
   get email() {
@@ -24,21 +30,22 @@ export class ViewFormContacts extends ViewForm<TViewFormContacts> implements IVi
   get valid() {
     if(Boolean(this.emailInput.value) && Boolean(this.telephoneInput.value)) {
       this.errorMessage ='';
+      return true
+    }
+    else if(!Boolean(this.emailInput.value) && !Boolean(this.telephoneInput.value)) {
+      this.errorMessage ='Заполните поля электронной почты и телефона';
       return false
     }
-    else if(super.valid) {
-      this.errorMessage ='Заполните поля эл. почты и телефона';
-      return true
-    }
     else if(!Boolean(this.emailInput.value) && Boolean(this.telephoneInput.value)) {
-      this.errorMessage ='Заполните поле эл. почты';
-      return true
+      this.errorMessage ='Заполните поле электронной почты';
+      return false
     }
     else if(Boolean(this.emailInput.value) && !Boolean(this.telephoneInput.value)) {
       this.errorMessage ='Заполните поле телефона';
-      return true
+      return false
     }
-    return true
+
+    return false
   }
 
   set valid(value: boolean) {

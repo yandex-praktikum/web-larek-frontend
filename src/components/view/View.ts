@@ -3,8 +3,7 @@ import { IEvents } from "../base/events";
 export class View<T> {
   protected container: HTMLElement;                                              // DOM элемент компонента
   protected events: IEvents;                                                      // объект класса `EventEmitter` для инициации событий при изменении данных
-  private _valid: any;
-
+  
 
   constructor(container: HTMLElement, events: IEvents) {
     this.container = container;                                                   // DOM элемент компонента

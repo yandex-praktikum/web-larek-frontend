@@ -2,6 +2,7 @@ import { ViewForm } from "./ViewForm";
 import { IViewFormOrder, TPaymentMethod, TViewForm, TViewFormOrder } from "../../types";
 import { IEvents } from "../base/events";
 import { ensureElement } from "../../utils/utils";
+// import { isEmpty } from "../../utils/utils";
 
 
 export class ViewFormOrder extends ViewForm<TViewFormOrder> implements IViewFormOrder{                                         // форма заказа с способом оплаты и адресом доставки 
@@ -18,14 +19,12 @@ export class ViewFormOrder extends ViewForm<TViewFormOrder> implements IViewForm
     this.addressInput = ensureElement<HTMLInputElement>('.form__input[name=address]', container);
    
     this.buttonOnDelivery.addEventListener('click', () => {
-      this.resetButtons();
       this.toggleClass(this.buttonOnDelivery,'button_alt-active', true) 
       this.toggleClass(this.buttonOnline, 'button_alt-active', false)
       this.events.emit('payment:input')
     })
 
     this.buttonOnline.addEventListener('click', () => {
-      this.resetButtons();
       this.toggleClass(this.buttonOnline,'button_alt-active', true) 
       this.toggleClass(this.buttonOnDelivery, 'button_alt-active', false)
       this.events.emit('payment:input')
@@ -58,13 +57,14 @@ export class ViewFormOrder extends ViewForm<TViewFormOrder> implements IViewForm
     if (this.buttonOnDelivery.classList.toggle('.button_alt-active', true)) {
       value === 'cash'
     }
-    else {value === 'card'
+    else if (this.buttonOnline.classList.toggle('.button_alt-active', true)) {
+      value === 'online'
     }
+    value === null
   }
 
   get payment() {// возвращает имя активной кнопки
     const buttonActive = this.getButtonActive();
-    
     return buttonActive ? buttonActive.name as TPaymentMethod : null
   }
 
@@ -73,17 +73,17 @@ export class ViewFormOrder extends ViewForm<TViewFormOrder> implements IViewForm
   }
 
   get valid() {                                                                                                  //возвращает "валидность"
-    if(!(super.valid) && Boolean(this.payment)) {
-      return false
-    }
-    else if ((super.valid) && Boolean(this.payment)) {
-      return true
-    }
-    else if (Boolean(this.payment) && (super.valid)) {
+    if (Boolean(this.addressInput.value) === true && (Boolean(this.payment) === true)) {
+      this.errorMessage = '';
       return true
     }
 
-    else if ((super.valid) && !Boolean(this.payment)) {
+    else if (Boolean(this.addressInput.value) === false && (Boolean(this.payment) === true)) {
+      this.errorMessage = 'Заполните поле адреса'
+      return false
+    }    
+    else if (Boolean(this.addressInput.value) === true && (Boolean(this.payment) === false)) {
+      this.errorMessage = 'Выберите метод платежа'
       return false
     }
     return false

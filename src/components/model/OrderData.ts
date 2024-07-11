@@ -1,4 +1,4 @@
-import { IOrder, TPaymentMethod, TOrderInfo} from '../../types/index'
+import { IOrder, TPaymentMethod} from '../../types/index'
 import { IEvents } from '../base/events';
 
 

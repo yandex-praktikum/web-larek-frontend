@@ -12,7 +12,9 @@ export class ViewSuccess<IViewSuccess> extends View<IViewSuccess> {
     super(container, events)
     this._message = ensureElement<HTMLParagraphElement>('.order-success__description', container);
     this.buttonSuccess = ensureElement<HTMLButtonElement>('.order-success__close', container);
-    this.buttonSuccess.addEventListener('.click', () => this.events.emit('success:submit'))
+    this.buttonSuccess.addEventListener('click', () => {
+      this.events.emit('success:submit')
+    })
   }
 
   set message (value: number) {

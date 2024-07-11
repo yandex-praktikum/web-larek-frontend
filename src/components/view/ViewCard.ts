@@ -5,7 +5,7 @@ import { ensureElement } from "../../utils/utils";
 import { categories } from "../../utils/constants";
 
 
-export class ViewCard<T> extends View<T> implements IViewCard {
+export abstract class ViewCard<T> extends View<T> implements IViewCard {
   protected _id: string;
   protected _title: HTMLHeadingElement;
   protected _price: HTMLSpanElement;
