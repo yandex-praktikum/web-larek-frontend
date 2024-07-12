@@ -44,7 +44,7 @@ export class BasketData implements IBasketData{
 
   clearBasket() {
                                                                  //очистить корзину
-    this._goods.length === 0;
+    this._goods = [];
     this.total === 0;
     this.events.emit('basketData:changed', this._goods);
   }

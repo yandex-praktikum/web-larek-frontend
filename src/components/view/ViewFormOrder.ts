@@ -22,16 +22,19 @@ export class ViewFormOrder extends ViewForm<TViewFormOrder> implements IViewForm
       this.toggleClass(this.buttonOnDelivery,'button_alt-active', true) 
       this.toggleClass(this.buttonOnline, 'button_alt-active', false)
       this.events.emit('payment:input')
+      this.events.emit('order:valid')
     })
 
     this.buttonOnline.addEventListener('click', () => {
       this.toggleClass(this.buttonOnline,'button_alt-active', true) 
       this.toggleClass(this.buttonOnDelivery, 'button_alt-active', false)
       this.events.emit('payment:input')
+      this.events.emit('order:valid')
     })
 
     this.addressInput.addEventListener('input', () => {
       this.events.emit('address:input')
+      this.events.emit('order:valid')
     } )
     }
 

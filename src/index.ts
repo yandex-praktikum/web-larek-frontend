@@ -148,6 +148,7 @@ events.on('viewOrder:open', () =>{
 events.on('payment:input', () => {
   if (viewFormOrder.payment) {
   orderData.payment = viewFormOrder.payment
+  orderData.address = viewFormOrder.address
   }
 })
 
@@ -163,6 +164,7 @@ events.on('order:valid', () => {
 
 //обработка события открытие формы с информацией о контактах
 events.on(`order:submit`, () => {
+    viewFormOrder.clear()
     return viewModal.render({ content: viewFormContacts.render({
     valid: viewFormContacts.valid,
     errorMessage: 'Заполните поля электронной почты и телефона'
@@ -186,16 +188,17 @@ events.on('contacts:valid', () => {
 
 // передача записанных данных о заказе на сервер
 events.on('contacts:submit', () => {
+
   const order = orderData.orderFullInfo
   
   console.log(order)
   api.postOrder(order).then((data: TOrderSuccess) => {
     console.log(data);
     orderSuccess.orderSuccess = data;
-    basketData.clearBasket();
     viewFormOrder.clear();
     viewFormContacts.clear();
-   }).catch(console.error)
+    basketData.clearBasket(); 
+  }).catch(console.error)
     const viewSuccess = new ViewSuccess(cloneTemplate(templateViewSuccess), events);
     viewModal.render({content: viewSuccess.render({message: String(order.total)})})
 });

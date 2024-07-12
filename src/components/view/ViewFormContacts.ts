@@ -13,9 +13,11 @@ export class ViewFormContacts extends ViewForm<TViewFormContacts> implements IVi
     this.telephoneInput = ensureElement<HTMLInputElement>('.form__input[name=phone]', container);
     this.emailInput.addEventListener('input', () => {
       this.events.emit('email:input'); 
+      this.events.emit('contacts:valid')
     })
     this.telephoneInput.addEventListener('input', () => {
       this.events.emit('telephone:input')
+      this.events.emit('contacts:valid')
     })
   }
 
