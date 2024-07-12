@@ -87,7 +87,6 @@ events.on('viewModal:close', () => {
 events.on('viewCardPreview:open', (dataId: TId) => {
   if (dataId.id){ 
   const cardToPreview = cardsData.getCard(dataId.id);
-  console.log(cardToPreview)
   if(cardToPreview) { 
   viewModal.render({
     content: viewCardPreview.render({
@@ -191,9 +190,7 @@ events.on('contacts:submit', () => {
 
   const order = orderData.orderFullInfo
   
-  console.log(order)
   api.postOrder(order).then((data: TOrderSuccess) => {
-    console.log(data);
     orderSuccess.orderSuccess = data;
     viewFormOrder.clear();
     viewFormContacts.clear();
