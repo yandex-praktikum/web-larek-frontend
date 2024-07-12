@@ -1,17 +1,17 @@
 //интерфейсы данных
 export interface ICard {            //данные карточки продукта
   category: string,
-  id: string,
-  title: string,
   description: string,
+  id: string,
   image: string,
-  price: number
+  price: number,
+  title: string  
 };
 
 export interface IOrder {           //данные заказа
-  paymentType: TPaymentMethod,
+  payment: TPaymentMethod,
   address: string,
-  telephone: string,
+  phone: string,
   email: string,
   total: number,
   items: string[]
@@ -45,13 +45,14 @@ export interface IBasketData {
   getIdsOfGoods(): string[]
 }
 
-export type TPaymentMethod = 'cash' | 'online';
+export type TPaymentMethod = 'cash' | 'card';
 export type TCardInfo = Pick<ICard, 'category' | 'title' | 'image' | 'price'>
 export type TCardPreview = Pick<ICard, 'category' | 'title' | 'description' | 'image' | 'price'>;
 export type TBasket = Pick<ICard, 'title' | 'price'>;
 export type TOrder = Partial<IOrder>;
-export type TPayment = Pick<IOrder, 'paymentType'>;
+export type TPayment = Pick<IOrder, 'payment'>;
 export type TOrderSuccess =  Pick<IOrder, 'items' | 'total'>;
+export type TId = Pick<ICard, 'id'>;
 
 export interface IAppApi {
   getCards(): Promise<ICard[]>;
@@ -115,7 +116,7 @@ export interface IViewFormOrder {
 
 export interface IViewFormContacts {
   email: string;
-  telephone: string;
+  phone: string;
   valid: boolean;
 }
 
@@ -132,9 +133,9 @@ export interface IViewPage {
 export type TViewForm = {valid: boolean; errorMessage: string;}
 export type TCategoryClassNames = 'soft' | 'other' | 'additional' | 'button' | 'hard';
 export type TCategoryClasses = Record<string, TCategoryClassNames>;
-export type TId = {id: string};
-export type TViewFormOrder = {payment: TPayment; address: string};
-export type TViewFormContacts = {email: string; telephone: string};
+
+export type TViewFormOrder = {payment: TPayment; address: string; valid: Boolean};
+export type TViewFormContacts = {email: string; phone: string; valid: Boolean };
 export type TViewBasket = {cards: HTMLElement[], total: number, emptyCheck: boolean}
 export type TViewSuccess = {message: string};
 export type TViewCardPreview = ICard & {invalidPrice: boolean; buttonValidation: boolean};

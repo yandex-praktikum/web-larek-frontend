@@ -32,7 +32,7 @@ export class ViewModal<IViewModal> extends View<IViewModal> {
     this.events.emit('viewModal:close');
   }
 
-  set content(value: HTMLElement) {                             // запись содержания контента (вставить внутрь модального окна)
+  set content(value: HTMLElement) {                             // устанавливает содержания контента (вставить внутрь модального окна)
     this._content.replaceChildren(value);
   }
 

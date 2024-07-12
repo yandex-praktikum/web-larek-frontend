@@ -38,15 +38,15 @@ export class BasketData implements IBasketData{
 
   removeFromBasket(id: string) {                                               //удалить из корзины
     this._goods = this._goods.filter((good) => {return good.id !== id})
-    console.log(this._goods)
     this.events.emit('basketData:changed', {id})
     
   }
 
-  clearBasket() {                                                              //очистить корзину
-    this._goods = [];
-    this.total = 0;
-    this.events.emit('basketData:changed');
+  clearBasket() {
+                                                                 //очистить корзину
+    this._goods.length === 0;
+    this.total === 0;
+    this.events.emit('basketData:changed', this._goods);
   }
 
   getGoodsNumber(): number {                                                    // получить общее количество добавленных товаров в корзину

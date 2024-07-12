@@ -23,7 +23,7 @@ export class ViewFormContacts extends ViewForm<TViewFormContacts> implements IVi
     return this.emailInput.value;
   }
 
-  get telephone() {
+  get phone() {
     return this.telephoneInput.value
   }
 

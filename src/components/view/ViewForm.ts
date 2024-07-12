@@ -3,7 +3,7 @@ import { View } from '../view/View';
 import { ensureAllElements, ensureElement } from '../../utils/utils';
 import { IEvents } from '../base/events';
 
-export class ViewForm<T> extends View <TViewForm> implements IViewForm {
+export abstract class ViewForm<T> extends View <TViewForm> implements IViewForm {
   protected container: HTMLFormElement;                     //DOM элемент формы
   protected inputs: HTMLInputElement[];                     //все поля ввода формы
   protected submitButton: HTMLButtonElement;                //кнопка сабмита формы

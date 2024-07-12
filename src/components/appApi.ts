@@ -22,9 +22,8 @@ export class AppApi extends Api implements IAppApi {
   }
 
   postOrder(order: IOrder): Promise<TOrderSuccess> {
-    return this.post('/order', order).then((success: TOrderSuccess) => {
-      return success
-    })
+    return this.post('/order', order).then((success: TOrderSuccess) => success)
+    
   }
   
 }  
