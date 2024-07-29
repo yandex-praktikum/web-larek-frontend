@@ -3,18 +3,10 @@ export interface IProduct {
   image: string;
   itemTitle: string;
   itemDescription: string;
-  itemPrice: number|null;
   category: string;
-  selected: boolean; 
-}
-
-export interface IOrder {
-  items: string[];
-  totalCost: number;
-  payment: string;
-  address: string;
-  email: string;
-  phone: string;
+  itemPrice: number|null;
+  index: number;
+	inBasket: boolean;
 }
 
 export interface IBasket {
@@ -67,7 +59,18 @@ export interface IValidateFormOrder {
   payment: string;
 }
 
+export interface IAppState {
+	catalog: IProduct[];
+	basket: IProduct[];
+}
+
 export interface IFormSuccess {
   totalDebited: number; 
 }
  
+export interface IOrder extends IFormOrder, IFormContact {
+  items: string[];
+	total: number; 
+}
+
+export type IFormErrors = Partial<Record<keyof IOrder, string>>;
