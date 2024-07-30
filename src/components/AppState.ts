@@ -20,7 +20,7 @@ export class AppState extends Model<IAppState> {
 	}
 
     inBasket(id: string) {
-        return !!this.basket.find((item) => item.itemId === id);
+        return !!this.basket.find((item) => item.id === id);
     }
 
 	addToBasket(item: IProduct) {
@@ -31,14 +31,14 @@ export class AppState extends Model<IAppState> {
 		this.basket = this.basket.filter(basketItem => basketItem !== item);
 	}
 
-    getCountBasket() {
+  getCountBasket() {
 		return this.basket.length;
 	}
 
 	getTotalBasket() {
 		let total: number = 0;
 		this.basket.forEach((item) => {
-			total = total + item.itemPrice;
+			total = total + item.price;
 		});
 		return total;
 	}

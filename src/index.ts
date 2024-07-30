@@ -8,7 +8,7 @@ import { Modal } from './components/modal';
 import { AppState } from './components/AppState';
 import { StoreAPI } from './components/StoreAPI';
 import { Card } from './components/Card';
-import { IProduct, IFormOrder, IFormContact, IValidateFormOrder, IOrder } from './types';
+import { IProduct, IFormOrder, IFormContact, IValidateFormOrder} from './types';
 import { Basket } from './components/Basket';
 import { OrderForm } from './components/OrderForm';
 import { ContactsForm } from './components/ContactsForm';
@@ -48,9 +48,9 @@ events.on('catalog:changed', () => {
 
 		return card.render({
 			category: item.category,
-			itemTitle: item.itemTitle,
+			title: item.title,
 			image: item.image,
-			itemPrice: item.itemPrice,
+			price: item.price,
 		});
 	});
 });
@@ -71,10 +71,10 @@ events.on('card:select', (item: IProduct) => {
 	return modal.render({
 		content: card.render({
 			category: item.category,
-			itemTitle: item.itemTitle,
+			title: item.title,
 			image: item.image,
-			itemPrice: item.itemPrice,
-			itemDescription: item.itemDescription,
+			price: item.price,
+			description: item.description,
 			inBasket: item.inBasket,
 		}),
 	});
@@ -100,8 +100,8 @@ events.on('basket:remove', (item: IProduct) => {
 		});
 
 		return card.render({
-			itemTitle: item.itemTitle,
-			itemPrice: item.itemPrice,
+			title: item.title,
+			price: item.price,
 			index: index + 1,
 		});
 	});
@@ -122,8 +122,8 @@ events.on('basket:open', () => {
 		});
 
 		return card.render({
-			itemTitle: item.itemTitle,
-			itemPrice: item.itemPrice,
+			title: item.title,
+			price: item.price,
 			index: index + 1,
 		});
 	});
@@ -169,7 +169,7 @@ events.on('orderFormErrors:change', (errors: Partial<IFormOrder>) => {
 
 events.on('order:submit', () => {
 	appData.order.total = appData.getTotalBasket();
-	appData.order.items = appData.basket.map((item) => item.itemId);
+	appData.order.items = appData.basket.map((item) => item.id);
 
 	modal.render({
 		content: contactsForm.render({
